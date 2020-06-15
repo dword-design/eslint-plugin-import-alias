@@ -18,9 +18,8 @@ export default {
       {
         type: 'object',
         properties: {
-          aliases: { type: 'object', default: { '@': '.' } },
+          aliases: { type: 'object' },
         },
-        required: ['aliases'],
       },
     ],
   },
@@ -41,7 +40,7 @@ export default {
         })
         // relative parent
         if (importPath |> isParentImport) {
-          const folder = P.basename(path)
+          const folder = P.dirname(path)
           const resolvedImportPath = P.resolve(folder, importPath)
           const matchingAlias =
             aliases

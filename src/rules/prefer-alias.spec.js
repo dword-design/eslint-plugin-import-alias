@@ -1,4 +1,4 @@
-import { endent, map, mapValues } from '@dword-design/functions'
+import { map, mapValues } from '@dword-design/functions'
 import { Linter } from 'eslint'
 import outputFiles from 'output-files'
 import P from 'path'
@@ -36,24 +36,24 @@ const runTest = config => () => {
 
 export default {
   external: {
-    code: endent`
-      import foo from 'foo'
-    `,
+    code: "import foo from 'foo'",
   },
   parent: {
-    code: endent`
-      import foo from '../foo/bar'
-    `,
+    code: "import foo from '../foo/bar'",
     filename: P.join('sub', 'index.js'),
     messages: [
       "Unexpected parent import '../foo/bar'. Use '@/foo/bar' instead",
     ],
     output: "import foo from '@/foo/bar'",
   },
+  'parent in-between folder': {
+    code: "import foo from '../foo'",
+    filename: P.join('sub', 'sub', 'index.js'),
+    messages: ["Unexpected parent import '../foo'. Use '@/sub/foo' instead"],
+    output: "import foo from '@/sub/foo'",
+  },
   'parent import but no matching alias': {
-    code: endent`
-      import foo from '../../foo'
-    `,
+    code: "import foo from '../../foo'",
     messages: [
       "Unexpected parent import '../../foo'. No matching alias found to fix the issue",
     ],
@@ -62,18 +62,14 @@ export default {
     files: {
       'foo.js': '',
     },
-    code: endent`
-      import foo from '@/foo'
-    `,
+    code: "import foo from '@/foo'",
     filename: 'sub/index.js',
   },
   'alias subpath': {
     files: {
       'foo.js': '',
     },
-    code: endent`
-      import foo from '@/foo'
-    `,
+    code: "import foo from '@/foo'",
     messages: [
       "Unexpected subpath import via alias '@/foo'. Use './foo' instead",
     ],
@@ -83,8 +79,6 @@ export default {
     files: {
       'foo.js': '',
     },
-    code: endent`
-      import foo from '@foo/bar'
-    `,
+    code: "import foo from '@foo/bar'",
   },
 } |> mapValues(runTest)
