@@ -29,10 +29,7 @@ const runTest = config => () => {
           sourceType: 'module',
           ecmaVersion: 2015,
         },
-        plugins: ['import-alias'],
-        rules: {
-          'import-alias/prefer-alias': 1,
-        },
+        extends: ['plugin:import-alias/recommended'],
       },
     })
     const result = await linter.lintText(config.code, {
