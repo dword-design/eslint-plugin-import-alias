@@ -1,6 +1,7 @@
 import {
   endent,
   flatten,
+  join,
   map,
   mapValues,
   pick,
@@ -13,7 +14,7 @@ import withLocalTmpDir from 'with-local-tmp-dir'
 
 const runTest = config => () => {
   const filename = config.filename || 'index.js'
-  // const output = config.output || config.code
+  const output = config.output || config.code
   const messages = config.messages || []
   return withLocalTmpDir(async () => {
     await outputFiles({
@@ -22,7 +23,7 @@ const runTest = config => () => {
       }')`,
       ...config.files,
     })
-    const linter = new ESLint({
+    const lintingConfig = {
       useEslintrc: false,
       overrideConfig: {
         parserOptions: {
@@ -31,13 +32,21 @@ const runTest = config => () => {
         },
         extends: ['plugin:import-alias/recommended'],
       },
-    })
-    const result = await linter.lintText(config.code, {
+    }
+    const eslintToLint = new ESLint(lintingConfig)
+    const eslintToFix = new ESLint({ ...lintingConfig, fix: true })
+    const result = await eslintToLint.lintText(config.code, {
       filePath: filename,
     })
     expect(
       result |> map('messages') |> flatten |> map(pick(['ruleId', 'message']))
     ).toEqual(messages)
+    const lintedOutput =
+      eslintToFix.lintText(config.code, { filePath: filename })
+      |> await
+      |> map('output')
+      |> join('\n')
+    expect(lintedOutput).toEqual(output)
   })
 }
 
