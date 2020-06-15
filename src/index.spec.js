@@ -18,7 +18,7 @@ const runTest = config => () => {
   const messages = config.messages || []
   return withLocalTmpDir(async () => {
     await outputFiles({
-      'node_modules/eslint-plugin-import-alias': `module.exports = require('${
+      'node_modules/@dword-design/eslint-plugin-import-alias': `module.exports = require('${
         require.resolve('.') |> replace(/\\/g, '/')
       }')`,
       ...config.files,
@@ -30,17 +30,20 @@ const runTest = config => () => {
           sourceType: 'module',
           ecmaVersion: 2015,
         },
-        extends: ['plugin:import-alias/recommended'],
+        extends: ['plugin:@dword-design/import-alias/recommended'],
       },
     }
     const eslintToLint = new ESLint(lintingConfig)
     const eslintToFix = new ESLint({ ...lintingConfig, fix: true })
-    const result = await eslintToLint.lintText(config.code, {
-      filePath: filename,
-    })
-    expect(
-      result |> map('messages') |> flatten |> map(pick(['ruleId', 'message']))
-    ).toEqual(messages)
+    const lintedMessages =
+      eslintToLint.lintText(config.code, {
+        filePath: filename,
+      })
+      |> await
+      |> map('messages')
+      |> flatten
+      |> map(pick(['ruleId', 'message']))
+    expect(lintedMessages).toEqual(messages)
     const lintedOutput =
       eslintToFix.lintText(config.code, { filePath: filename })
       |> await
@@ -60,7 +63,7 @@ export default {
       {
         message:
           "Unexpected parent import '../foo/bar'. Use '@/foo/bar' instead",
-        ruleId: 'import-alias/prefer-alias',
+        ruleId: '@dword-design/import-alias/prefer-alias',
       },
     ],
     output: "import foo from '@/foo/bar'",
