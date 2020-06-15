@@ -17,7 +17,7 @@ const runTest = config => () => {
     await outputFiles({
       'node_modules/eslint-plugin-import-alias': `module.exports = require('${require.resolve(
         '.'
-      )}')`,
+      ) |> replace(/\\/g, '/')}')`,
       ...config.files,
     })
     const linter = new ESLint({
