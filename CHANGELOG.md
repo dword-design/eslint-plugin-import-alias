@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.1.2...v1.1.3) (2020-06-15)
+
+
+### Bug Fixes
+
+* subfolder fix ([fa390ef](https://github.com/dword-design/eslint-plugin-import-alias/commit/fa390ef8bd234806b4deeac210dde3e2760f6f50))
+
 ## [1.1.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.1.1...v1.1.2) (2020-06-15)
 
 
