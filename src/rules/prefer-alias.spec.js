@@ -1,4 +1,4 @@
-import { endent, map, mapValues, pick } from '@dword-design/functions'
+import { endent, map, mapValues } from '@dword-design/functions'
 import { Linter } from 'eslint'
 import outputFiles from 'output-files'
 import P from 'path'
@@ -29,7 +29,7 @@ const runTest = config => () => {
     const lintedOutput = linter.verifyAndFix(config.code, lintingConfig, {
       filename,
     }).output
-    expect(lintedMessages |> map(pick(['ruleId', 'message']))).toEqual(messages)
+    expect(lintedMessages |> map('message')).toEqual(messages)
     expect(lintedOutput).toEqual(output)
   })
 }
@@ -46,11 +46,7 @@ export default {
     `,
     filename: P.join('sub', 'index.js'),
     messages: [
-      {
-        message:
-          "Unexpected parent import '../foo/bar'. Use '@/foo/bar' instead",
-        ruleId: 'self/self',
-      },
+      "Unexpected parent import '../foo/bar'. Use '@/foo/bar' instead",
     ],
     output: "import foo from '@/foo/bar'",
   },
@@ -59,11 +55,7 @@ export default {
       import foo from '../../foo'
     `,
     messages: [
-      {
-        message:
-          "Unexpected parent import '../../foo'. No matching alias found to fix the issue",
-        ruleId: 'self/self',
-      },
+      "Unexpected parent import '../../foo'. No matching alias found to fix the issue",
     ],
   },
   'alias parent import': {
@@ -83,11 +75,7 @@ export default {
       import foo from '@/foo'
     `,
     messages: [
-      {
-        message:
-          "Unexpected subpath import via alias '@/foo'. Use './foo' instead",
-        ruleId: 'self/self',
-      },
+      "Unexpected subpath import via alias '@/foo'. Use './foo' instead",
     ],
     output: "import foo from './foo'",
   },
