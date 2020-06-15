@@ -24,10 +24,10 @@ const runTest = config => () => {
       },
     }
     const lintedMessages = linter.verify(config.code, lintingConfig, {
-      filename: P.join(process.cwd(), filename),
+      filename,
     })
     const lintedOutput = linter.verifyAndFix(config.code, lintingConfig, {
-      filename: P.join(process.cwd(), filename),
+      filename,
     }).output
     expect(lintedMessages |> map(pick(['ruleId', 'message']))).toEqual(messages)
     expect(lintedOutput).toEqual(output)
