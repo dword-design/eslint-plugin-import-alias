@@ -33,7 +33,9 @@ export default {
       ImportDeclaration: node => {
         const importPath = node.source.value
         const hasAlias =
-          aliases |> keys |> some(alias => importPath |> startsWith(alias))
+          aliases
+          |> keys
+          |> some(alias => importPath |> startsWith(`${alias}/`))
         const resolvedImport = resolvePath(importPath, path, {
           alias: aliases,
         })

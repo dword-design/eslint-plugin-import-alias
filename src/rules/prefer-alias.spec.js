@@ -35,12 +35,12 @@ const runTest = config => () => {
 }
 
 export default {
-  'external import': {
+  external: {
     code: endent`
       import foo from 'foo'
     `,
   },
-  'parent import': {
+  parent: {
     code: endent`
       import foo from '../foo/bar'
     `,
@@ -58,7 +58,7 @@ export default {
       "Unexpected parent import '../../foo'. No matching alias found to fix the issue",
     ],
   },
-  'alias parent import': {
+  'alias parent': {
     files: {
       'foo.js': '',
     },
@@ -67,7 +67,7 @@ export default {
     `,
     filename: 'sub/index.js',
   },
-  'alias subpath import': {
+  'alias subpath': {
     files: {
       'foo.js': '',
     },
@@ -78,5 +78,13 @@ export default {
       "Unexpected subpath import via alias '@/foo'. Use './foo' instead",
     ],
     output: "import foo from './foo'",
+  },
+  scoped: {
+    files: {
+      'foo.js': '',
+    },
+    code: endent`
+      import foo from '@foo/bar'
+    `,
   },
 } |> mapValues(runTest)
