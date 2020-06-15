@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.1.0...v1.1.1) (2020-06-15)
+
+
+### Bug Fixes
+
+* fix name ([cd41c66](https://github.com/dword-design/eslint-plugin-import-alias/commit/cd41c66b05e01c638c79912bfed5e14d25375c8f))
+
 # [1.1.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.0.0...v1.1.0) (2020-06-15)
 
 
