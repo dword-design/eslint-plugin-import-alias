@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.1.1...v1.1.2) (2020-06-15)
+
+
+### Bug Fixes
+
+* scoped import support ([d6db8fc](https://github.com/dword-design/eslint-plugin-import-alias/commit/d6db8fc8042e891c22b41fde5599ce47bca664b2))
+
 ## [1.1.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.1.0...v1.1.1) (2020-06-15)
 
 
