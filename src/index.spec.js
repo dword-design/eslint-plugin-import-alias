@@ -1,13 +1,15 @@
-import { endent, flatten, map, mapValues, pick } from '@dword-design/functions'
+import {
+  endent,
+  flatten,
+  map,
+  mapValues,
+  pick,
+  replace,
+} from '@dword-design/functions'
 import { ESLint } from 'eslint'
 import outputFiles from 'output-files'
 import P from 'path'
 import withLocalTmpDir from 'with-local-tmp-dir'
-
-/* const lintedOutput = linter.verifyAndFix(config.code, lintingConfig, {
-      filename,
-    }).output */
-// expect(lintedOutput).toEqual(output)
 
 const runTest = config => () => {
   const filename = config.filename || 'index.js'
@@ -15,9 +17,9 @@ const runTest = config => () => {
   const messages = config.messages || []
   return withLocalTmpDir(async () => {
     await outputFiles({
-      'node_modules/eslint-plugin-import-alias': `module.exports = require('${require.resolve(
-        '.'
-      ) |> replace(/\\/g, '/')}')`,
+      'node_modules/eslint-plugin-import-alias': `module.exports = require('${
+        require.resolve('.') |> replace(/\\/g, '/')
+      }')`,
       ...config.files,
     })
     const linter = new ESLint({
