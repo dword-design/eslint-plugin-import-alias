@@ -10,6 +10,7 @@ const runTest = config => () => {
   const filename = config.filename || 'index.js'
   const output = config.output || config.code
   const messages = config.messages || []
+  const options = config.options || []
   return withLocalTmpDir(async () => {
     await outputFiles(config.files)
     const linter = new Linter()
@@ -20,7 +21,7 @@ const runTest = config => () => {
         ecmaVersion: 2015,
       },
       rules: {
-        'self/self': 1,
+        'self/self': [1, ...options],
       },
     }
     const lintedMessages = linter.verify(config.code, lintingConfig, {
@@ -80,5 +81,41 @@ export default {
       'foo.js': '',
     },
     code: "import foo from '@foo/bar'",
+  },
+  'cwd: subfolder': {
+    files: {
+      'sub/foo.js': '',
+    },
+    code: "import foo from '../foo'",
+    filename: P.join('sub', 'sub', 'index.js'),
+    options: [{ cwd: 'sub' }],
+    messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
+    output: "import foo from '@/foo'",
+  },
+  'cwd: packagejson': {
+    files: {
+      sub: {
+        'foo.js': '',
+        'package.json': JSON.stringify({}),
+      },
+    },
+    code: "import foo from '../foo'",
+    filename: P.join('sub', 'sub', 'index.js'),
+    options: [{ cwd: 'packagejson' }],
+    messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
+    output: "import foo from '@/foo'",
+  },
+  'cwd: babelrc': {
+    files: {
+      sub: {
+        'foo.js': '',
+        '.babelrc.json': JSON.stringify({}),
+      },
+    },
+    code: "import foo from '../foo'",
+    filename: P.join('sub', 'sub', 'index.js'),
+    options: [{ cwd: 'babelrc' }],
+    messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
+    output: "import foo from '@/foo'",
   },
 } |> mapValues(runTest)

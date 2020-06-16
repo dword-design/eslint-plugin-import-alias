@@ -19,7 +19,9 @@
   },
   "dependencies": {
     "@dword-design/functions": "^1.1.2",
-    "babel-plugin-module-resolver": "^4.0.0"
+    "babel-plugin-module-resolver": "^4.0.0",
+    "find-up": "^4.1.0",
+    "pkg-up": "^3.1.0"
   },
   "devDependencies": {
     "@dword-design/base": "^6.15.6",
