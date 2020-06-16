@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.1.3...v1.2.0) (2020-06-16)
+
+
+### Features
+
+* add packagejson and babelrc support ([dab35ad](https://github.com/dword-design/eslint-plugin-import-alias/commit/dab35ad9a555f69a77ebf329e0ffd3ea64eac5a9))
+
 ## [1.1.3](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.1.2...v1.1.3) (2020-06-15)
 
 
