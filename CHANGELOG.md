@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.3.0...v1.4.0) (2020-06-18)
+
+
+### Features
+
+* add resolvePath support ([28eeb0c](https://github.com/dword-design/eslint-plugin-import-alias/commit/28eeb0ccc5517f3ee915bc814e454570eb6dfc64))
+
 # [1.3.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.2.0...v1.3.0) (2020-06-18)
 
 
