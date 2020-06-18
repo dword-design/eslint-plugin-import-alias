@@ -1,4 +1,6 @@
+import { OptionManager } from '@babel/core'
 import {
+  find,
   findKey,
   keys,
   replace,
@@ -16,24 +18,20 @@ export default {
   meta: {
     type: 'suggestion',
     fixable: true,
-    schema: [
-      {
-        type: 'object',
-        properties: {
-          alias: { type: 'object' },
-        },
-      },
-    ],
   },
   create: context => {
-    const options = {
-      alias: { '@': '.' },
-      ...context.options[0],
-    }
     const path = context.getFilename()
     const folder = P.dirname(path)
     // can't check a non-file
     if (path === '<text>') return {}
+    const manager = new OptionManager()
+    const babelConfig = manager.init({
+      babelrc: true,
+      root: folder,
+      filename: path,
+    })
+    const plugin = babelConfig.plugins |> find({ key: 'module-resolver' })
+    const options = plugin.options
     return {
       ImportDeclaration: node => {
         const importPath = node.source.value

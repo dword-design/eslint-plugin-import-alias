@@ -18,6 +18,7 @@
     "test": "base test"
   },
   "dependencies": {
+    "@babel/core": "^7.10.2",
     "@dword-design/functions": "^1.1.2",
     "babel-plugin-module-resolver": "^4.0.0",
     "find-up": "^4.1.0",

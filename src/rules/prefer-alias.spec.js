@@ -10,7 +10,6 @@ const runTest = config => () => {
   const filename = config.filename || 'index.js'
   const output = config.output || config.code
   const messages = config.messages || []
-  const options = config.options || []
   return withLocalTmpDir(async () => {
     await outputFiles(config.files)
     const linter = new Linter()
@@ -21,7 +20,7 @@ const runTest = config => () => {
         ecmaVersion: 2015,
       },
       rules: {
-        'self/self': [1, ...options],
+        'self/self': 'error',
       },
     }
     const lintedMessages = linter.verify(config.code, lintingConfig, {
@@ -37,9 +36,19 @@ const runTest = config => () => {
 
 export default {
   external: {
+    files: {
+      '.babelrc.json': JSON.stringify({
+        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+      }),
+    },
     code: "import foo from 'foo'",
   },
   parent: {
+    files: {
+      '.babelrc.json': JSON.stringify({
+        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+      }),
+    },
     code: "import foo from '../foo/bar'",
     filename: P.join('sub', 'index.js'),
     messages: [
@@ -48,12 +57,22 @@ export default {
     output: "import foo from '@/foo/bar'",
   },
   'parent in-between folder': {
+    files: {
+      '.babelrc.json': JSON.stringify({
+        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+      }),
+    },
     code: "import foo from '../foo'",
     filename: P.join('sub', 'sub', 'index.js'),
     messages: ["Unexpected parent import '../foo'. Use '@/sub/foo' instead"],
     output: "import foo from '@/sub/foo'",
   },
   'parent import but no matching alias': {
+    files: {
+      '.babelrc.json': JSON.stringify({
+        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+      }),
+    },
     code: "import foo from '../../foo'",
     messages: [
       "Unexpected parent import '../../foo'. No matching alias found to fix the issue",
@@ -61,6 +80,9 @@ export default {
   },
   'alias parent': {
     files: {
+      '.babelrc.json': JSON.stringify({
+        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+      }),
       'foo.js': '',
     },
     code: "import foo from '@/foo'",
@@ -68,6 +90,9 @@ export default {
   },
   'alias subpath': {
     files: {
+      '.babelrc.json': JSON.stringify({
+        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+      }),
       'foo.js': '',
     },
     code: "import foo from '@/foo'",
@@ -78,17 +103,22 @@ export default {
   },
   scoped: {
     files: {
+      '.babelrc.json': JSON.stringify({
+        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+      }),
       'foo.js': '',
     },
     code: "import foo from '@foo/bar'",
   },
   'cwd: subfolder': {
     files: {
+      '.babelrc.json': JSON.stringify({
+        plugins: [['module-resolver', { alias: { '@': '.' }, cwd: 'sub' }]],
+      }),
       'sub/foo.js': '',
     },
     code: "import foo from '../foo'",
     filename: P.join('sub', 'sub', 'index.js'),
-    options: [{ cwd: 'sub' }],
     messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
     output: "import foo from '@/foo'",
   },
@@ -97,11 +127,15 @@ export default {
       sub: {
         'foo.js': '',
         'package.json': JSON.stringify({}),
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            ['module-resolver', { alias: { '@': '.' }, cwd: 'packagejson' }],
+          ],
+        }),
       },
     },
     code: "import foo from '../foo'",
     filename: P.join('sub', 'sub', 'index.js'),
-    options: [{ cwd: 'packagejson' }],
     messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
     output: "import foo from '@/foo'",
   },
@@ -109,12 +143,15 @@ export default {
     files: {
       sub: {
         'foo.js': '',
-        '.babelrc.json': JSON.stringify({}),
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            ['module-resolver', { alias: { '@': '.' }, cwd: 'babelrc' }],
+          ],
+        }),
       },
     },
     code: "import foo from '../foo'",
     filename: P.join('sub', 'sub', 'index.js'),
-    options: [{ cwd: 'babelrc' }],
     messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
     output: "import foo from '@/foo'",
   },

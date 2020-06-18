@@ -55,6 +55,11 @@ const runTest = config => () => {
 
 export default {
   'prefer-alias': {
+    files: {
+      '.babelrc.json': JSON.stringify({
+        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+      }),
+    },
     code: endent`
       import foo from '../foo/bar'
     `,
