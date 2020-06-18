@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.2.0...v1.3.0) (2020-06-18)
+
+
+### Features
+
+* use babel plugin to resolve options ([4d7c247](https://github.com/dword-design/eslint-plugin-import-alias/commit/4d7c24728a96da68045096a3109c00737d62b11a))
+
 # [1.2.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.1.3...v1.2.0) (2020-06-16)
 
 
