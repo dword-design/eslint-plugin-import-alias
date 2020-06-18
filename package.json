@@ -20,13 +20,12 @@
   "dependencies": {
     "@babel/core": "^7.10.2",
     "@dword-design/functions": "^1.1.2",
-    "babel-plugin-module-resolver": "^4.0.0",
-    "find-up": "^4.1.0",
-    "pkg-up": "^3.1.0"
+    "babel-plugin-module-resolver": "^4.0.0"
   },
   "devDependencies": {
     "@dword-design/base": "^6.15.6",
     "eslint": "^7.2.0",
+    "get-package-name": "^1.1.0",
     "output-files": "^1.1.16",
     "with-local-tmp-dir": "^2.2.10"
   },

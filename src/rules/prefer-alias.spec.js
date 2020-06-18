@@ -1,5 +1,6 @@
-import { map, mapValues } from '@dword-design/functions'
+import { endent, map, mapValues } from '@dword-design/functions'
 import { Linter } from 'eslint'
+import getPackageName from 'get-package-name'
 import outputFiles from 'output-files'
 import P from 'path'
 import withLocalTmpDir from 'with-local-tmp-dir'
@@ -38,7 +39,12 @@ export default {
   external: {
     files: {
       '.babelrc.json': JSON.stringify({
-        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+        plugins: [
+          [
+            getPackageName(require.resolve('babel-plugin-module-resolver')),
+            { alias: { '@': '.' } },
+          ],
+        ],
       }),
     },
     code: "import foo from 'foo'",
@@ -46,7 +52,12 @@ export default {
   parent: {
     files: {
       '.babelrc.json': JSON.stringify({
-        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+        plugins: [
+          [
+            getPackageName(require.resolve('babel-plugin-module-resolver')),
+            { alias: { '@': '.' } },
+          ],
+        ],
       }),
     },
     code: "import foo from '../foo/bar'",
@@ -59,7 +70,12 @@ export default {
   'parent in-between folder': {
     files: {
       '.babelrc.json': JSON.stringify({
-        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+        plugins: [
+          [
+            getPackageName(require.resolve('babel-plugin-module-resolver')),
+            { alias: { '@': '.' } },
+          ],
+        ],
       }),
     },
     code: "import foo from '../foo'",
@@ -70,7 +86,12 @@ export default {
   'parent import but no matching alias': {
     files: {
       '.babelrc.json': JSON.stringify({
-        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+        plugins: [
+          [
+            getPackageName(require.resolve('babel-plugin-module-resolver')),
+            { alias: { '@': '.' } },
+          ],
+        ],
       }),
     },
     code: "import foo from '../../foo'",
@@ -81,7 +102,12 @@ export default {
   'alias parent': {
     files: {
       '.babelrc.json': JSON.stringify({
-        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+        plugins: [
+          [
+            getPackageName(require.resolve('babel-plugin-module-resolver')),
+            { alias: { '@': '.' } },
+          ],
+        ],
       }),
       'foo.js': '',
     },
@@ -91,7 +117,12 @@ export default {
   'alias subpath': {
     files: {
       '.babelrc.json': JSON.stringify({
-        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+        plugins: [
+          [
+            getPackageName(require.resolve('babel-plugin-module-resolver')),
+            { alias: { '@': '.' } },
+          ],
+        ],
       }),
       'foo.js': '',
     },
@@ -104,7 +135,12 @@ export default {
   scoped: {
     files: {
       '.babelrc.json': JSON.stringify({
-        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+        plugins: [
+          [
+            getPackageName(require.resolve('babel-plugin-module-resolver')),
+            { alias: { '@': '.' } },
+          ],
+        ],
       }),
       'foo.js': '',
     },
@@ -113,7 +149,12 @@ export default {
   'cwd: subfolder': {
     files: {
       '.babelrc.json': JSON.stringify({
-        plugins: [['module-resolver', { alias: { '@': '.' }, cwd: 'sub' }]],
+        plugins: [
+          [
+            getPackageName(require.resolve('babel-plugin-module-resolver')),
+            { alias: { '@': '.' }, cwd: 'sub' },
+          ],
+        ],
       }),
       'sub/foo.js': '',
     },
@@ -129,7 +170,10 @@ export default {
         'package.json': JSON.stringify({}),
         '.babelrc.json': JSON.stringify({
           plugins: [
-            ['module-resolver', { alias: { '@': '.' }, cwd: 'packagejson' }],
+            [
+              getPackageName(require.resolve('babel-plugin-module-resolver')),
+              { alias: { '@': '.' }, cwd: 'packagejson' },
+            ],
           ],
         }),
       },
@@ -143,12 +187,50 @@ export default {
     files: {
       sub: {
         'foo.js': '',
-        '.babelrc.json': JSON.stringify({
+        '.babelrc': JSON.stringify({
           plugins: [
-            ['module-resolver', { alias: { '@': '.' }, cwd: 'babelrc' }],
+            [
+              getPackageName(require.resolve('babel-plugin-module-resolver')),
+              { alias: { '@': '.' }, cwd: 'babelrc' },
+            ],
           ],
         }),
       },
+    },
+    code: "import foo from '../foo'",
+    filename: P.join('sub', 'sub', 'index.js'),
+    messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
+    output: "import foo from '@/foo'",
+  },
+  'custom resolvePath': {
+    files: {
+      '.babelrc.json': JSON.stringify({
+        extends: 'babel-config-foo',
+      }),
+      'node_modules/babel-config-foo/index.js': endent`
+        const P = require('path')
+        const { resolvePath } = require('babel-plugin-module-resolver')
+
+        module.exports = {
+          plugins: [
+            [
+              '${getPackageName(
+                require.resolve('babel-plugin-module-resolver')
+              )}',
+              {
+                alias: { '@': '.' },
+                resolvePath: (sourcePath, currentFile) =>
+                  resolvePath(
+                    sourcePath,
+                    currentFile,
+                    { alias: { '@': '.' }, cwd: P.resolve(P.dirname(currentFile), '..') }
+                  )
+              },
+            ],
+          ],
+        }
+      `,
+      'sub/foo.js': '',
     },
     code: "import foo from '../foo'",
     filename: P.join('sub', 'sub', 'index.js'),

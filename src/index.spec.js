@@ -8,6 +8,7 @@ import {
   replace,
 } from '@dword-design/functions'
 import { ESLint } from 'eslint'
+import getPackageName from 'get-package-name'
 import outputFiles from 'output-files'
 import P from 'path'
 import withLocalTmpDir from 'with-local-tmp-dir'
@@ -57,7 +58,12 @@ export default {
   'prefer-alias': {
     files: {
       '.babelrc.json': JSON.stringify({
-        plugins: [['module-resolver', { alias: { '@': '.' } }]],
+        plugins: [
+          [
+            getPackageName(require.resolve('babel-plugin-module-resolver')),
+            { alias: { '@': '.' } },
+          ],
+        ],
       }),
     },
     code: endent`

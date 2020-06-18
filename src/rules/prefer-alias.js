@@ -7,10 +7,8 @@ import {
   some,
   startsWith,
 } from '@dword-design/functions'
-import { resolvePath } from 'babel-plugin-module-resolver'
-import findUp from 'find-up'
+import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver'
 import P from 'path'
-import pkgUp from 'pkg-up'
 
 const isParentImport = path => /^(\.\/)?\.\.\//.test(path)
 
@@ -32,6 +30,7 @@ export default {
     })
     const plugin = babelConfig.plugins |> find({ key: 'module-resolver' })
     const options = plugin.options
+    const resolvePath = options.resolvePath || defaultResolvePath
     return {
       ImportDeclaration: node => {
         const importPath = node.source.value
@@ -40,25 +39,17 @@ export default {
           |> keys
           |> some(alias => importPath |> startsWith(`${alias}/`))
         const importWithoutAlias = resolvePath(importPath, path, options)
-        const resolvedCwd = (() => {
-          switch (options.cwd) {
-            case 'packagejson':
-              return pkgUp.sync({ cwd: folder }) |> P.dirname
-            case 'babelrc':
-              return findUp.sync('.babelrc.json', { cwd: folder }) |> P.dirname
-            default:
-              return options.cwd || '.'
-          }
-        })()
         // relative parent
         if (importPath |> isParentImport) {
           const absoluteImportPath = P.resolve(folder, importPath)
           const matchingAlias =
             options.alias
             |> findKey(
-              aliasPath =>
+              (aliasPath, alias) =>
                 absoluteImportPath
-                |> startsWith(P.resolve(resolvedCwd, aliasPath))
+                |> startsWith(
+                  P.resolve(folder, resolvePath(`${alias}/`, path, options))
+                )
             )
           if (!matchingAlias) {
             return context.report({
@@ -68,7 +59,10 @@ export default {
           }
           const rewrittenImport = `${matchingAlias}/${
             P.relative(
-              P.resolve(resolvedCwd, options.alias[matchingAlias]),
+              P.resolve(
+                folder,
+                resolvePath(`${matchingAlias}/`, path, options)
+              ),
               absoluteImportPath
             ) |> replace(/\\/g, '/')
           }`
