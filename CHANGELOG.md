@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.4.0...v1.4.1) (2020-06-18)
+
+
+### Bug Fixes
+
+* optimization ([afc79e6](https://github.com/dword-design/eslint-plugin-import-alias/commit/afc79e60d092d0522abc45efdfdc65ddefdc0b15))
+
 # [1.4.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.3.0...v1.4.0) (2020-06-18)
 
 
