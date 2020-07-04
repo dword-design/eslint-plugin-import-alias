@@ -1,6 +1,6 @@
 {
   "name": "@dword-design/eslint-plugin-import-alias",
-  "version": "1.0.0",
+  "version": "1.4.1",
   "description": "",
   "repository": "dword-design/eslint-plugin-import-alias",
   "license": "MIT",
@@ -18,12 +18,14 @@
     "test": "base test"
   },
   "dependencies": {
+    "@babel/core": "^7.10.2",
     "@dword-design/functions": "^1.1.2",
     "babel-plugin-module-resolver": "^4.0.0"
   },
   "devDependencies": {
     "@dword-design/base": "^6.15.6",
     "eslint": "^7.2.0",
+    "get-package-name": "^1.1.0",
     "output-files": "^1.1.16",
     "with-local-tmp-dir": "^2.2.10"
   },
