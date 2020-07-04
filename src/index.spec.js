@@ -25,14 +25,14 @@ const runTest = config => () => {
       ...config.files,
     })
     const lintingConfig = {
-      useEslintrc: false,
       overrideConfig: {
-        parserOptions: {
-          sourceType: 'module',
-          ecmaVersion: 2015,
-        },
         extends: ['plugin:@dword-design/import-alias/recommended'],
+        parserOptions: {
+          ecmaVersion: 2015,
+          sourceType: 'module',
+        },
       },
+      useEslintrc: false,
     }
     const eslintToLint = new ESLint(lintingConfig)
     const eslintToFix = new ESLint({ ...lintingConfig, fix: true })
@@ -56,6 +56,10 @@ const runTest = config => () => {
 
 export default {
   'prefer-alias': {
+    code: endent`
+      import foo from '../foo/bar'
+    `,
+    filename: P.join('sub', 'index.js'),
     files: {
       '.babelrc.json': JSON.stringify({
         plugins: [
@@ -66,10 +70,6 @@ export default {
         ],
       }),
     },
-    code: endent`
-      import foo from '../foo/bar'
-    `,
-    filename: P.join('sub', 'index.js'),
     messages: [
       {
         message:

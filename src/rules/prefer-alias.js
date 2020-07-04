@@ -20,10 +20,6 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
 }
 
 export default {
-  meta: {
-    type: 'suggestion',
-    fixable: true,
-  },
   create: context => {
     const currentFile = context.getFilename()
     const folder = P.dirname(currentFile)
@@ -32,8 +28,8 @@ export default {
     const manager = new OptionManager()
     const babelConfig = manager.init({
       babelrc: true,
-      root: folder,
       filename: currentFile,
+      root: folder,
     })
     const plugin = babelConfig.plugins |> find({ key: 'module-resolver' })
     const options = plugin.options
@@ -54,8 +50,8 @@ export default {
           )
           if (!matchingAlias) {
             return context.report({
-              node,
               message: `Unexpected parent import '${sourcePath}'. No matching alias found to fix the issue`,
+              node,
             })
           }
           const absoluteImportPath = P.resolve(folder, sourcePath)
@@ -64,29 +60,33 @@ export default {
             |> replace(/\\/g, '/')
           }`
           return context.report({
-            node,
-            message: `Unexpected parent import '${sourcePath}'. Use '${rewrittenImport}' instead`,
             fix: fixer =>
               fixer.replaceTextRange(
                 [node.source.range[0] + 1, node.source.range[1] - 1],
                 rewrittenImport
               ),
+            message: `Unexpected parent import '${sourcePath}'. Use '${rewrittenImport}' instead`,
+            node,
           })
         }
         const importWithoutAlias = resolvePath(sourcePath, currentFile, options)
         if (!(importWithoutAlias |> isParentImport) && hasAlias) {
           return context.report({
-            node,
-            message: `Unexpected subpath import via alias '${sourcePath}'. Use '${importWithoutAlias}' instead`,
             fix: fixer =>
               fixer.replaceTextRange(
                 [node.source.range[0] + 1, node.source.range[1] - 1],
                 importWithoutAlias
               ),
+            message: `Unexpected subpath import via alias '${sourcePath}'. Use '${importWithoutAlias}' instead`,
+            node,
           })
         }
         return undefined
       },
     }
+  },
+  meta: {
+    fixable: true,
+    type: 'suggestion',
   },
 }
