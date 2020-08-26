@@ -2,6 +2,9 @@
   "extends": [
     ":semanticCommits"
   ],
+  "labels": [
+    "maintenance"
+  ],
   "packageRules": [
     {
       "packagePatterns": [
@@ -20,7 +23,6 @@
     }
   ],
   "lockFileMaintenance": {
-    "enabled": true,
-    "schedule": "at any time"
+    "enabled": true
   }
 }
