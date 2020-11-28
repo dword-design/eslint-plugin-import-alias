@@ -4328,6 +4328,11 @@ get-package-name@^1.0.0, get-package-name@^1.1.0:
   resolved "https://registry.yarnpkg.com/get-package-name/-/get-package-name-1.1.0.tgz#06a7c6e2b8bfcb84dc3abbfc2f92bf59bb2a1d66"
   integrity sha512-lwMnhvJ8lYNegh1306J9GTrXk8/5D2CTKK9bZ+bK0N1MN9i9hMZWe9B37LNMs531HdKjobHLRCWIS6vCl4Z46A==
 
+get-package-name@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/get-package-name/-/get-package-name-2.0.0.tgz#478f9b174496c9a3ba6b2bf34ef3d8ecc50793a6"
+  integrity sha512-zAAEi5/AhBXXrANS+moB3IrM56PsiNQaTOXO0/OuXdn0+Kt9RtZJe98YF8AVNXR2fDupmLg3gUAizh/mTqb3gA==
+
 get-package-type@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/get-package-type/-/get-package-type-0.1.0.tgz#8de2d803cff44df3bc6c456e6668b36c3926e11a"

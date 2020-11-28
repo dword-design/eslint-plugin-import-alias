@@ -26,7 +26,7 @@
   "devDependencies": {
     "@dword-design/base": "^6.15.6",
     "eslint": "^7.2.0",
-    "get-package-name": "^1.1.0",
+    "get-package-name": "^2.0.0",
     "output-files": "^1.1.16",
     "with-local-tmp-dir": "^2.2.10"
   },
