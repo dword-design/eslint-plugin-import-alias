@@ -1,3 +1,10 @@
+## [1.4.5](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.4.4...v1.4.5) (2020-12-11)
+
+
+### Bug Fixes
+
+* replace get-package-name with depcheck-package-name ([3002508](https://github.com/dword-design/eslint-plugin-import-alias/commit/3002508bbd8df3a7a78f99fc4fa519b669556f6b))
+
 ## [1.4.4](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.4.3...v1.4.4) (2020-12-02)
 
 
