@@ -7,8 +7,8 @@ import {
   pick,
   replace,
 } from '@dword-design/functions'
+import packageName from 'depcheck-package-name'
 import { ESLint } from 'eslint'
-import getPackageName from 'get-package-name'
 import outputFiles from 'output-files'
 import P from 'path'
 import withLocalTmpDir from 'with-local-tmp-dir'
@@ -63,10 +63,7 @@ export default {
     files: {
       '.babelrc.json': JSON.stringify({
         plugins: [
-          [
-            getPackageName(require.resolve('babel-plugin-module-resolver')),
-            { alias: { '@': '.' } },
-          ],
+          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
         ],
       }),
     },

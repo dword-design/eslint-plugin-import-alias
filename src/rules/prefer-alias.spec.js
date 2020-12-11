@@ -1,6 +1,6 @@
 import { endent, map, mapValues } from '@dword-design/functions'
+import packageName from 'depcheck-package-name'
 import { Linter } from 'eslint'
-import getPackageName from 'get-package-name'
 import outputFiles from 'output-files'
 import P from 'path'
 import withLocalTmpDir from 'with-local-tmp-dir'
@@ -42,10 +42,7 @@ export default {
     files: {
       '.babelrc.json': JSON.stringify({
         plugins: [
-          [
-            getPackageName(require.resolve('babel-plugin-module-resolver')),
-            { alias: { '@': '.' } },
-          ],
+          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
         ],
       }),
       'foo.js': '',
@@ -56,10 +53,7 @@ export default {
     files: {
       '.babelrc.json': JSON.stringify({
         plugins: [
-          [
-            getPackageName(require.resolve('babel-plugin-module-resolver')),
-            { alias: { '@': '.' } },
-          ],
+          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
         ],
       }),
       'foo.js': '',
@@ -83,9 +77,7 @@ export default {
         module.exports = {
           plugins: [
             [
-              '${getPackageName(
-                require.resolve('babel-plugin-module-resolver')
-              )}',
+              '${packageName`babel-plugin-module-resolver`}',
               {
                 alias: { '@': '.' },
                 resolvePath: (sourcePath, currentFile) =>
@@ -112,7 +104,7 @@ export default {
         '.babelrc': JSON.stringify({
           plugins: [
             [
-              getPackageName(require.resolve('babel-plugin-module-resolver')),
+              packageName`babel-plugin-module-resolver`,
               { alias: { '@': '.' }, cwd: 'babelrc' },
             ],
           ],
@@ -131,7 +123,7 @@ export default {
         '.babelrc.json': JSON.stringify({
           plugins: [
             [
-              getPackageName(require.resolve('babel-plugin-module-resolver')),
+              packageName`babel-plugin-module-resolver`,
               { alias: { '@': '.' }, cwd: 'packagejson' },
             ],
           ],
@@ -150,7 +142,7 @@ export default {
       '.babelrc.json': JSON.stringify({
         plugins: [
           [
-            getPackageName(require.resolve('babel-plugin-module-resolver')),
+            packageName`babel-plugin-module-resolver`,
             { alias: { '@': '.' }, cwd: 'sub' },
           ],
         ],
@@ -165,10 +157,7 @@ export default {
     files: {
       '.babelrc.json': JSON.stringify({
         plugins: [
-          [
-            getPackageName(require.resolve('babel-plugin-module-resolver')),
-            { alias: { '@': '.' } },
-          ],
+          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
         ],
       }),
     },
@@ -179,10 +168,7 @@ export default {
     files: {
       '.babelrc.json': JSON.stringify({
         plugins: [
-          [
-            getPackageName(require.resolve('babel-plugin-module-resolver')),
-            { alias: { '@': '.' } },
-          ],
+          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
         ],
       }),
     },
@@ -196,10 +182,7 @@ export default {
     files: {
       '.babelrc.json': JSON.stringify({
         plugins: [
-          [
-            getPackageName(require.resolve('babel-plugin-module-resolver')),
-            { alias: { '@': '.' } },
-          ],
+          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
         ],
       }),
     },
@@ -213,10 +196,7 @@ export default {
     files: {
       '.babelrc.json': JSON.stringify({
         plugins: [
-          [
-            getPackageName(require.resolve('babel-plugin-module-resolver')),
-            { alias: { '@': '.' } },
-          ],
+          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
         ],
       }),
     },
@@ -228,10 +208,7 @@ export default {
     files: {
       '.babelrc.json': JSON.stringify({
         plugins: [
-          [
-            getPackageName(require.resolve('babel-plugin-module-resolver')),
-            { alias: { '@': '.' } },
-          ],
+          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
         ],
       }),
       'foo.js': '',
