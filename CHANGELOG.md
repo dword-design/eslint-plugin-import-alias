@@ -1,3 +1,10 @@
+## [1.4.8](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.4.7...v1.4.8) (2021-03-22)
+
+
+### Bug Fixes
+
+* lock file maintenance ([#11](https://github.com/dword-design/eslint-plugin-import-alias/issues/11)) ([eb550b0](https://github.com/dword-design/eslint-plugin-import-alias/commit/eb550b02f870d501de3c3604457d9b7a8009fd1a))
+
 ## [1.4.7](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.4.6...v1.4.7) (2021-03-17)
 
 
