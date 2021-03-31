@@ -64,7 +64,7 @@ $ yarn add @dword-design/eslint-plugin-import-alias
 <!-- LICENSE/ -->
 ## Contribute
 
-Are you missing something or want to contribute? Feel free to file an [issue](https://github.com/dword-design/eslint-plugin-import-alias/issues) or [pull request](https://github.com/dword-design/eslint-plugin-import-alias/pulls)! ⚙️
+Are you missing something or want to contribute? Feel free to file an [issue](https://github.com/dword-design/eslint-plugin-import-alias/issues) or a [pull request](https://github.com/dword-design/eslint-plugin-import-alias/pulls)! ⚙️
 
 ## Support
 

@@ -9,12 +9,17 @@ import self from './prefer-alias'
 
 const runTest = config => () => {
   const filename = config.filename || 'index.js'
+
   const output = config.output || config.code
+
   const messages = config.messages || []
+
   return withLocalTmpDir(async () => {
     await outputFiles(config.files)
+
     const linter = new Linter()
     linter.defineRule('self/self', self)
+
     const lintingConfig = {
       parserOptions: {
         ecmaVersion: 2015,
@@ -24,9 +29,11 @@ const runTest = config => () => {
         'self/self': 'error',
       },
     }
+
     const lintedMessages = linter.verify(config.code, lintingConfig, {
       filename,
     })
+
     const lintedOutput = linter.verifyAndFix(config.code, lintingConfig, {
       filename,
     }).output

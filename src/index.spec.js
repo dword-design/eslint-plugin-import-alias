@@ -15,8 +15,11 @@ import withLocalTmpDir from 'with-local-tmp-dir'
 
 const runTest = config => () => {
   const filename = config.filename || 'index.js'
+
   const output = config.output || config.code
+
   const messages = config.messages || []
+
   return withLocalTmpDir(async () => {
     await outputFiles({
       'node_modules/@dword-design/eslint-plugin-import-alias': `module.exports = require('${
@@ -24,6 +27,7 @@ const runTest = config => () => {
       }')`,
       ...config.files,
     })
+
     const lintingConfig = {
       overrideConfig: {
         extends: ['plugin:@dword-design/import-alias/recommended'],
@@ -34,8 +38,11 @@ const runTest = config => () => {
       },
       useEslintrc: false,
     }
+
     const eslintToLint = new ESLint(lintingConfig)
+
     const eslintToFix = new ESLint({ ...lintingConfig, fix: true })
+
     const lintedMessages =
       eslintToLint.lintText(config.code, {
         filePath: filename,
@@ -45,6 +52,7 @@ const runTest = config => () => {
       |> flatten
       |> map(pick(['ruleId', 'message']))
     expect(lintedMessages).toEqual(messages)
+
     const lintedOutput =
       eslintToFix.lintText(config.code, { filePath: filename })
       |> await

@@ -4,8 +4,10 @@ import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver'
 import P from 'path'
 
 const isParentImport = path => /^(\.\/)?\.\.\//.test(path)
+
 const findMatchingAlias = (sourcePath, currentFile, options) => {
   const resolvePath = options.resolvePath || defaultResolvePath
+
   const absoluteSourcePath = P.resolve(P.dirname(currentFile), sourcePath)
   for (const aliasName of options.alias |> keys) {
     const path = P.resolve(
@@ -16,27 +18,36 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
       return { name: aliasName, path }
     }
   }
+
   return undefined
 }
 
 export default {
   create: context => {
     const currentFile = context.getFilename()
+
     const folder = P.dirname(currentFile)
     // can't check a non-file
     if (currentFile === '<text>') return {}
+
     const manager = new OptionManager()
+
     const babelConfig = manager.init({
       babelrc: true,
       filename: currentFile,
       root: folder,
     })
+
     const plugin = babelConfig.plugins |> find({ key: 'module-resolver' })
+
     const options = plugin.options
+
     const resolvePath = options.resolvePath || defaultResolvePath
+
     return {
       ImportDeclaration: node => {
         const sourcePath = node.source.value
+
         const hasAlias =
           options.alias
           |> keys
@@ -54,11 +65,14 @@ export default {
               node,
             })
           }
+
           const absoluteImportPath = P.resolve(folder, sourcePath)
+
           const rewrittenImport = `${matchingAlias.name}/${
             P.relative(matchingAlias.path, absoluteImportPath)
             |> replace(/\\/g, '/')
           }`
+
           return context.report({
             fix: fixer =>
               fixer.replaceTextRange(
@@ -69,6 +83,7 @@ export default {
             node,
           })
         }
+
         const importWithoutAlias = resolvePath(sourcePath, currentFile, options)
         if (!(importWithoutAlias |> isParentImport) && hasAlias) {
           return context.report({
@@ -81,6 +96,7 @@ export default {
             node,
           })
         }
+
         return undefined
       },
     }
