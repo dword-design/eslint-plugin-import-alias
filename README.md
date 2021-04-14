@@ -1,12 +1,12 @@
 <!-- TITLE/ -->
-# @dword-design/eslint-plugin-import-alias
+# eslint-plugin-import-alias
 <!-- /TITLE -->
 
 <!-- BADGES/ -->
   <p>
-    <a href="https://npmjs.org/package/@dword-design/eslint-plugin-import-alias">
+    <a href="https://npmjs.org/package/eslint-plugin-import-alias">
       <img
-        src="https://img.shields.io/npm/v/@dword-design/eslint-plugin-import-alias.svg"
+        src="https://img.shields.io/npm/v/eslint-plugin-import-alias.svg"
         alt="npm version"
       >
     </a><img src="https://img.shields.io/badge/os-linux%20%7C%C2%A0macos%20%7C%C2%A0windows-blue" alt="Linux macOS Windows compatible"><a href="https://github.com/dword-design/eslint-plugin-import-alias/actions">
@@ -58,10 +58,10 @@ An ESLint plugin that enforces the use of import aliases. Also supports autofixi
 
 ```bash
 # npm
-$ npm install @dword-design/eslint-plugin-import-alias
+$ npm install eslint-plugin-import-alias
 
 # Yarn
-$ yarn add @dword-design/eslint-plugin-import-alias
+$ yarn add eslint-plugin-import-alias
 ```
 <!-- /INSTALL -->
 
