@@ -50,7 +50,7 @@
 <!-- /BADGES -->
 
 <!-- DESCRIPTION/ -->
-
+An ESLint plugin that enforces the use of import aliases. Also supports autofixing.
 <!-- /DESCRIPTION -->
 
 <!-- INSTALL/ -->
