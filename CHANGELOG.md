@@ -1,3 +1,12 @@
+## [1.5.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.5.0...v1.5.1) (2021-04-14)
+
+
+### Bug Fixes
+
+* revert open source ([1c07f3f](https://github.com/dword-design/eslint-plugin-import-alias/commit/1c07f3f2ad0d7bdd7aac64c32ac9a1d65f14779a))
+* update config files ([657a25c](https://github.com/dword-design/eslint-plugin-import-alias/commit/657a25c85f1280ef5e9c56f65c8282089ce75595))
+* update readme ([bf8265b](https://github.com/dword-design/eslint-plugin-import-alias/commit/bf8265bbbcc0ba9c37a084f785c7e20df43dd8f9))
+
 # [1.5.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.4.11...v1.5.0) (2021-04-14)
 
 
