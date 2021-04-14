@@ -53,6 +53,22 @@
 An ESLint plugin that enforces the use of import aliases. Also supports autofixing.
 <!-- /DESCRIPTION -->
 
+Aliases are a great thing to make imports more readable and you do not have to change import paths that often when a file path is changed.
+
+```js
+import foo from '../../model/sub/foo'
+import bar from '../other/bar'
+```
+
+changes to
+
+```js
+import foo from '@/model/sub/foo'
+import bar from '@/sub/other/bar'
+```
+
+Now what if you are in a bigger team or you have a lot of projects to update. Or you just want to make sure that everything is consistent. This is where a linter comes into the play. This rule allows you to detect inconsistent imports and even autofix them. This works by matching alias paths agains the imports and replacing the import paths with the first matching aliased path.
+
 <!-- INSTALL/ -->
 ## Install
 
@@ -64,6 +80,38 @@ $ npm install eslint-plugin-import-alias
 $ yarn add eslint-plugin-import-alias
 ```
 <!-- /INSTALL -->
+
+## Usage
+
+Add the plugin to your ESLint config:
+
+```json
+{
+  "extends": [
+    "plugin:import-alias/recommended"
+  ],
+}
+```
+
+Alright, now you have to tell the plugin which aliases to use. In the simplest case, you are already using [babel-plugin-module-resolver](https://www.npmjs.com/package/babel-plugin-module-resolver) for your aliases. Your babel config would look something like this:
+
+```json
+{
+  "plugins": {
+    ["module-resolver", {
+      "alias": {
+        "@": ".",
+      },
+    }]
+  }
+}
+```
+
+In this case lucky you, you don't have to do anything else. The plugin should work out of the box.
+
+If you have a special project setup that does not have a babel config in the project path, you can still use the plugin by passing the aliases directly to the rule. In this case you define the rule additionally in the `rules` section:
+
+
 
 <!-- LICENSE/ -->
 ## Contribute
