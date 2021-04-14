@@ -201,7 +201,7 @@ export default {
       'package.json': JSON.stringify({}),
     },
     messages: [
-      "Unexpected parent import '../foo'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule in your ESLint config.",
+      "Unexpected parent import '../foo'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.",
     ],
   },
   parent: {
@@ -229,7 +229,7 @@ export default {
       }),
     },
     messages: [
-      "Unexpected parent import '../../foo'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule in your ESLint config.",
+      "Unexpected parent import '../../foo'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.",
     ],
   },
   'parent in-between folder': {

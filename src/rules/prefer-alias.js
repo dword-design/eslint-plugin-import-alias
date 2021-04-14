@@ -61,7 +61,7 @@ export default {
           )
           if (!matchingAlias) {
             return context.report({
-              message: `Unexpected parent import '${sourcePath}'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule in your ESLint config.`,
+              message: `Unexpected parent import '${sourcePath}'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.`,
               node,
             })
           }
