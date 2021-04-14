@@ -40,7 +40,7 @@ export default {
 
     const plugin = babelConfig.plugins |> find({ key: 'module-resolver' })
 
-    const options = plugin.options
+    const options = { ...plugin?.options, ...context.options[0] }
 
     const resolvePath = options.resolvePath || defaultResolvePath
 
@@ -61,7 +61,7 @@ export default {
           )
           if (!matchingAlias) {
             return context.report({
-              message: `Unexpected parent import '${sourcePath}'. No matching alias found to fix the issue`,
+              message: `Unexpected parent import '${sourcePath}'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule in your ESLint config.`,
               node,
             })
           }
@@ -103,6 +103,17 @@ export default {
   },
   meta: {
     fixable: true,
+    schema: [
+      {
+        additionalProperties: false,
+        properties: {
+          alias: {
+            type: 'object',
+          },
+        },
+        type: 'object',
+      },
+    ],
     type: 'suggestion',
   },
 }

@@ -7,12 +7,14 @@ import withLocalTmpDir from 'with-local-tmp-dir'
 
 import self from './prefer-alias'
 
-const runTest = config => () => {
-  const filename = config.filename || 'index.js'
-
-  const output = config.output || config.code
-
-  const messages = config.messages || []
+const runTest = (config = {}) => () => {
+  config = {
+    eslintConfig: {},
+    filename: 'index.js',
+    messages: [],
+    output: config.code,
+    ...config,
+  }
 
   return withLocalTmpDir(async () => {
     await outputFiles(config.files)
@@ -27,18 +29,20 @@ const runTest = config => () => {
       },
       rules: {
         'self/self': 'error',
+        ...config.eslintConfig.rules,
       },
+      ...config.eslintConfig,
     }
 
     const lintedMessages = linter.verify(config.code, lintingConfig, {
-      filename,
+      filename: config.filename,
     })
 
     const lintedOutput = linter.verifyAndFix(config.code, lintingConfig, {
-      filename,
+      filename: config.filename,
     }).output
-    expect(lintedMessages |> map('message')).toEqual(messages)
-    expect(lintedOutput).toEqual(output)
+    expect(lintedMessages |> map('message')).toEqual(config.messages)
+    expect(lintedOutput).toEqual(config.output)
   })
 }
 
@@ -69,6 +73,26 @@ export default {
       "Unexpected subpath import via alias '@/foo'. Use './foo' instead",
     ],
     output: "import foo from './foo'",
+  },
+  'custom alias': {
+    code: "import foo from '../foo'",
+    eslintConfig: {
+      rules: {
+        'self/self': [
+          'error',
+          {
+            alias: { bar: '.' },
+          },
+        ],
+      },
+    },
+    filename: 'sub/index.js',
+    files: {
+      'foo.js': '',
+      'package.json': JSON.stringify({}),
+    },
+    messages: ["Unexpected parent import '../foo'. Use 'bar/foo' instead"],
+    output: "import foo from 'bar/foo'",
   },
   'custom resolvePath': {
     code: "import foo from '../foo'",
@@ -169,6 +193,17 @@ export default {
       }),
     },
   },
+  'no aliases': {
+    code: "import foo from '../foo'",
+    filename: 'sub/index.js',
+    files: {
+      'foo.js': '',
+      'package.json': JSON.stringify({}),
+    },
+    messages: [
+      "Unexpected parent import '../foo'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule in your ESLint config.",
+    ],
+  },
   parent: {
     code: "import foo from '../foo/bar'",
     filename: P.join('sub', 'index.js'),
@@ -194,7 +229,7 @@ export default {
       }),
     },
     messages: [
-      "Unexpected parent import '../../foo'. No matching alias found to fix the issue",
+      "Unexpected parent import '../../foo'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule in your ESLint config.",
     ],
   },
   'parent in-between folder': {
