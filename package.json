@@ -1,28 +1,8 @@
 {
   "name": "@dword-design/eslint-plugin-import-alias",
   "version": "1.5.1",
-  "description": "An ESLint plugin that enforces the use of import aliases. Also supports autofixing.",
-  "keywords": [
-    "alias",
-    "aliases",
-    "autofix",
-    "babel",
-    "babel-plugin-module-resolver",
-    "enforce",
-    "eslint",
-    "fix",
-    "import",
-    "lint",
-    "module",
-    "module-resolver",
-    "nuxt",
-    "nuxtjs",
-    "plugin",
-    "prefer",
-    "require",
-    "replace",
-    "rule"
-  ],
+  "description": null,
+  "keywords": [],
   "repository": "dword-design/eslint-plugin-import-alias",
   "funding": "https://www.buymeacoffee.com/dword",
   "license": "MIT",
@@ -54,5 +34,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "homepage": null
 }
