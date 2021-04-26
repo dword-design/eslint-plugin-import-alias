@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.5.1...v1.5.2) (2021-04-26)
+
+
+### Bug Fixes
+
+* update dependency with-local-tmp-dir to v3 ([#24](https://github.com/dword-design/eslint-plugin-import-alias/issues/24)) ([ecfbd59](https://github.com/dword-design/eslint-plugin-import-alias/commit/ecfbd59db951fac5951f4e1fb68fd655775f63a6))
+
 ## [1.5.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.5.0...v1.5.1) (2021-04-14)
 
 
