@@ -46,11 +46,14 @@
     "babel-plugin-module-resolver": "^4.0.0"
   },
   "devDependencies": {
-    "@dword-design/base": "^7.0.0",
+    "@dword-design/base": "^8.0.0",
     "depcheck-package-name": "^1.0.0",
     "eslint": "^7.2.0",
     "output-files": "^1.1.16",
     "with-local-tmp-dir": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=12"
   },
   "publishConfig": {
     "access": "public"
