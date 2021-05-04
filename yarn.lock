@@ -6781,12 +6781,20 @@ os-tmpdir@~1.0.2:
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=
 
-output-files@^1.1.16, output-files@^1.1.7:
+output-files@^1.1.7:
   version "1.1.27"
   resolved "https://registry.yarnpkg.com/output-files/-/output-files-1.1.27.tgz#fd7bbd3368618ffd1b5205250dee3a1712559fb9"
   integrity sha512-7KGbCm3gUlqljZfhnmG23Q2kADo60jxC7OsHS+YP3hj+RGAAO4U95DYYWOu4yWhcZmKwvC03jCOiYdAQich9ug==
   dependencies:
     "@dword-design/functions" "^3.0.0"
+    fs-extra "^9.0.0"
+
+output-files@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/output-files/-/output-files-2.0.2.tgz#cbcf3adf78d2d6ba0407958e6816467bf0b4658d"
+  integrity sha512-WbXc2mlFcx3MkJ38DEUnnKH78pYWpgJOZqMRFvnZ2gQBty1f/VHzDV6BBI+yK/7oLx8sbZ+aw8rxnyoAIYMz9w==
+  dependencies:
+    "@dword-design/functions" "^4.0.0"
     fs-extra "^9.0.0"
 
 p-each-series@^2.1.0:
