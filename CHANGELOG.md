@@ -1,3 +1,22 @@
+# [2.0.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.5.2...v2.0.0) (2021-05-04)
+
+
+### Bug Fixes
+
+* update dependency @dword-design/base to v8 ([#27](https://github.com/dword-design/eslint-plugin-import-alias/issues/27)) ([494b47b](https://github.com/dword-design/eslint-plugin-import-alias/commit/494b47b49c4c1b24b3d00826deb9f1341127aa5a))
+* update dependency @dword-design/functions to v4 ([#28](https://github.com/dword-design/eslint-plugin-import-alias/issues/28)) ([395af9c](https://github.com/dword-design/eslint-plugin-import-alias/commit/395af9c671fcb4946784ab42db1bac271866eff3))
+* update dependency depcheck-package-name to v2 ([#29](https://github.com/dword-design/eslint-plugin-import-alias/issues/29)) ([f6de4ef](https://github.com/dword-design/eslint-plugin-import-alias/commit/f6de4ef4ec4a8d747a71e8411a0b3b82df7bd82d))
+* update dependency with-local-tmp-dir to v4 ([#31](https://github.com/dword-design/eslint-plugin-import-alias/issues/31)) ([bb1e596](https://github.com/dword-design/eslint-plugin-import-alias/commit/bb1e596e20ba39149e21ab6fd7a1644e5aa962f7))
+
+
+### BREAKING CHANGES
+
+* require Node.js >= 12
+
+Co-authored-by: Renovate Bot <bot@renovateapp.com>
+Co-authored-by: Sebastian Landwehr <info@dword-design.de>
+Co-authored-by: GitHub Actions <actions@github.com>
+
 ## [1.5.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v1.5.1...v1.5.2) (2021-04-26)
 
 
