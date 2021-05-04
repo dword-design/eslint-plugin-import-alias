@@ -1258,6 +1258,16 @@
     lodash "^4.17.15"
     tinycolor2 "^1.4.1"
 
+"@dword-design/functions@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@dword-design/functions/-/functions-4.0.0.tgz#9408fbd1b474a55509fda84699a448ae217e0490"
+  integrity sha512-ceh7fcd9BGuBus/4F6Ltyk+oitow8RQ+dEUfwCqQP79EdIuhvW+vQYQ0F7+Ubj/oO1fZLTHn0VEfpJxdnf+S5A==
+  dependencies:
+    delay "^5.0.0"
+    endent "github:dword-design/endent#fork"
+    lodash "^4.17.15"
+    tinycolor2 "^1.4.1"
+
 "@eslint/eslintrc@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.0.tgz#99cc0a0584d72f1df38b900fb062ba995f395547"
