@@ -7,44 +7,46 @@ import withLocalTmpDir from 'with-local-tmp-dir'
 
 import self from './prefer-alias'
 
-const runTest = (config = {}) => () => {
-  config = {
-    eslintConfig: {},
-    filename: 'index.js',
-    messages: [],
-    output: config.code,
-    ...config,
-  }
-
-  return withLocalTmpDir(async () => {
-    await outputFiles(config.files)
-
-    const linter = new Linter()
-    linter.defineRule('self/self', self)
-
-    const lintingConfig = {
-      parserOptions: {
-        ecmaVersion: 2015,
-        sourceType: 'module',
-      },
-      rules: {
-        'self/self': 'error',
-        ...config.eslintConfig.rules,
-      },
-      ...config.eslintConfig,
+const runTest =
+  (config = {}) =>
+  () => {
+    config = {
+      eslintConfig: {},
+      filename: 'index.js',
+      messages: [],
+      output: config.code,
+      ...config,
     }
 
-    const lintedMessages = linter.verify(config.code, lintingConfig, {
-      filename: config.filename,
-    })
+    return withLocalTmpDir(async () => {
+      await outputFiles(config.files)
 
-    const lintedOutput = linter.verifyAndFix(config.code, lintingConfig, {
-      filename: config.filename,
-    }).output
-    expect(lintedMessages |> map('message')).toEqual(config.messages)
-    expect(lintedOutput).toEqual(config.output)
-  })
-}
+      const linter = new Linter()
+      linter.defineRule('self/self', self)
+
+      const lintingConfig = {
+        parserOptions: {
+          ecmaVersion: 2015,
+          sourceType: 'module',
+        },
+        rules: {
+          'self/self': 'error',
+          ...config.eslintConfig.rules,
+        },
+        ...config.eslintConfig,
+      }
+
+      const lintedMessages = linter.verify(config.code, lintingConfig, {
+        filename: config.filename,
+      })
+
+      const lintedOutput = linter.verifyAndFix(config.code, lintingConfig, {
+        filename: config.filename,
+      }).output
+      expect(lintedMessages |> map('message')).toEqual(config.messages)
+      expect(lintedOutput).toEqual(config.output)
+    })
+  }
 
 export default {
   'alias parent': {
