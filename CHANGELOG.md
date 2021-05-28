@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v2.0.1...v2.0.2) (2021-05-28)
+
+
+### Bug Fixes
+
+* update config files ([41f9c53](https://github.com/dword-design/eslint-plugin-import-alias/commit/41f9c53e7426981a0e01dccadf8240d56adc0e0f))
+
 ## [2.0.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v2.0.0...v2.0.1) (2021-05-04)
 
 
