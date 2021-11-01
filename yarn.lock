@@ -6204,9 +6204,9 @@ jsprim@^1.2.2:
     object.assign "^4.1.2"
 
 just-diff-apply@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/just-diff-apply/-/just-diff-apply-3.1.0.tgz#400a3a1c8e169e9087d39f227945e04dc132587c"
-  integrity sha512-fkpeq7isgxggMy86MfjM25LRqtAnkhEfS22qfkkjZ+PIjGHScv/0CpLMJ30G+ARanX5E77JyL4+1IXK1qXHkEg==
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/just-diff-apply/-/just-diff-apply-3.1.2.tgz#710d8cda00c65dc4e692df50dbe9bac5581c2193"
+  integrity sha512-TCa7ZdxCeq6q3Rgms2JCRHTCfWAETPZ8SzYUbkYF6KR3I03sN29DaOIC+xyWboIcMvjAsD5iG2u/RWzHD8XpgQ==
 
 just-diff@^3.0.1:
   version "3.1.1"
