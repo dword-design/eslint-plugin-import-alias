@@ -3,7 +3,7 @@
 <!-- /TITLE -->
 
 <!-- BADGES/ -->
-  <p>
+<p>
     <a href="https://npmjs.org/package/@dword-design/eslint-plugin-import-alias">
       <img
         src="https://img.shields.io/npm/v/@dword-design/eslint-plugin-import-alias.svg"
