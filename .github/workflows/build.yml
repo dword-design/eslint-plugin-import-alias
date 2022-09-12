@@ -46,7 +46,9 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: yarn --frozen-lockfile
-      - run: yarn test
+      - env:
+          TEST_GITHUB_API_TOKEN: ${{ secrets.TEST_GITHUB_API_TOKEN }}
+        run: yarn test
       - if: failure()
         uses: actions/upload-artifact@v3
         with:
@@ -59,18 +61,15 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
     strategy:
       matrix:
-        exclude:
-          - node: 12
-            os: macos-latest
-          - node: 12
-            os: windows-latest
-        node:
-          - 12
-          - 14
-        os:
-          - macos-latest
-          - windows-latest
-          - ubuntu-latest
+        include:
+          - node: 14
+            os: ubuntu-latest
+          - node: 16
+            os: ubuntu-latest
+          - os: macos-latest
+            version: 14
+          - os: windows-latest
+            version: 14
 name: build
 on:
   pull_request: {}
