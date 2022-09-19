@@ -46,9 +46,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: yarn --frozen-lockfile
-      - env:
-          TEST_GITHUB_API_TOKEN: ${{ secrets.TEST_GITHUB_API_TOKEN }}
-        run: yarn test
+      - run: yarn test
       - if: failure()
         uses: actions/upload-artifact@v3
         with:
