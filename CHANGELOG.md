@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v2.0.7...v3.0.0) (2023-01-08)
+
+
+### Bug Fixes
+
+* lock file maintenance ([#90](https://github.com/dword-design/eslint-plugin-import-alias/issues/90)) ([732421e](https://github.com/dword-design/eslint-plugin-import-alias/commit/732421e1c5dac0817d592c0f9d3228e86896131e))
+
+
+### BREAKING CHANGES
+
+* drop node 12 support, move to esm
+
 ## [2.0.7](https://github.com/dword-design/eslint-plugin-import-alias/compare/v2.0.6...v2.0.7) (2022-01-12)
 
 

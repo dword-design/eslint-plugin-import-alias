@@ -1,6 +1,6 @@
 {
   "name": "@dword-design/eslint-plugin-import-alias",
-  "version": "2.0.7",
+  "version": "3.0.0",
   "description": "An ESLint plugin that enforces the use of import aliases. Also supports autofixing.",
   "keywords": [
     "alias",
