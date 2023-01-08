@@ -34,6 +34,7 @@
   "scripts": {
     "checkUnknownFiles": "base checkUnknownFiles",
     "commit": "base commit",
+    "depcheck": "base depcheck",
     "dev": "base dev",
     "lint": "base lint",
     "prepare": "base prepare",
@@ -46,14 +47,14 @@
     "babel-plugin-module-resolver": "^4.0.0"
   },
   "devDependencies": {
-    "@dword-design/base": "^8.0.0",
+    "@dword-design/base": "^9.2.3",
     "depcheck-package-name": "^2.0.0",
     "eslint": "^7.2.0",
     "output-files": "^2.0.0",
     "with-local-tmp-dir": "^4.0.0"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "publishConfig": {
     "access": "public"
