@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v3.0.0...v3.0.1) (2023-03-04)
+
+
+### Bug Fixes
+
+* update dependency eslint to v8 ([#51](https://github.com/dword-design/eslint-plugin-import-alias/issues/51)) ([87887fc](https://github.com/dword-design/eslint-plugin-import-alias/commit/87887fcf8b01bc52d0ce0a459cfd4f10fb4ab28f))
+
 # [3.0.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v2.0.7...v3.0.0) (2023-01-08)
 
 
