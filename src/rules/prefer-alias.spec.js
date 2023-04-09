@@ -5,7 +5,7 @@ import outputFiles from 'output-files'
 import P from 'path'
 import withLocalTmpDir from 'with-local-tmp-dir'
 
-import self from './prefer-alias'
+import self from './prefer-alias.js'
 
 const runTest =
   (config = {}) =>

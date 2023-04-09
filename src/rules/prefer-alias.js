@@ -12,7 +12,7 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
   for (const aliasName of options.alias |> keys) {
     const path = P.resolve(
       P.dirname(currentFile),
-      resolvePath(`${aliasName}/`, currentFile, options)
+      resolvePath(`${aliasName}/`, currentFile, options),
     )
     if (absoluteSourcePath |> startsWith(path)) {
       return { name: aliasName, path }
@@ -57,7 +57,7 @@ export default {
           const matchingAlias = findMatchingAlias(
             sourcePath,
             currentFile,
-            options
+            options,
           )
           if (!matchingAlias) {
             return context.report({
@@ -77,7 +77,7 @@ export default {
             fix: fixer =>
               fixer.replaceTextRange(
                 [node.source.range[0] + 1, node.source.range[1] - 1],
-                rewrittenImport
+                rewrittenImport,
               ),
             message: `Unexpected parent import '${sourcePath}'. Use '${rewrittenImport}' instead`,
             node,
@@ -90,7 +90,7 @@ export default {
             fix: fixer =>
               fixer.replaceTextRange(
                 [node.source.range[0] + 1, node.source.range[1] - 1],
-                importWithoutAlias
+                importWithoutAlias,
               ),
             message: `Unexpected subpath import via alias '${sourcePath}'. Use '${importWithoutAlias}' instead`,
             node,

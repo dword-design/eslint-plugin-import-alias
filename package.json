@@ -27,7 +27,8 @@
   "funding": "https://github.com/sponsors/dword-design",
   "license": "MIT",
   "author": "Sebastian Landwehr <info@sebastianlandwehr.com>",
-  "main": "dist/index.js",
+  "type": "module",
+  "main": "dist/cjs-fallback.cjs",
   "files": [
     "dist"
   ],
@@ -48,10 +49,10 @@
   },
   "devDependencies": {
     "@dword-design/base": "^9.2.3",
-    "depcheck-package-name": "^2.0.0",
+    "depcheck-package-name": "^3.0.0",
     "eslint": "^8.0.0",
     "output-files": "^2.0.0",
-    "with-local-tmp-dir": "^4.0.0"
+    "with-local-tmp-dir": "^5.0.0"
   },
   "engines": {
     "node": ">=14"

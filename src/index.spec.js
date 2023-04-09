@@ -9,9 +9,12 @@ import {
 } from '@dword-design/functions'
 import packageName from 'depcheck-package-name'
 import { ESLint } from 'eslint'
+import { createRequire } from 'module'
 import outputFiles from 'output-files'
 import P from 'path'
 import withLocalTmpDir from 'with-local-tmp-dir'
+
+const _require = createRequire(import.meta.url)
 
 const runTest = config => () => {
   const filename = config.filename || 'index.js'
@@ -23,7 +26,7 @@ const runTest = config => () => {
   return withLocalTmpDir(async () => {
     await outputFiles({
       'node_modules/@dword-design/eslint-plugin-import-alias': `module.exports = require('${
-        require.resolve('.') |> replace(/\\/g, '/')
+        _require.resolve('.') |> replace(/\\/g, '/')
       }')`,
       ...config.files,
     })
