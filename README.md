@@ -88,7 +88,7 @@ Add the plugin to your ESLint config:
 ```json
 {
   "extends": [
-    "plugin:import-alias/recommended"
+    "plugin:@dword-design/import-alias/recommended"
   ],
 }
 ```
