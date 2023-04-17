@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v3.0.8...v4.0.0) (2023-04-17)
+
+
+### Bug Fixes
+
+* update dependency babel-plugin-module-resolver to v5 ([#95](https://github.com/dword-design/eslint-plugin-import-alias/issues/95)) ([d3df2f3](https://github.com/dword-design/eslint-plugin-import-alias/commit/d3df2f324078a2644175214a0f005d195a6afdb0))
+
+
+### BREAKING CHANGES
+
+* require Node.js >= 16
+
 ## [3.0.8](https://github.com/dword-design/eslint-plugin-import-alias/compare/v3.0.7...v3.0.8) (2023-04-09)
 
 
