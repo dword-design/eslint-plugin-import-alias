@@ -44,7 +44,7 @@
   "dependencies": {
     "@babel/core": "^7.10.2",
     "@dword-design/functions": "^4.0.0",
-    "babel-plugin-module-resolver": "^4.0.0"
+    "babel-plugin-module-resolver": "^5.0.0"
   },
   "devDependencies": {
     "@dword-design/base": "^9.2.3",
@@ -54,7 +54,7 @@
     "with-local-tmp-dir": "^4.0.0"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "publishConfig": {
     "access": "public"
