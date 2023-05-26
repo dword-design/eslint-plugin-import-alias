@@ -1,3 +1,10 @@
+## [4.0.5](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.4...v4.0.5) (2023-05-26)
+
+
+### Bug Fixes
+
+* update dependency @babel/core to v7.22.1 ([dbaf776](https://github.com/dword-design/eslint-plugin-import-alias/commit/dbaf776b6d9fcc02e3c41a8df5ff6c7072ca7cf4))
+
 ## [4.0.4](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.3...v4.0.4) (2023-05-20)
 
 
