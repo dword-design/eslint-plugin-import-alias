@@ -47,7 +47,7 @@
     "babel-plugin-module-resolver": "^5.0.0"
   },
   "devDependencies": {
-    "@dword-design/base": "^9.2.3",
+    "@dword-design/base": "^10.0.0",
     "depcheck-package-name": "^2.0.0",
     "eslint": "^8.0.0",
     "output-files": "^2.0.0",
