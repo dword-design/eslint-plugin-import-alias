@@ -1,3 +1,71 @@
+## [4.0.7](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.6...v4.0.7) (2023-06-08)
+
+
+### Bug Fixes
+
+* update dependency @babel/core to v7.22.5 ([464b29f](https://github.com/dword-design/eslint-plugin-import-alias/commit/464b29f162a0551e6cfa9388c2c92f14ac4be675))
+
+## [4.0.6](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.5...v4.0.6) (2023-06-03)
+
+
+### Bug Fixes
+
+* update dependency eslint to v8.42.0 ([4c799a5](https://github.com/dword-design/eslint-plugin-import-alias/commit/4c799a5a0564c4cb57c5c3a6159218d19cb4a362))
+
+## [4.0.5](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.4...v4.0.5) (2023-05-26)
+
+
+### Bug Fixes
+
+* update dependency @babel/core to v7.22.1 ([dbaf776](https://github.com/dword-design/eslint-plugin-import-alias/commit/dbaf776b6d9fcc02e3c41a8df5ff6c7072ca7cf4))
+
+## [4.0.4](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.3...v4.0.4) (2023-05-20)
+
+
+### Bug Fixes
+
+* update dependency eslint to v8.41.0 ([9bd5eba](https://github.com/dword-design/eslint-plugin-import-alias/commit/9bd5eba910202b2272b9167e9b0c78d2f70b952e))
+
+## [4.0.3](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.2...v4.0.3) (2023-05-06)
+
+
+### Bug Fixes
+
+* update dependency eslint to v8.40.0 ([e0c1973](https://github.com/dword-design/eslint-plugin-import-alias/commit/e0c1973a54fd7f50d3e5072f468ce02b51d04eb6))
+
+## [4.0.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.1...v4.0.2) (2023-05-02)
+
+
+### Bug Fixes
+
+* update dependency @babel/core to v7.21.8 ([5d5e231](https://github.com/dword-design/eslint-plugin-import-alias/commit/5d5e231bb462c68e0da0d171bfbd0895f3c9cf99))
+
+## [4.0.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.0...v4.0.1) (2023-04-22)
+
+
+### Bug Fixes
+
+* update dependency eslint to v8.39.0 ([9631b31](https://github.com/dword-design/eslint-plugin-import-alias/commit/9631b313338be6c34a690bf3e167724a82799b64))
+
+# [4.0.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v3.0.8...v4.0.0) (2023-04-17)
+
+
+### Bug Fixes
+
+* update dependency babel-plugin-module-resolver to v5 ([#95](https://github.com/dword-design/eslint-plugin-import-alias/issues/95)) ([d3df2f3](https://github.com/dword-design/eslint-plugin-import-alias/commit/d3df2f324078a2644175214a0f005d195a6afdb0))
+
+
+### BREAKING CHANGES
+
+* require Node.js >= 16
+
+## [3.0.8](https://github.com/dword-design/eslint-plugin-import-alias/compare/v3.0.7...v3.0.8) (2023-04-09)
+
+
+### Bug Fixes
+
+* update dependency @dword-design/functions to v4.1.7 ([7e383cb](https://github.com/dword-design/eslint-plugin-import-alias/commit/7e383cbd8d124c801e5fabf4a594fc2824b2ec29))
+
 ## [3.0.7](https://github.com/dword-design/eslint-plugin-import-alias/compare/v3.0.6...v3.0.7) (2023-04-09)
 
 
