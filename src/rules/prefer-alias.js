@@ -1,6 +1,7 @@
 import { OptionManager } from '@babel/core'
 import { find, keys, replace, some, startsWith } from '@dword-design/functions'
 import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver'
+import deepmerge from 'deepmerge'
 import P from 'path'
 
 const isParentImport = path => /^(\.\/)?\.\.\//.test(path)
@@ -40,7 +41,16 @@ export default {
 
     const plugin = babelConfig.plugins |> find({ key: 'module-resolver' })
 
-    const options = { ...plugin?.options, ...context.options[0] }
+    const options = deepmerge.all([
+      { alias: [] },
+      plugin?.options || {},
+      context.options[0] || {},
+    ])
+    if (options.alias.length === 0) {
+      throw new Error(
+        'No alias configured. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.',
+      )
+    }
 
     const resolvePath = options.resolvePath || defaultResolvePath
 
@@ -60,10 +70,7 @@ export default {
             options,
           )
           if (!matchingAlias) {
-            return context.report({
-              message: `Unexpected parent import '${sourcePath}'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.`,
-              node,
-            })
+            return undefined
           }
 
           const absoluteImportPath = P.resolve(folder, sourcePath)
