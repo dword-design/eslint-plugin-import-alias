@@ -1,4 +1,4 @@
-import preferAlias from './rules/prefer-alias'
+import preferAlias from './rules/prefer-alias.js'
 
 export default {
   configs: {

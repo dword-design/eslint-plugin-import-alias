@@ -1,261 +1,312 @@
-import { endent, map, mapValues } from '@dword-design/functions'
+import { endent, map } from '@dword-design/functions'
+import tester from '@dword-design/tester'
+import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir'
+import deepmerge from 'deepmerge'
 import packageName from 'depcheck-package-name'
 import { Linter } from 'eslint'
+import fs from 'fs-extra'
 import outputFiles from 'output-files'
 import P from 'path'
-import withLocalTmpDir from 'with-local-tmp-dir'
 
-import self from './prefer-alias'
+import self from './prefer-alias.js'
 
-const runTest =
-  (config = {}) =>
-  () => {
-    config = {
-      eslintConfig: {},
-      filename: 'index.js',
-      messages: [],
-      output: config.code,
-      ...config,
-    }
+const linter = new Linter()
+linter.defineRule('self/self', self)
 
-    return withLocalTmpDir(async () => {
-      await outputFiles(config.files)
+const lint = (code, options = {}) => {
+  options = deepmerge({ eslintConfig: {} }, options)
 
-      const linter = new Linter()
-      linter.defineRule('self/self', self)
-
-      const lintingConfig = {
-        parserOptions: {
-          ecmaVersion: 2015,
-          sourceType: 'module',
-        },
-        rules: {
-          'self/self': 'error',
-          ...config.eslintConfig.rules,
-        },
-        ...config.eslintConfig,
-      }
-
-      const lintedMessages = linter.verify(config.code, lintingConfig, {
-        filename: config.filename,
-      })
-
-      const lintedOutput = linter.verifyAndFix(config.code, lintingConfig, {
-        filename: config.filename,
-      }).output
-      expect(lintedMessages |> map('message')).toEqual(config.messages)
-      expect(lintedOutput).toEqual(config.output)
-    })
-  }
-
-export default {
-  'alias parent': {
-    code: "import foo from '@/foo'",
-    filename: 'sub/index.js',
-    files: {
-      '.babelrc.json': JSON.stringify({
-        plugins: [
-          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
-        ],
-      }),
-      'foo.js': '',
-    },
-  },
-  'alias subpath': {
-    code: "import foo from '@/foo'",
-    files: {
-      '.babelrc.json': JSON.stringify({
-        plugins: [
-          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
-        ],
-      }),
-      'foo.js': '',
-    },
-    messages: [
-      "Unexpected subpath import via alias '@/foo'. Use './foo' instead",
-    ],
-    output: "import foo from './foo'",
-  },
-  'custom alias': {
-    code: "import foo from '../foo'",
-    eslintConfig: {
+  const lintingConfig = deepmerge(
+    {
+      parserOptions: {
+        ecmaVersion: 2015,
+        sourceType: 'module',
+      },
       rules: {
-        'self/self': [
-          'error',
-          {
-            alias: { bar: '.' },
-          },
-        ],
+        'self/self': 'error',
       },
     },
-    filename: 'sub/index.js',
-    files: {
-      'foo.js': '',
-      'package.json': JSON.stringify({}),
-    },
-    messages: ["Unexpected parent import '../foo'. Use 'bar/foo' instead"],
-    output: "import foo from 'bar/foo'",
-  },
-  'custom resolvePath': {
-    code: "import foo from '../foo'",
-    filename: P.join('sub', 'sub', 'index.js'),
-    files: {
-      '.babelrc.json': JSON.stringify({
-        extends: 'babel-config-foo',
-      }),
-      'node_modules/babel-config-foo/index.js': endent`
-        const P = require('path')
-        const { resolvePath } = require('babel-plugin-module-resolver')
+    options.eslintConfig,
+  )
 
-        module.exports = {
-          plugins: [
-            [
-              '${packageName`babel-plugin-module-resolver`}',
-              {
-                alias: { '@': '.' },
-                resolvePath: (sourcePath, currentFile) =>
-                  resolvePath(
-                    sourcePath,
-                    currentFile,
-                    { alias: { '@': '.' }, cwd: P.resolve(P.dirname(currentFile), '..') }
-                  )
-              },
-            ],
-          ],
-        }
-      `,
-      'sub/foo.js': '',
-    },
-    messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
-    output: "import foo from '@/foo'",
-  },
-  'cwd: babelrc': {
-    code: "import foo from '../foo'",
-    filename: P.join('sub', 'sub', 'index.js'),
-    files: {
-      sub: {
-        '.babelrc': JSON.stringify({
-          plugins: [
-            [
-              packageName`babel-plugin-module-resolver`,
-              { alias: { '@': '.' }, cwd: 'babelrc' },
-            ],
-          ],
-        }),
-        'foo.js': '',
-      },
-    },
-    messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
-    output: "import foo from '@/foo'",
-  },
-  'cwd: packagejson': {
-    code: "import foo from '../foo'",
-    filename: P.join('sub', 'sub', 'index.js'),
-    files: {
-      sub: {
+  return {
+    messages:
+      linter.verify(code, lintingConfig, {
+        filename: options.filename,
+      }) |> map('message'),
+    output: linter.verifyAndFix(code, lintingConfig, {
+      filename: options.filename,
+    }).output,
+  }
+}
+
+export default tester(
+  {
+    'alias parent': async () => {
+      await outputFiles({
         '.babelrc.json': JSON.stringify({
           plugins: [
             [
               packageName`babel-plugin-module-resolver`,
-              { alias: { '@': '.' }, cwd: 'packagejson' },
+              { alias: { '@': '.' } },
             ],
           ],
         }),
         'foo.js': '',
-        'package.json': JSON.stringify({}),
-      },
+      })
+      expect(
+        lint("import foo from '@/foo'", { filename: 'sub/index.js' }).messages,
+      ).toEqual([])
     },
-    messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
-    output: "import foo from '@/foo'",
-  },
-  'cwd: subfolder': {
-    code: "import foo from '../foo'",
-    filename: P.join('sub', 'sub', 'index.js'),
-    files: {
-      '.babelrc.json': JSON.stringify({
-        plugins: [
-          [
-            packageName`babel-plugin-module-resolver`,
-            { alias: { '@': '.' }, cwd: 'sub' },
+    'alias subpath': async () => {
+      await outputFiles({
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@': '.' } },
+            ],
           ],
+        }),
+        'foo.js': '',
+      })
+      expect(lint("import foo from '@/foo'")).toEqual({
+        messages: [
+          "Unexpected subpath import via alias '@/foo'. Use './foo' instead",
         ],
-      }),
-      'sub/foo.js': '',
+        output: "import foo from './foo'",
+      })
     },
-    messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
-    output: "import foo from '@/foo'",
-  },
-  external: {
-    code: "import foo from 'foo'",
-    files: {
-      '.babelrc.json': JSON.stringify({
-        plugins: [
-          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
+    'custom alias': async () => {
+      await outputFiles({
+        'foo.js': '',
+        'package.json': JSON.stringify({}),
+      })
+      expect(
+        lint("import foo from '../foo'", {
+          eslintConfig: {
+            rules: {
+              'self/self': [
+                'error',
+                {
+                  alias: { bar: '.' },
+                },
+              ],
+            },
+          },
+          filename: 'sub/index.js',
+        }),
+      ).toEqual({
+        messages: ["Unexpected parent import '../foo'. Use 'bar/foo' instead"],
+        output: "import foo from 'bar/foo'",
+      })
+    },
+    'custom resolvePath': async () => {
+      await outputFiles({
+        '.babelrc.json': JSON.stringify({
+          extends: 'babel-config-foo',
+        }),
+        'node_modules/babel-config-foo/index.js': endent`
+          const P = require('path')
+          const { resolvePath } = require('babel-plugin-module-resolver')
+
+          module.exports = {
+            plugins: [
+              [
+                '${packageName`babel-plugin-module-resolver`}',
+                {
+                  alias: { '@': '.' },
+                  resolvePath: (sourcePath, currentFile) =>
+                    resolvePath(
+                      sourcePath,
+                      currentFile,
+                      { alias: { '@': '.' }, cwd: P.resolve(P.dirname(currentFile), '..') }
+                    )
+                },
+              ],
+            ],
+          }
+        `,
+        'sub/foo.js': '',
+      })
+      expect(
+        lint("import foo from '../foo'", {
+          filename: P.join('sub', 'sub', 'index.js'),
+        }),
+      ).toEqual({
+        messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
+        output: "import foo from '@/foo'",
+      })
+    },
+    'cwd: babelrc': async () => {
+      await outputFiles({
+        sub: {
+          '.babelrc': JSON.stringify({
+            plugins: [
+              [
+                packageName`babel-plugin-module-resolver`,
+                { alias: { '@': '.' }, cwd: 'babelrc' },
+              ],
+            ],
+          }),
+          'foo.js': '',
+        },
+      })
+      expect(
+        lint("import foo from '../foo'", {
+          filename: P.join('sub', 'sub', 'index.js'),
+        }),
+      ).toEqual({
+        messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
+        output: "import foo from '@/foo'",
+      })
+    },
+    'cwd: packagejson': async () => {
+      await outputFiles({
+        sub: {
+          '.babelrc.json': JSON.stringify({
+            plugins: [
+              [
+                packageName`babel-plugin-module-resolver`,
+                { alias: { '@': '.' }, cwd: 'packagejson' },
+              ],
+            ],
+          }),
+          'foo.js': '',
+          'package.json': JSON.stringify({}),
+        },
+      })
+      expect(
+        lint("import foo from '../foo'", {
+          filename: P.join('sub', 'sub', 'index.js'),
+        }),
+      ).toEqual({
+        messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
+        output: "import foo from '@/foo'",
+      })
+    },
+    'cwd: subfolder': async () => {
+      await outputFiles({
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@': '.' }, cwd: 'sub' },
+            ],
+          ],
+        }),
+        'sub/foo.js': '',
+      })
+      expect(
+        lint("import foo from '../foo'", {
+          filename: P.join('sub', 'sub', 'index.js'),
+        }),
+      ).toEqual({
+        messages: ["Unexpected parent import '../foo'. Use '@/foo' instead"],
+        output: "import foo from '@/foo'",
+      })
+    },
+    external: async () => {
+      await fs.outputFile(
+        '.babelrc.json',
+        JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@': '.' } },
+            ],
+          ],
+        }),
+      )
+      expect(lint("import foo from 'foo'").messages).toEqual([])
+    },
+    'no aliases': async () => {
+      await outputFiles({
+        'foo.js': '',
+        'package.json': JSON.stringify({}),
+      })
+      expect(() =>
+        lint("import foo from '../foo'", {
+          filename: P.join('sub', 'index.js'),
+        }),
+      ).toThrow(
+        'No alias configured. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.',
+      )
+    },
+    parent: async () => {
+      await fs.outputFile(
+        '.babelrc.json',
+        JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@': '.' } },
+            ],
+          ],
+        }),
+      )
+      expect(
+        lint("import foo from '../foo/bar'", {
+          filename: P.join('sub', 'index.js'),
+        }),
+      ).toEqual({
+        messages: [
+          "Unexpected parent import '../foo/bar'. Use '@/foo/bar' instead",
         ],
-      }),
+        output: "import foo from '@/foo/bar'",
+      })
     },
-  },
-  'no aliases': {
-    code: "import foo from '../foo'",
-    filename: 'sub/index.js',
-    files: {
-      'foo.js': '',
-      'package.json': JSON.stringify({}),
+    'parent import but no matching alias': async () => {
+      await fs.outputFile(
+        '.babelrc.json',
+        JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@': '.' } },
+            ],
+          ],
+        }),
+      )
+      expect(lint("import foo from '../../foo'").messages).toEqual([])
     },
-    messages: [
-      "Unexpected parent import '../foo'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.",
-    ],
-  },
-  parent: {
-    code: "import foo from '../foo/bar'",
-    filename: P.join('sub', 'index.js'),
-    files: {
-      '.babelrc.json': JSON.stringify({
-        plugins: [
-          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
+    'parent in-between folder': async () => {
+      await fs.outputFile(
+        '.babelrc.json',
+        JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@': '.' } },
+            ],
+          ],
+        }),
+      )
+      expect(
+        lint("import foo from '../foo'", {
+          filename: P.join('sub', 'sub', 'index.js'),
+        }),
+      ).toEqual({
+        messages: [
+          "Unexpected parent import '../foo'. Use '@/sub/foo' instead",
         ],
-      }),
+        output: "import foo from '@/sub/foo'",
+      })
     },
-    messages: [
-      "Unexpected parent import '../foo/bar'. Use '@/foo/bar' instead",
-    ],
-    output: "import foo from '@/foo/bar'",
-  },
-  'parent import but no matching alias': {
-    code: "import foo from '../../foo'",
-    files: {
-      '.babelrc.json': JSON.stringify({
-        plugins: [
-          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
-        ],
-      }),
-    },
-    messages: [
-      "Unexpected parent import '../../foo'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.",
-    ],
-  },
-  'parent in-between folder': {
-    code: "import foo from '../foo'",
-    filename: P.join('sub', 'sub', 'index.js'),
-    files: {
-      '.babelrc.json': JSON.stringify({
-        plugins: [
-          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
-        ],
-      }),
-    },
-    messages: ["Unexpected parent import '../foo'. Use '@/sub/foo' instead"],
-    output: "import foo from '@/sub/foo'",
-  },
-  scoped: {
-    code: "import foo from '@foo/bar'",
-    files: {
-      '.babelrc.json': JSON.stringify({
-        plugins: [
-          [packageName`babel-plugin-module-resolver`, { alias: { '@': '.' } }],
-        ],
-      }),
-      'foo.js': '',
+    scoped: async () => {
+      await outputFiles({
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@': '.' } },
+            ],
+          ],
+        }),
+        'foo.js': '',
+      })
+      expect(lint("import foo from '@foo/bar'").messages).toEqual([])
     },
   },
-} |> mapValues(runTest)
+  [testerPluginTmpDir()],
+)

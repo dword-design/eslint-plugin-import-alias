@@ -1,6 +1,7 @@
 import { OptionManager } from '@babel/core'
 import { find, keys, replace, some, startsWith } from '@dword-design/functions'
 import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver'
+import deepmerge from 'deepmerge'
 import P from 'path'
 
 const isParentImport = path => /^(\.\/)?\.\.\//.test(path)
@@ -12,7 +13,7 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
   for (const aliasName of options.alias |> keys) {
     const path = P.resolve(
       P.dirname(currentFile),
-      resolvePath(`${aliasName}/`, currentFile, options)
+      resolvePath(`${aliasName}/`, currentFile, options),
     )
     if (absoluteSourcePath |> startsWith(path)) {
       return { name: aliasName, path }
@@ -40,7 +41,16 @@ export default {
 
     const plugin = babelConfig.plugins |> find({ key: 'module-resolver' })
 
-    const options = { ...plugin?.options, ...context.options[0] }
+    const options = deepmerge.all([
+      { alias: [] },
+      plugin?.options || {},
+      context.options[0] || {},
+    ])
+    if (options.alias.length === 0) {
+      throw new Error(
+        'No alias configured. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.',
+      )
+    }
 
     const resolvePath = options.resolvePath || defaultResolvePath
 
@@ -57,13 +67,10 @@ export default {
           const matchingAlias = findMatchingAlias(
             sourcePath,
             currentFile,
-            options
+            options,
           )
           if (!matchingAlias) {
-            return context.report({
-              message: `Unexpected parent import '${sourcePath}'. No matching alias found to fix the issue. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.`,
-              node,
-            })
+            return undefined
           }
 
           const absoluteImportPath = P.resolve(folder, sourcePath)
@@ -77,7 +84,7 @@ export default {
             fix: fixer =>
               fixer.replaceTextRange(
                 [node.source.range[0] + 1, node.source.range[1] - 1],
-                rewrittenImport
+                rewrittenImport,
               ),
             message: `Unexpected parent import '${sourcePath}'. Use '${rewrittenImport}' instead`,
             node,
@@ -90,7 +97,7 @@ export default {
             fix: fixer =>
               fixer.replaceTextRange(
                 [node.source.range[0] + 1, node.source.range[1] - 1],
-                importWithoutAlias
+                importWithoutAlias,
               ),
             message: `Unexpected subpath import via alias '${sourcePath}'. Use '${importWithoutAlias}' instead`,
             node,
