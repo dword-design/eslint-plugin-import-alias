@@ -1234,7 +1234,7 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@dword-design/babel-config@^2.0.0", "@dword-design/babel-config@^2.1.1":
+"@dword-design/babel-config@^2.1.1":
   version "2.2.19"
   resolved "https://registry.yarnpkg.com/@dword-design/babel-config/-/babel-config-2.2.19.tgz#0e681d51a9f02bbec1f758147045516fa4f74a4d"
   integrity sha512-0cgsLOGvjoqd8KtAlRKrzEVsEbyzchi5j4ryuXxZiIwkmJfEGcbwSsDFh4lvpqWiIkm0aIs3+Hk9VBOAmRB2OQ==
@@ -1245,7 +1245,7 @@
     "@babel/preset-env" "^7.6.3"
     "@babel/preset-typescript" "^7.13.0"
     "@dword-design/functions" "^4.0.0"
-    "@vue/babel-preset-jsx" dword-design/jsx#fork-babel-preset-jsx
+    "@vue/babel-preset-jsx" "github:dword-design/jsx#fork-babel-preset-jsx"
     babel-plugin-add-module-exports "^1.0.2"
     babel-plugin-macros "^3.0.1"
     babel-plugin-module-resolver "^4"
@@ -1267,7 +1267,7 @@
     "@babel/preset-env" "^7.6.3"
     "@babel/preset-typescript" "^7.13.0"
     "@dword-design/functions" "^4.0.0"
-    "@vue/babel-preset-jsx" dword-design/jsx#fork-babel-preset-jsx
+    "@vue/babel-preset-jsx" "github:dword-design/jsx#fork-babel-preset-jsx"
     babel-plugin-add-module-exports "^1.0.2"
     babel-plugin-macros "^3.0.1"
     babel-plugin-module-resolver "^5.0.0"
@@ -1297,16 +1297,16 @@
     micromatch "^4.0.2"
 
 "@dword-design/base@^10.1.0":
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/@dword-design/base/-/base-10.1.0.tgz#ca24bedae6f1159c30aa3ddaf4340890ad47b53d"
-  integrity sha512-3QL0DNKx1Of7cPMo20YRNsa9K6F7UsK7tOWIrWIMX9MpBiE3KyB7FdR2fZjZ4ge6tsM8L9qUTc+JVZvNh7/U4w==
+  version "10.1.1"
+  resolved "https://registry.yarnpkg.com/@dword-design/base/-/base-10.1.1.tgz#8820fbf6b5161ea5bc47e053ff7c10b5af658181"
+  integrity sha512-cEwMYvuIQYQLoLVWY3AUAaMf4GPIHIL0l3SDJSlBHXLq+NPfshrdJYyCOXn6IoNEH4QloWmmWrtB/fCZCVM53w==
   dependencies:
     "@commitlint/cli" "^17.4.0"
     "@commitlint/config-conventional" "^17.4.0"
     "@dword-design/babel-config" "^3.0.0"
     "@dword-design/base-config-node" "^2.0.0"
     "@dword-design/ci" "^4.0.0"
-    "@dword-design/eslint-config" "^3.0.6"
+    "@dword-design/eslint-config" "^4.0.0"
     "@dword-design/functions" "^5.0.20"
     "@dword-design/jiti-babel-transform" "^1.0.7"
     "@dword-design/personal-data" "^2.0.3"
@@ -1399,15 +1399,15 @@
     fast-json-parse "^1.0.3"
     objectorarray "^1.0.3"
 
-"@dword-design/eslint-config@^3.0.6":
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/@dword-design/eslint-config/-/eslint-config-3.1.3.tgz#3339bc2a60e3e5a8d2ad4887a8da23f90a78b7e3"
-  integrity sha512-D5ZGwUK2z3NznjtU7AibfxHlxjsqxsjlTxnH5XTWlG6BlmPslVZYAHNh+3yr3IjnbvJf0shF/2/eIrRHwcQkJg==
+"@dword-design/eslint-config@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@dword-design/eslint-config/-/eslint-config-4.0.0.tgz#2578f6a01f820d58891163cf2937ec19271d2750"
+  integrity sha512-t79BpKrip1V4XsAAuf9fSCbew9S1ZoO/jFT61lJe2ZUbwUm3jN8Yeo24eRq7oZU10GY6e/+I4WVFRCMzMcektg==
   dependencies:
     "@babel/eslint-parser" "^7.13.14"
-    "@dword-design/babel-config" "^2.0.0"
-    "@dword-design/eslint-plugin-import-alias" "^3.0.6"
-    "@dword-design/functions" "^4.0.0"
+    "@dword-design/babel-config" "^3.0.0"
+    "@dword-design/eslint-plugin-import-alias" "^4.0.8"
+    "@dword-design/functions" "^5.0.22"
     depcheck-package-name "^3.0.0"
     eslint-config-airbnb-base "^15.0.0"
     eslint-config-prettier "^8.0.0"
@@ -1430,14 +1430,16 @@
     prettier "^2.1.1"
     vue-eslint-parser "^9.1.1"
 
-"@dword-design/eslint-plugin-import-alias@^3.0.6":
-  version "3.0.8"
-  resolved "https://registry.yarnpkg.com/@dword-design/eslint-plugin-import-alias/-/eslint-plugin-import-alias-3.0.8.tgz#21b9409264bd23dae8660990a750c1b1ad5f4aef"
-  integrity sha512-2ow6wL2xGurhjKou3YzCNdG8IwpNRPkrcVElaiShWYyz3ahV4xCrjo4CZKQsO9xDAqiYwNo/YHD08TLz3KmqBA==
+"@dword-design/eslint-plugin-import-alias@^4.0.8":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@dword-design/eslint-plugin-import-alias/-/eslint-plugin-import-alias-4.0.8.tgz#a5bddfe99f5c21251496f501cc30cee6cb1cbbae"
+  integrity sha512-u20BC0eJ6MHhGen+lG38nf/dvlQI7g1GdXLZbgJfOeGT+GKYey7SVTdotY0X4iKWFGGqElkW0bbOuF07T90VOA==
   dependencies:
     "@babel/core" "^7.10.2"
-    "@dword-design/functions" "^4.0.0"
-    babel-plugin-module-resolver "^4.0.0"
+    "@dword-design/functions" "^5.0.22"
+    babel-plugin-module-resolver "^5.0.0"
+    deepmerge "^4.3.1"
+    jiti "^1.18.2"
 
 "@dword-design/functions@^4.0.0", "@dword-design/functions@^4.0.7":
   version "4.1.7"
@@ -2419,6 +2421,7 @@
 
 "@vue/babel-preset-jsx@github:dword-design/jsx#fork-babel-preset-jsx":
   version "1.1.2"
+  uid a73cb9961541a60a66b1b99a69a32e00bc66d336
   resolved "https://codeload.github.com/dword-design/jsx/tar.gz/a73cb9961541a60a66b1b99a69a32e00bc66d336"
   dependencies:
     "@vue/babel-helper-vue-jsx-merge-props" "^1.0.0"
@@ -2437,6 +2440,7 @@
 
 "@vue/babel-sugar-inject-h@dword-design/jsx#fork-babel-sugar-inject-h":
   version "1.1.2"
+  uid cc36a2200c059120f37944615fb2ec0e22f8f3cc
   resolved "https://codeload.github.com/dword-design/jsx/tar.gz/cc36a2200c059120f37944615fb2ec0e22f8f3cc"
   dependencies:
     "@babel/plugin-syntax-jsx" "^7.2.0"
@@ -2741,9 +2745,9 @@ argv-formatter@~1.0.0:
   integrity sha512-F2+Hkm9xFaRg+GkaNnbwXNDV5O6pnCFEmqyhvfC/Ic5LbgOWjJh3L+mN/s91rxVL3znE7DYVpW0GJFT+4YBgWw==
 
 aria-query@^5.1.3:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/aria-query/-/aria-query-5.2.1.tgz#bc285d9d654d1df121bcd0c134880d415ca67c15"
-  integrity sha512-7uFg4b+lETFgdaJyETnILsXgnnzVnkHcgRbwbPwevm5x/LmUlt3MjczMRe1zg824iBgXZNRPTBftNYyRSKLp2g==
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/aria-query/-/aria-query-5.3.0.tgz#650c569e41ad90b51b3d7df5e5eed1c7549c103e"
+  integrity sha512-b0P0sZPKtyu8HkeRAfCq0IfURZK+SuwMjY1UXGBU27wpAiTwQAIlq56IbIO+ytk/JjS1fMR14ee5WBBfKi5J6A==
   dependencies:
     dequal "^2.0.3"
 
@@ -2921,7 +2925,7 @@ babel-plugin-macros@^3.0.1:
     cosmiconfig "^7.0.0"
     resolve "^1.19.0"
 
-babel-plugin-module-resolver@^4, babel-plugin-module-resolver@^4.0.0:
+babel-plugin-module-resolver@^4:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-module-resolver/-/babel-plugin-module-resolver-4.1.0.tgz#22a4f32f7441727ec1fbf4967b863e1e3e9f33e2"
   integrity sha512-MlX10UDheRr3lb3P0WcaIdtCSRlxdQsB1sBqL7W0raF070bGl1HQQq5K3T2vf2XAYie+ww+5AKC/WrkjRO2knA==
@@ -3297,9 +3301,9 @@ camelcase@^6.0.0, camelcase@^6.2.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001503:
-  version "1.0.30001507"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001507.tgz#fae53f6286e7564783eadea9b447819410a59534"
-  integrity sha512-SFpUDoSLCaE5XYL2jfqe9ova/pbQHEmbheDf5r4diNwbAgR3qxM9NQtfsiSscjqoya5K7kFcHPUQ+VsUkIJR4A==
+  version "1.0.30001508"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001508.tgz#4461bbc895c692a96da399639cc1e146e7302a33"
+  integrity sha512-sdQZOJdmt3GJs1UMNpCCCyeuS2IEGLXnHyAo9yIO5JJDjbjoVRij4M1qep6P6gFpptD1PqIYgzM+gwJbOi92mw==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -4586,9 +4590,9 @@ eslint-plugin-unicorn@^46.0.0:
     strip-indent "^3.0.0"
 
 eslint-plugin-vue@^9.10.0:
-  version "9.15.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-9.15.0.tgz#2bffe2b8a628ee438f983672a73cd89df455c461"
-  integrity sha512-XYzpK6e2REli100+6iCeBA69v6Sm0D/yK2FZP+fCeNt0yH/m82qZQq+ztseyV0JsKdhFysuSEzeE1yCmSC92BA==
+  version "9.15.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-9.15.1.tgz#3c09e0edab444b5d4d9239a12a645a0e2e2ea5be"
+  integrity sha512-CJE/oZOslvmAR9hf8SClTdQ9JLweghT6JCBQNrT2Iel1uVw0W0OLJxzvPd6CxmABKCvLrtyDnqGV37O7KQv6+A==
   dependencies:
     "@eslint-community/eslint-utils" "^4.3.0"
     natural-compare "^1.4.0"
@@ -7311,7 +7315,14 @@ load-json-file@^4.0.0:
     pify "^3.0.0"
     strip-bom "^3.0.0"
 
-load-pkg@^4.0.0, "load-pkg@npm:@dword-design/load-pkg":
+load-pkg@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/load-pkg/-/load-pkg-4.0.0.tgz#f80a29aec2f6d02aadde714099fda4eea1b611f1"
+  integrity sha512-xS6uYdbUzHbwO5bExhtM8RsU6Z/fVEfZE4uZpWQOwVygLSUfXz7J97nGzJfZ+FFCZc0Weabn/wA3y1k9Q7Y4mw==
+  dependencies:
+    find-pkg "^2.0.0"
+
+"load-pkg@npm:@dword-design/load-pkg":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@dword-design/load-pkg/-/load-pkg-4.0.0.tgz#201f76adeb44c64ed22d789591ab740573fe0a5b"
   integrity sha512-lZxKRusgIqSg2y4jLzZzMPWyhrGPGke3YYmAxj4SoJeUGV4CmvYyhJkJnfA7Yaov7GMXZi64nlhx8D809VDazg==
