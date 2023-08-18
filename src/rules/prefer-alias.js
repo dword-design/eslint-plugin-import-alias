@@ -92,7 +92,11 @@ export default {
         }
 
         const importWithoutAlias = resolvePath(sourcePath, currentFile, options)
-        if (!(importWithoutAlias |> isParentImport) && hasAlias) {
+        if (
+          !(importWithoutAlias |> isParentImport) &&
+          hasAlias &&
+          !options.allowSubpathWithAlias
+        ) {
           return context.report({
             fix: fixer =>
               fixer.replaceTextRange(
@@ -116,6 +120,10 @@ export default {
         properties: {
           alias: {
             type: 'object',
+          },
+          allowSubpathWithAlias: {
+            default: false,
+            type: 'boolean',
           },
         },
         type: 'object',
