@@ -111,7 +111,19 @@ In this case lucky you, you don't have to do anything else. The plugin should wo
 
 If you have a special project setup that does not have a babel config in the project path, you can still use the plugin by passing the aliases directly to the rule. In this case you define the rule additionally in the `rules` section:
 
-
+```json
+"rules": {
+  "@dword-design/import-alias/prefer-alias": [
+    "error",
+    {
+      "alias": {
+        "@": "./src",
+        "@components: "./src/components"
+      }
+    }
+  ]
+}
+```
 
 <!-- LICENSE/ -->
 ## Contribute
