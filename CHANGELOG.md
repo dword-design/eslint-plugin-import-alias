@@ -1,3 +1,11 @@
+## [4.0.9](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.8...v4.0.9) (2023-11-04)
+
+
+### Bug Fixes
+
+* document alias adjustment ([b142105](https://github.com/dword-design/eslint-plugin-import-alias/commit/b1421054974a8eb75d52f70ed9ca1240c549a39a))
+* update dependency execa to v8 ([#131](https://github.com/dword-design/eslint-plugin-import-alias/issues/131)) ([06bff14](https://github.com/dword-design/eslint-plugin-import-alias/commit/06bff14a0a50435ce4a4581481bb36a10e017ea3))
+
 ## [4.0.8](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.7...v4.0.8) (2023-06-24)
 
 
