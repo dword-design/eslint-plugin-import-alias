@@ -50,7 +50,7 @@
     "jiti": "^1.18.2"
   },
   "devDependencies": {
-    "@dword-design/base": "^10.1.0",
+    "@dword-design/base": "^11.0.0",
     "@dword-design/tester": "^2.0.19",
     "@dword-design/tester-plugin-tmp-dir": "^2.1.26",
     "depcheck-package-name": "^3.0.1",
