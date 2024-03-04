@@ -44,23 +44,24 @@
   },
   "dependencies": {
     "@babel/core": "^7.10.2",
-    "@dword-design/functions": "^5.0.22",
+    "@dword-design/functions": "^6.0.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "deepmerge": "^4.3.1",
     "jiti": "^1.18.2"
   },
   "devDependencies": {
-    "@dword-design/base": "^10.1.0",
+    "@dword-design/base": "^11.0.7",
     "@dword-design/tester": "^2.0.19",
     "@dword-design/tester-plugin-tmp-dir": "^2.1.26",
     "depcheck-package-name": "^3.0.1",
     "eslint": "^8.0.0",
     "execa": "^8.0.0",
     "fs-extra": "^11.1.1",
+    "in-folder": "^1.0.3",
     "output-files": "^2.0.0"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "publishConfig": {
     "access": "public"

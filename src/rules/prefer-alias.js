@@ -34,9 +34,8 @@ export default {
     const manager = new OptionManager()
 
     const babelConfig = manager.init({
-      babelrc: true,
       filename: currentFile,
-      root: folder,
+      rootMode: 'upward-optional',
     })
 
     const plugin = babelConfig.plugins |> find({ key: 'module-resolver' })
