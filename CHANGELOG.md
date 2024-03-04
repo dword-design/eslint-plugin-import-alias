@@ -1,3 +1,15 @@
+# [5.0.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.9...v5.0.0) (2024-03-04)
+
+
+### Bug Fixes
+
+* lock file maintenance ([#170](https://github.com/dword-design/eslint-plugin-import-alias/issues/170)) ([8d92063](https://github.com/dword-design/eslint-plugin-import-alias/commit/8d920633e047f5759d450db8ff051875fd686e6c))
+
+
+### BREAKING CHANGES
+
+* node.js >= 18
+
 ## [4.0.9](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.8...v4.0.9) (2023-11-04)
 
 
