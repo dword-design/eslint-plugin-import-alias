@@ -6,6 +6,10 @@ import P from 'path'
 
 const isParentImport = path => /^(\.\/)?\.\.\//.test(path)
 
+const isSiblingImport = path => /^\.\/[^/]+$/.test(path)
+
+const isSubpathImport = path => /^\.\/.+\//.test(path)
+
 const findMatchingAlias = (sourcePath, currentFile, options) => {
   const resolvePath = options.resolvePath || defaultResolvePath
 
@@ -61,8 +65,22 @@ export default {
           options.alias
           |> keys
           |> some(alias => sourcePath |> startsWith(`${alias}/`))
-        // relative parent
-        if (sourcePath |> isParentImport) {
+
+        const importWithoutAlias = resolvePath(sourcePath, currentFile, options)
+
+        const [shouldAlias, shouldUnalias] = [
+          !hasAlias &&
+            ((importWithoutAlias |> isParentImport) ||
+              ((importWithoutAlias |> isSiblingImport) &&
+                options.forSiblings) ||
+              ((importWithoutAlias |> isSubpathImport) && options.forSubpaths)),
+          hasAlias &&
+            (((importWithoutAlias |> isSiblingImport) &&
+              !options.forSiblings) ||
+              ((importWithoutAlias |> isSubpathImport) &&
+                !options.forSubpaths)),
+        ]
+        if (shouldAlias) {
           const matchingAlias = findMatchingAlias(
             sourcePath,
             currentFile,
@@ -78,6 +96,14 @@ export default {
             P.relative(matchingAlias.path, absoluteImportPath)
             |> replace(/\\/g, '/')
           }`
+          let importType
+          if (importWithoutAlias |> isSiblingImport) {
+            importType = 'sibling'
+          } else if (importWithoutAlias |> isSubpathImport) {
+            importType = 'subpath'
+          } else {
+            importType = 'parent'
+          }
 
           return context.report({
             fix: fixer =>
@@ -85,13 +111,11 @@ export default {
                 [node.source.range[0] + 1, node.source.range[1] - 1],
                 rewrittenImport,
               ),
-            message: `Unexpected parent import '${sourcePath}'. Use '${rewrittenImport}' instead`,
+            message: `Unexpected ${importType} import '${sourcePath}'. Use '${rewrittenImport}' instead`,
             node,
           })
         }
-
-        const importWithoutAlias = resolvePath(sourcePath, currentFile, options)
-        if (!(importWithoutAlias |> isParentImport) && hasAlias) {
+        if (shouldUnalias) {
           return context.report({
             fix: fixer =>
               fixer.replaceTextRange(
@@ -115,6 +139,14 @@ export default {
         properties: {
           alias: {
             type: 'object',
+          },
+          forSiblings: {
+            default: false,
+            type: 'boolean',
+          },
+          forSubpaths: {
+            default: false,
+            type: 'boolean',
           },
         },
         type: 'object',

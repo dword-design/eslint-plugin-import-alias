@@ -43,6 +43,68 @@ const lint = (code, options = {}) => {
 
 export default tester(
   {
+    'alias for siblings': async () => {
+      await outputFiles({
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@': '.' } },
+            ],
+          ],
+        }),
+        'foo.js': '',
+      })
+      expect(
+        lint("import foo from './foo'", {
+          eslintConfig: {
+            rules: {
+              'self/self': [
+                'error',
+                {
+                  forSiblings: true,
+                },
+              ],
+            },
+          },
+        }),
+      ).toEqual({
+        messages: ["Unexpected sibling import './foo'. Use '@/foo' instead"],
+        output: "import foo from '@/foo'",
+      })
+    },
+    'alias for subpaths': async () => {
+      await outputFiles({
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@': '.' } },
+            ],
+          ],
+        }),
+        'sub/foo.js': '',
+      })
+      expect(
+        lint("import foo from './sub/foo'", {
+          eslintConfig: {
+            rules: {
+              'self/self': [
+                'error',
+                {
+                  forSubpaths: true,
+                },
+              ],
+            },
+          },
+        }),
+      ).toEqual({
+        messages: [
+          "Unexpected subpath import './sub/foo'. Use '@/sub/foo' instead",
+        ],
+        output: "import foo from '@/sub/foo'",
+      })
+    },
     'alias parent': async () => {
       await outputFiles({
         '.babelrc.json': JSON.stringify({
