@@ -118,8 +118,12 @@ export default {
           })
         }
 
+        const isDirectAlias =
+          options.alias |> keys |> some(alias => sourcePath === alias)
+
         const shouldUnalias =
           hasAlias &&
+          !isDirectAlias &&
           (((importWithoutAlias |> isSiblingImport) && !options.forSiblings) ||
             ((importWithoutAlias |> isSubpathImport) && !options.forSubpaths))
         if (shouldUnalias) {

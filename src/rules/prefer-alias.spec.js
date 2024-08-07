@@ -245,6 +245,32 @@ export default tester(
         output: "import foo from '@/foo'",
       })
     },
+    'direct import of an alias from a parent': async () => {
+      await outputFiles({
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@components': './sub/components' } },
+            ],
+          ],
+        }),
+      })
+      expect(lint("import { foo } from '@components'").messages).toEqual([])
+    },
+    'direct import of an alias from a sibling': async () => {
+      await outputFiles({
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@components': './components' } },
+            ],
+          ],
+        }),
+      })
+      expect(lint("import { foo } from '@components'").messages).toEqual([])
+    },
     'direct import of an alias from another one': async () => {
       await outputFiles({
         '.babelrc.json': JSON.stringify({
