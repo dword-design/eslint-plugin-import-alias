@@ -38,6 +38,17 @@ const getImportType = importWithoutAlias => {
   return 'parent'
 }
 
+const getSiblingsMaxNestingLevel = options => {
+  if (options.forSiblings === true) {
+    return Infinity
+  }
+  if (options.forSiblings) {
+    return options.forSiblings.ofMaxNestingLevel
+  }
+
+  return -1
+}
+
 export default {
   create: context => {
     const currentFile = context.getFilename()
@@ -66,6 +77,8 @@ export default {
       )
     }
 
+    const siblingsMaxNestingLevel = getSiblingsMaxNestingLevel(options)
+
     const resolvePath = options.resolvePath || defaultResolvePath
 
     return {
@@ -82,17 +95,25 @@ export default {
 
         const importWithoutAlias = resolvePath(sourcePath, currentFile, options)
 
+        const importType = getImportType(importWithoutAlias)
+
+        const matchingAlias = findMatchingAlias(
+          sourcePath,
+          currentFile,
+          options,
+        )
+
+        const currentFileNestingLevel =
+          matchingAlias &&
+          P.relative(matchingAlias.path, currentFile).split(P.sep).length - 1
+
         const shouldAlias =
           !hasAlias &&
           ((importWithoutAlias |> isParentImport) ||
-            ((importWithoutAlias |> isSiblingImport) && options.forSiblings) ||
+            ((importWithoutAlias |> isSiblingImport) &&
+              currentFileNestingLevel <= siblingsMaxNestingLevel) ||
             ((importWithoutAlias |> isSubpathImport) && options.forSubpaths))
         if (shouldAlias) {
-          const matchingAlias = findMatchingAlias(
-            sourcePath,
-            currentFile,
-            options,
-          )
           if (!matchingAlias) {
             return undefined
           }
@@ -104,8 +125,6 @@ export default {
               P.relative(matchingAlias.path, absoluteImportPath)
               |> replace(/\\/g, '/')
             }` |> replace(/\/$/, '')
-
-          const importType = getImportType(importWithoutAlias)
 
           return context.report({
             fix: fixer =>
@@ -124,7 +143,8 @@ export default {
         const shouldUnalias =
           hasAlias &&
           !isDirectAlias &&
-          (((importWithoutAlias |> isSiblingImport) && !options.forSiblings) ||
+          (((importWithoutAlias |> isSiblingImport) &&
+            currentFileNestingLevel > siblingsMaxNestingLevel) ||
             ((importWithoutAlias |> isSubpathImport) && !options.forSubpaths))
         if (shouldUnalias) {
           return context.report({
@@ -133,7 +153,7 @@ export default {
                 [node.source.range[0] + 1, node.source.range[1] - 1],
                 importWithoutAlias,
               ),
-            message: `Unexpected subpath import via alias '${sourcePath}'. Use '${importWithoutAlias}' instead`,
+            message: `Unexpected ${importType} import via alias '${sourcePath}'. Use '${importWithoutAlias}' instead`,
             node,
           })
         }
@@ -152,8 +172,22 @@ export default {
             type: 'object',
           },
           forSiblings: {
-            default: false,
-            type: 'boolean',
+            anyOf: [
+              {
+                default: false,
+                type: 'boolean',
+              },
+              {
+                additionalProperties: false,
+                properties: {
+                  ofMaxNestingLevel: {
+                    minimum: 0,
+                    type: 'number',
+                  },
+                },
+                type: 'object',
+              },
+            ],
           },
           forSubpaths: {
             default: false,
