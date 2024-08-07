@@ -27,6 +27,17 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
   return undefined
 }
 
+const getImportType = importWithoutAlias => {
+  if (importWithoutAlias |> isSiblingImport) {
+    return 'sibling'
+  }
+  if (importWithoutAlias |> isSubpathImport) {
+    return 'subpath'
+  }
+
+  return 'parent'
+}
+
 export default {
   create: context => {
     const currentFile = context.getFilename()
@@ -89,14 +100,8 @@ export default {
             P.relative(matchingAlias.path, absoluteImportPath)
             |> replace(/\\/g, '/')
           }`
-          let importType
-          if (importWithoutAlias |> isSiblingImport) {
-            importType = 'sibling'
-          } else if (importWithoutAlias |> isSubpathImport) {
-            importType = 'subpath'
-          } else {
-            importType = 'parent'
-          }
+
+          const importType = getImportType(importWithoutAlias)
 
           return context.report({
             fix: fixer =>
