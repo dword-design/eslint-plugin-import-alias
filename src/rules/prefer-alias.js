@@ -68,18 +68,11 @@ export default {
 
         const importWithoutAlias = resolvePath(sourcePath, currentFile, options)
 
-        const [shouldAlias, shouldUnalias] = [
+        const shouldAlias =
           !hasAlias &&
-            ((importWithoutAlias |> isParentImport) ||
-              ((importWithoutAlias |> isSiblingImport) &&
-                options.forSiblings) ||
-              ((importWithoutAlias |> isSubpathImport) && options.forSubpaths)),
-          hasAlias &&
-            (((importWithoutAlias |> isSiblingImport) &&
-              !options.forSiblings) ||
-              ((importWithoutAlias |> isSubpathImport) &&
-                !options.forSubpaths)),
-        ]
+          ((importWithoutAlias |> isParentImport) ||
+            ((importWithoutAlias |> isSiblingImport) && options.forSiblings) ||
+            ((importWithoutAlias |> isSubpathImport) && options.forSubpaths))
         if (shouldAlias) {
           const matchingAlias = findMatchingAlias(
             sourcePath,
@@ -115,6 +108,11 @@ export default {
             node,
           })
         }
+
+        const shouldUnalias =
+          hasAlias &&
+          (((importWithoutAlias |> isSiblingImport) && !options.forSiblings) ||
+            ((importWithoutAlias |> isSubpathImport) && !options.forSubpaths))
         if (shouldUnalias) {
           return context.report({
             fix: fixer =>
