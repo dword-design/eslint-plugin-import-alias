@@ -75,7 +75,10 @@ export default {
         const hasAlias =
           options.alias
           |> keys
-          |> some(alias => sourcePath |> startsWith(`${alias}/`))
+          |> some(
+            alias =>
+              (sourcePath |> startsWith(`${alias}/`)) || sourcePath === alias,
+          )
 
         const importWithoutAlias = resolvePath(sourcePath, currentFile, options)
 
@@ -96,10 +99,11 @@ export default {
 
           const absoluteImportPath = P.resolve(folder, sourcePath)
 
-          const rewrittenImport = `${matchingAlias.name}/${
-            P.relative(matchingAlias.path, absoluteImportPath)
-            |> replace(/\\/g, '/')
-          }`
+          const rewrittenImport =
+            `${matchingAlias.name}/${
+              P.relative(matchingAlias.path, absoluteImportPath)
+              |> replace(/\\/g, '/')
+            }` |> replace(/\/$/, '')
 
           const importType = getImportType(importWithoutAlias)
 

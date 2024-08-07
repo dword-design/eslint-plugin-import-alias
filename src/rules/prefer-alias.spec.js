@@ -245,6 +245,26 @@ export default tester(
         output: "import foo from '@/foo'",
       })
     },
+    'direct import of an alias from another one': async () => {
+      await outputFiles({
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@components': './components', '@hooks': './hooks' } },
+            ],
+          ],
+        }),
+      })
+      expect(
+        lint("import { foo } from '../hooks'", {
+          filename: 'components/bar.js',
+        }),
+      ).toEqual({
+        messages: ["Unexpected parent import '../hooks'. Use '@hooks' instead"],
+        output: "import { foo } from '@hooks'",
+      })
+    },
     external: async () => {
       await fs.outputFile(
         '.babelrc.json',
