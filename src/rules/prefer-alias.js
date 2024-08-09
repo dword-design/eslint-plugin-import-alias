@@ -49,6 +49,22 @@ const getSiblingsMaxNestingLevel = options => {
   return -1
 }
 
+const optionForSubpathsMatches = (options, currentFileIsInsideAlias) => {
+  if (options.forSubpaths === true) {
+    return true
+  }
+  if (options.forSubpaths) {
+    if (currentFileIsInsideAlias && options.forSubpaths.fromInside) {
+      return true
+    }
+    if (!currentFileIsInsideAlias && options.forSubpaths.fromOutside) {
+      return true
+    }
+  }
+
+  return false
+}
+
 export default {
   create: context => {
     const currentFile = context.getFilename()
@@ -107,12 +123,17 @@ export default {
           matchingAlias &&
           P.relative(matchingAlias.path, currentFile).split(P.sep).length - 1
 
+        const currentFileIsInsideAlias =
+          matchingAlias &&
+          !(P.relative(matchingAlias.path, currentFile) |> startsWith('..'))
+
         const shouldAlias =
           !hasAlias &&
           ((importWithoutAlias |> isParentImport) ||
             ((importWithoutAlias |> isSiblingImport) &&
               currentFileNestingLevel <= siblingsMaxNestingLevel) ||
-            ((importWithoutAlias |> isSubpathImport) && options.forSubpaths))
+            ((importWithoutAlias |> isSubpathImport) &&
+              optionForSubpathsMatches(options, currentFileIsInsideAlias)))
         if (shouldAlias) {
           if (!matchingAlias) {
             return undefined
@@ -145,7 +166,8 @@ export default {
           !isDirectAlias &&
           (((importWithoutAlias |> isSiblingImport) &&
             currentFileNestingLevel > siblingsMaxNestingLevel) ||
-            ((importWithoutAlias |> isSubpathImport) && !options.forSubpaths))
+            ((importWithoutAlias |> isSubpathImport) &&
+              !optionForSubpathsMatches(options, currentFileIsInsideAlias)))
         if (shouldUnalias) {
           return context.report({
             fix: fixer =>
@@ -190,8 +212,26 @@ export default {
             ],
           },
           forSubpaths: {
-            default: false,
-            type: 'boolean',
+            anyOf: [
+              {
+                default: false,
+                type: 'boolean',
+              },
+              {
+                additionalProperties: false,
+                properties: {
+                  fromInside: {
+                    default: false,
+                    type: 'boolean',
+                  },
+                  fromOutside: {
+                    default: false,
+                    type: 'boolean',
+                  },
+                },
+                type: 'object',
+              },
+            ],
           },
         },
         type: 'object',

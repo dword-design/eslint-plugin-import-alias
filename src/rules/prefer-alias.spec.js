@@ -239,31 +239,125 @@ export default tester(
           plugins: [
             [
               packageName`babel-plugin-module-resolver`,
-              { alias: { '@': '.' } },
+              { alias: { '@components': './components' } },
             ],
           ],
         }),
-        'sub/foo.js': '',
       })
-      expect(
-        lint("import foo from './sub/foo'", {
-          eslintConfig: {
-            rules: {
-              'self/self': [
-                'error',
-                {
-                  forSubpaths: true,
-                },
-              ],
+
+      const eslintConfig = {
+        rules: {
+          'self/self': [
+            'error',
+            {
+              forSubpaths: true,
             },
-          },
+          ],
+        },
+      }
+      expect(
+        lint("import foo from './components/foo'", {
+          eslintConfig,
         }),
       ).toEqual({
         messages: [
-          "Unexpected subpath import './sub/foo'. Use '@/sub/foo' instead",
+          "Unexpected subpath import './components/foo'. Use '@components/foo' instead",
         ],
-        output: "import foo from '@/sub/foo'",
+        output: "import foo from '@components/foo'",
       })
+      expect(
+        lint("import foo from './sub/foo'", {
+          eslintConfig,
+          filename: './components/bar.js',
+        }),
+      ).toEqual({
+        messages: [
+          "Unexpected subpath import './sub/foo'. Use '@components/sub/foo' instead",
+        ],
+        output: "import foo from '@components/sub/foo'",
+      })
+    },
+    'alias for subpaths from inside': async () => {
+      await outputFiles({
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@components': './components' } },
+            ],
+          ],
+        }),
+      })
+
+      const eslintConfig = {
+        rules: {
+          'self/self': [
+            'error',
+            {
+              forSubpaths: {
+                fromInside: true,
+              },
+            },
+          ],
+        },
+      }
+      expect(
+        lint("import foo from './sub/foo'", {
+          eslintConfig,
+          filename: './components/bar.js',
+        }),
+      ).toEqual({
+        messages: [
+          "Unexpected subpath import './sub/foo'. Use '@components/sub/foo' instead",
+        ],
+        output: "import foo from '@components/sub/foo'",
+      })
+      expect(
+        lint("import foo from './components/foo'", {
+          eslintConfig,
+        }).messages,
+      ).toEqual([])
+    },
+    'alias for subpaths from outside': async () => {
+      await outputFiles({
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@components': './components' } },
+            ],
+          ],
+        }),
+      })
+
+      const eslintConfig = {
+        rules: {
+          'self/self': [
+            'error',
+            {
+              forSubpaths: {
+                fromOutside: true,
+              },
+            },
+          ],
+        },
+      }
+      expect(
+        lint("import foo from './components/foo'", {
+          eslintConfig,
+        }),
+      ).toEqual({
+        messages: [
+          "Unexpected subpath import './components/foo'. Use '@components/foo' instead",
+        ],
+        output: "import foo from '@components/foo'",
+      })
+      expect(
+        lint("import foo from './sub/foo'", {
+          eslintConfig,
+          filename: './components/bar.js',
+        }).messages,
+      ).toEqual([])
     },
     'alias parent': async () => {
       await outputFiles({
