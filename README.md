@@ -125,6 +125,57 @@ If you have a special project setup that does not have a babel config in the pro
 }
 ```
 
+### Sibling and subpath aliases
+
+By default, this plugin enforce relative paths when importing sibling and subpath files (e.g. `import from./sibling` and `import from ./subpath/file`).
+You can change this behaviour with the `forSiblings` and `forSubpaths` options:
+
+```json
+"rules": {
+  "@dword-design/import-alias/prefer-alias": [
+    "error",
+    {
+      "alias": {
+        "@": "./src",
+        "@components: "./components"
+      },
+      "forSiblings": ...,
+      "forSubpaths": ...
+    }
+  ]
+}
+```
+
+#### `forSiblings`
+
+The `forSiblings` option can take a boolean or an object with a property `forMaxNestingLevel` of type number.
+
+When setting the option to `true`, all sibling imports will be enforced to use aliases.
+When setting the option to an object, you can specify a maximum nesting level for which sibling imports would be enforced.
+For example, setting the option to `{ forMaxNestingLevel: 0 }` will enforce aliases for all sibling imports that are at the root level of the project, and enforce relative paths for all other sibling imports.
+
+Here are some examples, considering `@` as an alias for `.`:
+
+|                                          | `false` (default) | `true`                 | `{ forMaxNestingLevel: 0 }` | `{ forMaxNestingLevel: 1 }` |
+|------------------------------------------|-------------------|------------------------|-----------------------------|-----------------------------|
+| `./foo.js` that `import './bar'`         | `import ./bar`    | `import @/bar`         | `import @/bar`              | `import @/bar`              |
+| `./sub/foo.js` that `import './bar'`     | `import ./bar`    | `import @/sub/bar`     | `import ./bar`              | `import @/sub/bar`          |
+| `./sub/sub/foo.js` that `import './bar'` | `import ./bar`    | `import @/sub/sub/bar` | `import ./bar`              | `import ./bar`              |
+
+#### `forSubpaths`
+
+The `forSubpaths` option can take a boolean or an object with the properties `fromInside` and `fromOutside` of type boolean.
+
+When setting the option to `true`, all subpath imports will be enforced to use aliases.
+When setting the option to an object, you can specify whether subpath should be enforced to use aliases or relative paths if the calling file is located inside or outside the alias that match the imported file.
+
+Here are some examples, considering `@components` as an alias for `./components`:
+
+|                                               | `false` (default)         | `true`                       | `{ fromInside: true }`       | `{ fromOutside: true }`  |
+|-----------------------------------------------|---------------------------|------------------------------|------------------------------|--------------------------|
+| `./foo.js` that `import ./components/bar`     | `import ./components/bar` | `import @components/bar`     | `import ./components/bar`    | `import @components/bar` |
+| `./components/foo.js` that `import ./sub/bar` | `import ./sub/bar`        | `import @components/sub/bar` | `import @components/sub/bar` | `import ./sub/bar`       |
+
 <!-- LICENSE/ -->
 ## Contribute
 
