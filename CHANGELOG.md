@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v5.0.0...v5.0.1) (2024-08-14)
+
+
+### Bug Fixes
+
+* typo in rules section ([#151](https://github.com/dword-design/eslint-plugin-import-alias/issues/151)) ([39b077f](https://github.com/dword-design/eslint-plugin-import-alias/commit/39b077fb90f7ba8b78eced9d072874f47967bf8c))
+
 # [5.0.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v4.0.9...v5.0.0) (2024-03-04)
 
 
