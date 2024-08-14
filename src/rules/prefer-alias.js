@@ -1,83 +1,109 @@
-import { OptionManager } from '@babel/core'
-import { find, keys, replace, some, startsWith } from '@dword-design/functions'
-import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver'
-import deepmerge from 'deepmerge'
-import P from 'path'
+import { OptionManager } from '@babel/core';
+import {
+  find,
+  keys,
+  mapValues,
+  replace,
+  some,
+  startsWith,
+  map,
+  compact,
+} from '@dword-design/functions';
+import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver';
+import deepmerge from 'deepmerge';
+import P from 'path';
+import maxBy from 'lodash/fp/maxBy.js';
 
-const isParentImport = path => /^(\.\/)?\.\.\//.test(path)
+const isParentImport = path => /^(\.\/)?\.\.\//.test(path);
 
 const findMatchingAlias = (sourcePath, currentFile, options) => {
-  const resolvePath = options.resolvePath || defaultResolvePath
+  const resolvePath = options.resolvePath || defaultResolvePath;
+  const absoluteSourcePath = P.resolve(P.dirname(currentFile), sourcePath);
 
-  const absoluteSourcePath = P.resolve(P.dirname(currentFile), sourcePath)
-  for (const aliasName of options.alias |> keys) {
+  const alias = options.alias
+    |> keys
+    |> map(aliasName => {
+    
     const path = P.resolve(
       P.dirname(currentFile),
       resolvePath(`${aliasName}/`, currentFile, options),
-    )
-    if (absoluteSourcePath |> startsWith(path)) {
-      return { name: aliasName, path }
-    }
-  }
+    );
 
-  return undefined
-}
+    if (absoluteSourcePath |> startsWith(path)) {
+      return { name: aliasName, path };
+    }
+    return null
+  })
+  |> compact
+  |> maxBy('path')
+
+  return alias;
+};
 
 export default {
   create: context => {
-    const currentFile = context.getFilename()
-
-    const folder = P.dirname(currentFile)
+    const currentFile = context.getFilename();
+    const folder = P.dirname(currentFile);
     // can't check a non-file
-    if (currentFile === '<text>') return {}
-
-    const manager = new OptionManager()
+    if (currentFile === '<text>') return {};
+    const manager = new OptionManager();
 
     const babelConfig = manager.init({
       filename: currentFile,
       rootMode: 'upward-optional',
-    })
+    });
 
-    const plugin = babelConfig.plugins |> find({ key: 'module-resolver' })
+    const plugin = babelConfig.plugins |> find({ key: 'module-resolver' });
+
+    const babelAliases =
+      plugin?.options.alias || {}
+      |> mapValues(path => P.join(babelConfig.root, path));
+
+    const passedOptions = context.options[0] || {};
+
+    passedOptions.alias =
+      passedOptions.alias || {} |> mapValues(path => P.resolve(path));
 
     const options = deepmerge.all([
       { alias: [] },
-      plugin?.options || {},
-      context.options[0] || {},
-    ])
+      { alias: babelAliases },
+      passedOptions,
+    ]);
+
     if (options.alias.length === 0) {
       throw new Error(
         'No alias configured. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.',
-      )
+      );
     }
 
-    const resolvePath = options.resolvePath || defaultResolvePath
-
+    const resolvePath = options.resolvePath || defaultResolvePath;
     return {
       ImportDeclaration: node => {
-        const sourcePath = node.source.value
+        const sourcePath = node.source.value;
 
         const hasAlias =
           options.alias
           |> keys
-          |> some(alias => sourcePath |> startsWith(`${alias}/`))
+          |> some(alias => sourcePath |> startsWith(`${alias}/`));
+
         // relative parent
         if (sourcePath |> isParentImport) {
           const matchingAlias = findMatchingAlias(
             sourcePath,
             currentFile,
             options,
-          )
+          );
+
           if (!matchingAlias) {
-            return undefined
+            return undefined;
           }
 
-          const absoluteImportPath = P.resolve(folder, sourcePath)
+          const absoluteImportPath = P.resolve(folder, sourcePath);
 
           const rewrittenImport = `${matchingAlias.name}/${
             P.relative(matchingAlias.path, absoluteImportPath)
             |> replace(/\\/g, '/')
-          }`
+          }`;
 
           return context.report({
             fix: fixer =>
@@ -87,10 +113,15 @@ export default {
               ),
             message: `Unexpected parent import '${sourcePath}'. Use '${rewrittenImport}' instead`,
             node,
-          })
+          });
         }
 
-        const importWithoutAlias = resolvePath(sourcePath, currentFile, options)
+        const importWithoutAlias = resolvePath(
+          sourcePath,
+          currentFile,
+          options,
+        );
+
         if (!(importWithoutAlias |> isParentImport) && hasAlias) {
           return context.report({
             fix: fixer =>
@@ -100,26 +131,22 @@ export default {
               ),
             message: `Unexpected subpath import via alias '${sourcePath}'. Use '${importWithoutAlias}' instead`,
             node,
-          })
+          });
         }
 
-        return undefined
+        return undefined;
       },
-    }
+    };
   },
   meta: {
     fixable: true,
     schema: [
       {
         additionalProperties: false,
-        properties: {
-          alias: {
-            type: 'object',
-          },
-        },
+        properties: { alias: { type: 'object' } },
         type: 'object',
       },
     ],
     type: 'suggestion',
   },
-}
+};
