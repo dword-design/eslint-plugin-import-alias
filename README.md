@@ -118,7 +118,7 @@ If you have a special project setup that does not have a babel config in the pro
     {
       "alias": {
         "@": "./src",
-        "@components: "./src/components"
+        "@components": "./src/components"
       }
     }
   ]
