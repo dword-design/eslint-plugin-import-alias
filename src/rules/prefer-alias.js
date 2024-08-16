@@ -6,6 +6,10 @@ import P from 'path'
 
 const isParentImport = path => /^(\.\/)?\.\.\//.test(path)
 
+const isSiblingImport = path => /^\.\/[^/]+$/.test(path)
+
+const isSubpathImport = path => /^\.\/.+\//.test(path)
+
 const findMatchingAlias = (sourcePath, currentFile, options) => {
   const resolvePath = options.resolvePath || defaultResolvePath
 
@@ -21,6 +25,44 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
   }
 
   return undefined
+}
+
+const getImportType = importWithoutAlias => {
+  if (importWithoutAlias |> isSiblingImport) {
+    return 'sibling'
+  }
+  if (importWithoutAlias |> isSubpathImport) {
+    return 'subpath'
+  }
+
+  return 'parent'
+}
+
+const getSiblingsMaxNestingLevel = options => {
+  if (options.forSiblings === true) {
+    return Infinity
+  }
+  if (options.forSiblings) {
+    return options.forSiblings.ofMaxNestingLevel
+  }
+
+  return -1
+}
+
+const optionForSubpathsMatches = (options, currentFileIsInsideAlias) => {
+  if (options.forSubpaths === true) {
+    return true
+  }
+  if (options.forSubpaths) {
+    if (currentFileIsInsideAlias && options.forSubpaths.fromInside) {
+      return true
+    }
+    if (!currentFileIsInsideAlias && options.forSubpaths.fromOutside) {
+      return true
+    }
+  }
+
+  return false
 }
 
 export default {
@@ -51,6 +93,8 @@ export default {
       )
     }
 
+    const siblingsMaxNestingLevel = getSiblingsMaxNestingLevel(options)
+
     const resolvePath = options.resolvePath || defaultResolvePath
 
     return {
@@ -60,24 +104,48 @@ export default {
         const hasAlias =
           options.alias
           |> keys
-          |> some(alias => sourcePath |> startsWith(`${alias}/`))
-        // relative parent
-        if (sourcePath |> isParentImport) {
-          const matchingAlias = findMatchingAlias(
-            sourcePath,
-            currentFile,
-            options,
+          |> some(
+            alias =>
+              (sourcePath |> startsWith(`${alias}/`)) || sourcePath === alias,
           )
+
+        const importWithoutAlias = resolvePath(sourcePath, currentFile, options)
+
+        const importType = getImportType(importWithoutAlias)
+
+        const matchingAlias = findMatchingAlias(
+          sourcePath,
+          currentFile,
+          options,
+        )
+
+        const currentFileNestingLevel =
+          matchingAlias &&
+          P.relative(matchingAlias.path, currentFile).split(P.sep).length - 1
+
+        const currentFileIsInsideAlias =
+          matchingAlias &&
+          !(P.relative(matchingAlias.path, currentFile) |> startsWith('..'))
+
+        const shouldAlias =
+          !hasAlias &&
+          ((importWithoutAlias |> isParentImport) ||
+            ((importWithoutAlias |> isSiblingImport) &&
+              currentFileNestingLevel <= siblingsMaxNestingLevel) ||
+            ((importWithoutAlias |> isSubpathImport) &&
+              optionForSubpathsMatches(options, currentFileIsInsideAlias)))
+        if (shouldAlias) {
           if (!matchingAlias) {
             return undefined
           }
 
           const absoluteImportPath = P.resolve(folder, sourcePath)
 
-          const rewrittenImport = `${matchingAlias.name}/${
-            P.relative(matchingAlias.path, absoluteImportPath)
-            |> replace(/\\/g, '/')
-          }`
+          const rewrittenImport =
+            `${matchingAlias.name}/${
+              P.relative(matchingAlias.path, absoluteImportPath)
+              |> replace(/\\/g, '/')
+            }` |> replace(/\/$/, '')
 
           return context.report({
             fix: fixer =>
@@ -85,20 +153,29 @@ export default {
                 [node.source.range[0] + 1, node.source.range[1] - 1],
                 rewrittenImport,
               ),
-            message: `Unexpected parent import '${sourcePath}'. Use '${rewrittenImport}' instead`,
+            message: `Unexpected ${importType} import '${sourcePath}'. Use '${rewrittenImport}' instead`,
             node,
           })
         }
 
-        const importWithoutAlias = resolvePath(sourcePath, currentFile, options)
-        if (!(importWithoutAlias |> isParentImport) && hasAlias) {
+        const isDirectAlias =
+          options.alias |> keys |> some(alias => sourcePath === alias)
+
+        const shouldUnalias =
+          hasAlias &&
+          !isDirectAlias &&
+          (((importWithoutAlias |> isSiblingImport) &&
+            currentFileNestingLevel > siblingsMaxNestingLevel) ||
+            ((importWithoutAlias |> isSubpathImport) &&
+              !optionForSubpathsMatches(options, currentFileIsInsideAlias)))
+        if (shouldUnalias) {
           return context.report({
             fix: fixer =>
               fixer.replaceTextRange(
                 [node.source.range[0] + 1, node.source.range[1] - 1],
                 importWithoutAlias,
               ),
-            message: `Unexpected subpath import via alias '${sourcePath}'. Use '${importWithoutAlias}' instead`,
+            message: `Unexpected ${importType} import via alias '${sourcePath}'. Use '${importWithoutAlias}' instead`,
             node,
           })
         }
@@ -115,6 +192,46 @@ export default {
         properties: {
           alias: {
             type: 'object',
+          },
+          forSiblings: {
+            anyOf: [
+              {
+                default: false,
+                type: 'boolean',
+              },
+              {
+                additionalProperties: false,
+                properties: {
+                  ofMaxNestingLevel: {
+                    minimum: 0,
+                    type: 'number',
+                  },
+                },
+                type: 'object',
+              },
+            ],
+          },
+          forSubpaths: {
+            anyOf: [
+              {
+                default: false,
+                type: 'boolean',
+              },
+              {
+                additionalProperties: false,
+                properties: {
+                  fromInside: {
+                    default: false,
+                    type: 'boolean',
+                  },
+                  fromOutside: {
+                    default: false,
+                    type: 'boolean',
+                  },
+                },
+                type: 'object',
+              },
+            ],
           },
         },
         type: 'object',
