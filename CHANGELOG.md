@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v5.0.2...v5.1.0) (2024-08-17)
+
+
+### Features
+
+* allow to alias also subpaths ([4f697c9](https://github.com/dword-design/eslint-plugin-import-alias/commit/4f697c906dee608fb4364139e6cfc88c5aae6d1d))
+
 ## [5.0.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v5.0.1...v5.0.2) (2024-08-17)
 
 
