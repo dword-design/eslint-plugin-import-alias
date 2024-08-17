@@ -1,18 +1,8 @@
 import { OptionManager } from '@babel/core';
-import {
-  find,
-  keys,
-  mapValues,
-  replace,
-  some,
-  startsWith,
-  map,
-  compact,
-} from '@dword-design/functions';
+import { find, keys, replace, some, startsWith } from '@dword-design/functions';
 import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver';
 import deepmerge from 'deepmerge';
 import P from 'path';
-import maxBy from 'lodash/fp/maxBy.js';
 
 const isParentImport = path => /^(\.\/)?\.\.\//.test(path);
 
@@ -20,10 +10,7 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
   const resolvePath = options.resolvePath || defaultResolvePath;
   const absoluteSourcePath = P.resolve(P.dirname(currentFile), sourcePath);
 
-  const alias = options.alias
-    |> keys
-    |> map(aliasName => {
-    
+  for (const aliasName of options.alias |> keys) {
     const path = P.resolve(
       P.dirname(currentFile),
       resolvePath(`${aliasName}/`, currentFile, options),
@@ -32,12 +19,9 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
     if (absoluteSourcePath |> startsWith(path)) {
       return { name: aliasName, path };
     }
-    return null
-  })
-  |> compact
-  |> maxBy('path')
+  }
 
-  return alias;
+  return undefined;
 };
 
 export default {
@@ -55,19 +39,10 @@ export default {
 
     const plugin = babelConfig.plugins |> find({ key: 'module-resolver' });
 
-    const babelAliases =
-      plugin?.options.alias || {}
-      |> mapValues(path => P.join(babelConfig.root, path));
-
-    const passedOptions = context.options[0] || {};
-
-    passedOptions.alias =
-      passedOptions.alias || {} |> mapValues(path => P.resolve(path));
-
     const options = deepmerge.all([
       { alias: [] },
-      { alias: babelAliases },
-      passedOptions,
+      plugin?.options || {},
+      context.options[0] || {},
     ]);
 
     if (options.alias.length === 0) {

@@ -80,7 +80,7 @@ export default tester(
       expect(
         lint("import foo from '../foo'", {
           eslintConfig: {
-            rules: { 'self/self': ['error', { alias: { 'bar': '.' } }] },
+            rules: { 'self/self': ['error', { alias: { bar: '.' } }] },
           },
           filename: 'sub/index.js',
         }),
