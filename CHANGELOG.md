@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v5.0.1...v5.0.2) (2024-08-17)
+
+
+### Bug Fixes
+
+* trigger release ([66758d9](https://github.com/dword-design/eslint-plugin-import-alias/commit/66758d97f7ca01b29fcf8e565c78bd324c9257d6))
+
 ## [5.0.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v5.0.0...v5.0.1) (2024-08-14)
 
 
