@@ -125,6 +125,14 @@ If you have a special project setup that does not have a babel config in the pro
 }
 ```
 
+By default, the plugin will convert parent paths to aliases (like `../model/foo`), but will keep subpath imports relative. You can change that to also convert subpaths to aliased imports by passing the `aliasForSubpaths` option to the rule like so:
+
+```json
+"rules": {
+  "@dword-design/import-alias/prefer-alias": ["error", { "aliasForSubpaths": true }]
+}
+```
+
 <!-- LICENSE/ -->
 ## Contribute
 

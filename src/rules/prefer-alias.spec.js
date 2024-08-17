@@ -74,6 +74,23 @@ export default tester(
         output: "import foo from './foo'",
       });
     },
+    aliasForSubpaths: async () => {
+      await outputFiles({
+        '.babelrc.json': JSON.stringify({
+          plugins: [
+            [
+              packageName`babel-plugin-module-resolver`,
+              { alias: { '@': '.' }, aliasForSubpaths: false },
+            ],
+          ],
+        }),
+        'foo.js': '',
+      });
+
+      expect(
+        lint("import foo from '@/foo'", { filename: 'sub/index.js' }).messages,
+      ).toEqual([]);
+    },
     'custom alias': async () => {
       await outputFiles({ 'foo.js': '', 'package.json': JSON.stringify({}) });
 

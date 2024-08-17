@@ -97,7 +97,11 @@ export default {
           options,
         );
 
-        if (!(importWithoutAlias |> isParentImport) && hasAlias) {
+        if (
+          !(importWithoutAlias |> isParentImport) &&
+          hasAlias &&
+          !options.allowSubpathWithAlias
+        ) {
           return context.report({
             fix: fixer =>
               fixer.replaceTextRange(
@@ -118,7 +122,10 @@ export default {
     schema: [
       {
         additionalProperties: false,
-        properties: { alias: { type: 'object' } },
+        properties: {
+          alias: { type: 'object' },
+          aliasForSubpaths: { default: false, type: 'boolean' },
+        },
         type: 'object',
       },
     ],
