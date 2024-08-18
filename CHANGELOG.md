@@ -1,3 +1,10 @@
+## [5.1.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v5.1.0...v5.1.1) (2024-08-18)
+
+
+### Bug Fixes
+
+* foo ([a0ac190](https://github.com/dword-design/eslint-plugin-import-alias/commit/a0ac190c715b50806fa9cc13cf6315fda312a89a))
+
 # [5.1.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v5.0.2...v5.1.0) (2024-08-17)
 
 
