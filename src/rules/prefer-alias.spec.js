@@ -5,7 +5,6 @@ import deepmerge from 'deepmerge';
 import packageName from 'depcheck-package-name';
 import { Linter } from 'eslint';
 import fs from 'fs-extra';
-import inFolder from 'in-folder';
 import outputFiles from 'output-files';
 import P from 'path';
 
@@ -202,21 +201,6 @@ export default tester(
       );
 
       expect(lint("import foo from 'foo'").messages).toEqual([]);
-    },
-    'file in parent folder': async () => {
-      await outputFiles({
-        'babel.config.json': JSON.stringify({
-          plugins: [
-            [
-              packageName`babel-plugin-module-resolver`,
-              { alias: { '@': '.' } },
-            ],
-          ],
-        }),
-        'sub/package.json': JSON.stringify({}),
-      });
-
-      await inFolder('sub', () => expect(lint('').messages).toEqual([]));
     },
     'no aliases': async () => {
       await outputFiles({ 'foo.js': '', 'package.json': JSON.stringify({}) });

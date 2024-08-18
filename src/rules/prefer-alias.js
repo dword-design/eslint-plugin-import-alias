@@ -31,12 +31,7 @@ export default {
     // can't check a non-file
     if (currentFile === '<text>') return {};
     const manager = new OptionManager();
-
-    const babelConfig = manager.init({
-      filename: currentFile,
-      rootMode: 'upward-optional',
-    });
-
+    const babelConfig = manager.init({ filename: currentFile });
     const plugin = babelConfig.plugins |> find({ key: 'module-resolver' });
 
     const options = deepmerge.all([
