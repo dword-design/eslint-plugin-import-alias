@@ -21,8 +21,8 @@ importers:
         specifier: ^4.3.1
         version: 4.3.1
       jiti:
-        specifier: ^1.18.2
-        version: 1.21.7
+        specifier: ^2.0.0
+        version: 2.4.2
     devDependencies:
       '@dword-design/base':
         specifier: ^11.0.7
@@ -10712,8 +10712,7 @@ snapshots:
 
   jiti@1.21.7: {}
 
-  jiti@2.4.2:
-    optional: true
+  jiti@2.4.2: {}
 
   js-tokens@4.0.0: {}
 
