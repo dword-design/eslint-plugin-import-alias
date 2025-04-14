@@ -13,7 +13,7 @@ importers:
         version: 7.26.10
       '@dword-design/functions':
         specifier: ^6.0.0
-        version: 6.0.1
+        version: 6.0.2
       babel-plugin-module-resolver:
         specifier: ^5.0.0
         version: 5.0.2
@@ -26,7 +26,7 @@ importers:
     devDependencies:
       '@dword-design/base':
         specifier: ^11.0.7
-        version: 11.2.9(@babel/core@7.26.10)(@types/node@22.14.1)(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(babel-plugin-module-resolver@5.0.2)(jest@27.5.1)(typescript@5.8.3)
+        version: 11.2.10(@babel/core@7.26.10)(@types/node@22.14.1)(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(babel-plugin-module-resolver@5.0.2)(jest@27.5.1)(typescript@5.8.3)
       '@dword-design/tester':
         specifier: ^2.0.19
         version: 2.0.19
@@ -770,8 +770,8 @@ packages:
     resolution: {integrity: sha512-xFAj86B+KzUZfK2ETpiTfG+tO0EJvZSYhBdzcnTmrPj6RXRtDpR0svhQ5u+9piuGjr6ffK+vuHsAOzlZnNvM1w==}
     engines: {node: '>=18'}
 
-  '@dword-design/base@11.2.9':
-    resolution: {integrity: sha512-fg7nAmxObrUh+//0jPtZzqfsgfBDdnRU0apJIlVjrktscvUzGPtmWsGSZ5u71gpW60EW5A7AOu3tB42rlhQIxw==}
+  '@dword-design/base@11.2.10':
+    resolution: {integrity: sha512-HQJdJyQzVLNPdwmuFonz/j+3Dc258XCdPb/ljxzZ94p/B8E95uTa86ZBwbceAGt44WORf/HafivW0FoTVKnfrw==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -799,13 +799,19 @@ packages:
   '@dword-design/endent@1.4.1':
     resolution: {integrity: sha512-e2sCTzth5kyRdM0o+yEb5wBVzUdJL8Y6HblRGRV0Bif0knf1ZjRLhUjdCrqM+Muirb68X/xJzgdRDJVmLqgXGA==}
 
-  '@dword-design/eslint-config@5.0.16':
-    resolution: {integrity: sha512-Xjon/iGdBs2QuW54obtgwzwwjVbVCzkafolNMjmRGt8y4lfzus+HsCeNAhW6rkyX3C00gzrNzAC0nvkVIJXK/Q==}
+  '@dword-design/eslint-config@5.0.19':
+    resolution: {integrity: sha512-ST40+5qeDeofEzOybDRCINtQf/67BC14QcfOpGJOTpmjrU1c7buOvGWjWjcPoyDf2ljFJY5reOrUOCwEFBsF1g==}
     engines: {node: '>=18'}
 
-  '@dword-design/eslint-plugin-import-alias@5.1.1':
-    resolution: {integrity: sha512-3DEILojpdQ1XMpjAunkLHHeSdtPDifxV1/PF1bFl/HFuYRrr11bd0JPnxTZzvxm8Dfm2W5gbahB4Xil2WXTkww==}
+  '@dword-design/eslint-plugin-import-alias@5.1.2':
+    resolution: {integrity: sha512-+rMxHNbpDHgZq/J0z2TbE+BQ2CJtyi4YP3UYePxRA/MerKvg8Xkeh2BF8M+7W2fCifFkgCSV2eHfivzXEIOcWQ==}
     engines: {node: '>=18'}
+
+  '@dword-design/eslint-plugin-import@0.1.0':
+    resolution: {integrity: sha512-349Z5EYX32PqEDFvXhTZ/oskfXrstCIrkY88I/VdLfCyMCOyId1NLYClmSWVu92TO/tumKPXhK7gS5RhgfhVug==}
+    engines: {node: '>=4'}
+    peerDependencies:
+      eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8 || ^9
 
   '@dword-design/functions@4.1.7':
     resolution: {integrity: sha512-kc7bzBKZasf0icxKldgB7dkpd1mcEQkPz8c0BP5Wuxy63bMYs+kNWbywFT+xNBWDT6N9cdTczHwBuVBgc8ZU0A==}
@@ -815,8 +821,8 @@ packages:
     resolution: {integrity: sha512-16A97RKtn21xLWI7Y7VhFz4WCWui+TLit/J5/l77BDpWmPi2LzgjQzDbafDDw7OUeY6GEAi/M4jdbuQhsIbSEg==}
     engines: {node: '>=14'}
 
-  '@dword-design/functions@6.0.1':
-    resolution: {integrity: sha512-iK2fRD2+9vD6ps8OHYeSJCKCMy9H8A2yjTmVuhxqaVKMYZI1pw0hdWWTfB27czmXn7Lgk/B4ftE5zSYvrYmXZg==}
+  '@dword-design/functions@6.0.2':
+    resolution: {integrity: sha512-bX8MqBkzGaYEIlGAdc3hLiHO3Gia1L/sguymbQkp07yB611ZZW4Y0lTGJxWAemJEggEVM5jr1IL4vvAUmQX8VA==}
     engines: {node: '>=18'}
 
   '@dword-design/jiti-babel-transform@2.0.0':
@@ -6744,7 +6750,7 @@ snapshots:
       '@babel/cli': 7.27.0(@babel/core@7.26.10)
       '@babel/core': 7.26.10
       '@dword-design/depcheck-parser-sass': 4.0.4
-      '@dword-design/functions': 6.0.1
+      '@dword-design/functions': 6.0.2
       chokidar: 3.6.0
       debounce: 2.2.0
       delete-empty: 3.0.0
@@ -6755,15 +6761,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@dword-design/base@11.2.9(@babel/core@7.26.10)(@types/node@22.14.1)(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(babel-plugin-module-resolver@5.0.2)(jest@27.5.1)(typescript@5.8.3)':
+  '@dword-design/base@11.2.10(@babel/core@7.26.10)(@types/node@22.14.1)(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(babel-plugin-module-resolver@5.0.2)(jest@27.5.1)(typescript@5.8.3)':
     dependencies:
       '@commitlint/cli': 18.6.1(@types/node@22.14.1)(typescript@5.8.3)
       '@commitlint/config-conventional': 18.6.3
       '@dword-design/babel-config': 4.2.1(@babel/core@7.26.10)
       '@dword-design/base-config-node': 3.0.0
       '@dword-design/ci': 4.0.6
-      '@dword-design/eslint-config': 5.0.16(@babel/core@7.26.10)(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(babel-plugin-module-resolver@5.0.2)(eslint@8.57.1)(typescript@5.8.3)
-      '@dword-design/functions': 6.0.1
+      '@dword-design/eslint-config': 5.0.19(@babel/core@7.26.10)(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(babel-plugin-module-resolver@5.0.2)(eslint@8.57.1)(typescript@5.8.3)
+      '@dword-design/functions': 6.0.2
       '@dword-design/jiti-babel-transform': 2.0.0
       '@dword-design/personal-data': 2.0.3
       '@dword-design/pretest': 1.0.15(jest@27.5.1)
@@ -6879,19 +6885,19 @@ snapshots:
       fast-json-parse: 1.0.3
       objectorarray: 1.0.5
 
-  '@dword-design/eslint-config@5.0.16(@babel/core@7.26.10)(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(babel-plugin-module-resolver@5.0.2)(eslint@8.57.1)(typescript@5.8.3)':
+  '@dword-design/eslint-config@5.0.19(@babel/core@7.26.10)(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(babel-plugin-module-resolver@5.0.2)(eslint@8.57.1)(typescript@5.8.3)':
     dependencies:
       '@babel/eslint-parser': 7.27.0(@babel/core@7.26.10)(eslint@8.57.1)
-      '@dword-design/eslint-plugin-import-alias': 5.1.1
-      '@dword-design/functions': 6.0.1
+      '@dword-design/eslint-plugin-import-alias': 5.1.2
+      '@dword-design/functions': 6.0.2
       confusing-browser-globals: 1.0.11
       depcheck-package-name: 3.0.1
-      eslint-config-airbnb-base: 15.0.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1)
+      eslint-config-airbnb-base: 15.0.0(@dword-design/eslint-plugin-import@0.1.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1)
       eslint-config-prettier: 10.1.2(eslint@8.57.1)
       eslint-import-resolver-babel-module: 5.3.2(@babel/core@7.26.10)(babel-plugin-module-resolver@5.0.2)
-      eslint-import-resolver-exports: 1.0.0-beta.5(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1)
+      eslint-import-resolver-exports: 1.0.0-beta.5(@dword-design/eslint-plugin-import@0.1.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1)
       eslint-plugin-github: 5.1.8(eslint@8.57.1)(typescript@5.8.3)
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)
+      eslint-plugin-import: '@dword-design/eslint-plugin-import@0.1.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)'
       eslint-plugin-json-format: 2.0.1(eslint@8.57.1)
       eslint-plugin-prefer-arrow: 1.2.3(eslint@8.57.1)
       eslint-plugin-prettier: 5.2.6(eslint-config-prettier@10.1.2(eslint@8.57.1))(eslint@8.57.1)(prettier@3.5.3)
@@ -6917,14 +6923,42 @@ snapshots:
       - supports-color
       - typescript
 
-  '@dword-design/eslint-plugin-import-alias@5.1.1':
+  '@dword-design/eslint-plugin-import-alias@5.1.2':
     dependencies:
       '@babel/core': 7.26.10
-      '@dword-design/functions': 6.0.1
+      '@dword-design/functions': 6.0.2
       babel-plugin-module-resolver: 5.0.2
       deepmerge: 4.3.1
       jiti: 1.21.7
     transitivePeerDependencies:
+      - supports-color
+
+  '@dword-design/eslint-plugin-import@0.1.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)':
+    dependencies:
+      '@rtsao/scc': 1.1.0
+      array-includes: 3.1.8
+      array.prototype.findlastindex: 1.2.6
+      array.prototype.flat: 1.3.3
+      array.prototype.flatmap: 1.3.3
+      debug: 3.2.7
+      doctrine: 2.1.0
+      eslint: 8.57.1
+      eslint-import-resolver-node: 0.3.9
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint@8.57.1)
+      hasown: 2.0.2
+      is-core-module: 2.16.1
+      is-glob: 4.0.3
+      minimatch: 3.1.2
+      object.fromentries: 2.0.8
+      object.groupby: 1.0.3
+      object.values: 1.2.1
+      semver: 6.3.1
+      string.prototype.trimend: 1.0.9
+      tsconfig-paths: 3.15.0
+    transitivePeerDependencies:
+      - '@typescript-eslint/parser'
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
       - supports-color
 
   '@dword-design/functions@4.1.7':
@@ -6941,7 +6975,7 @@ snapshots:
       lodash: 4.17.21
       tinycolor2: 1.6.0
 
-  '@dword-design/functions@6.0.1':
+  '@dword-design/functions@6.0.2':
     dependencies:
       '@dword-design/endent': 1.4.1
       delay: 6.0.0
@@ -6952,7 +6986,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.26.10
       '@babel/preset-env': 7.26.9(@babel/core@7.26.10)
-      '@dword-design/functions': 6.0.1
+      '@dword-design/functions': 6.0.2
       babel-plugin-transform-import-meta: 2.3.2(@babel/core@7.26.10)
       depcheck-package-name: 3.0.1
     transitivePeerDependencies:
@@ -8552,7 +8586,7 @@ snapshots:
 
   depcheck-detector-execa@4.0.0:
     dependencies:
-      '@dword-design/functions': 6.0.1
+      '@dword-design/functions': 6.0.2
       fs-extra: 11.3.0
       module-root: '@dword-design/module-root@0.2.4'
 
@@ -8758,11 +8792,11 @@ snapshots:
     optionalDependencies:
       source-map: 0.6.1
 
-  eslint-config-airbnb-base@15.0.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1):
+  eslint-config-airbnb-base@15.0.0(@dword-design/eslint-plugin-import@0.1.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1):
     dependencies:
       confusing-browser-globals: 1.0.11
       eslint: 8.57.1
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)
+      eslint-plugin-import: '@dword-design/eslint-plugin-import@0.1.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)'
       object.assign: 4.1.7
       object.entries: 1.1.9
       semver: 6.3.1
@@ -8778,10 +8812,10 @@ snapshots:
       pkg-up: 3.1.0
       resolve: 1.22.10
 
-  eslint-import-resolver-exports@1.0.0-beta.5(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1):
+  eslint-import-resolver-exports@1.0.0-beta.5(@dword-design/eslint-plugin-import@0.1.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1))(eslint@8.57.1):
     dependencies:
       eslint: 8.57.1
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)
+      eslint-plugin-import: '@dword-design/eslint-plugin-import@0.1.0(@typescript-eslint/parser@8.29.1(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)'
       resolve.exports: 2.0.3
 
   eslint-import-resolver-node@0.3.9:
@@ -10942,7 +10976,7 @@ snapshots:
 
   make-cli@4.0.0:
     dependencies:
-      '@dword-design/functions': 6.0.1
+      '@dword-design/functions': 6.0.2
       commander: 12.1.0
 
   make-dir@2.1.0:
