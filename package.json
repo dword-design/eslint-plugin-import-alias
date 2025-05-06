@@ -47,7 +47,7 @@
     "@dword-design/functions": "^6.0.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "deepmerge": "^4.3.1",
-    "jiti": "^1.18.2"
+    "jiti": "^2.0.0"
   },
   "devDependencies": {
     "@dword-design/base": "^11.0.7",
