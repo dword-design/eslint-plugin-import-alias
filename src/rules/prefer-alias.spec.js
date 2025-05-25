@@ -1,3 +1,5 @@
+import P from 'node:path';
+
 import { endent, map } from '@dword-design/functions';
 import tester from '@dword-design/tester';
 import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir';
@@ -6,7 +8,6 @@ import packageName from 'depcheck-package-name';
 import { Linter } from 'eslint';
 import fs from 'fs-extra';
 import outputFiles from 'output-files';
-import P from 'path';
 
 import self from './prefer-alias.js';
 

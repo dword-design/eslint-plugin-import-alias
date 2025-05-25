@@ -1,8 +1,9 @@
+import P from 'node:path';
+
 import { OptionManager } from '@babel/core';
 import { find, keys, replace, some, startsWith } from '@dword-design/functions';
 import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver';
 import deepmerge from 'deepmerge';
-import P from 'path';
 
 const isParentImport = path => /^(\.\/)?\.\.\//.test(path);
 
@@ -21,7 +22,7 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
     }
   }
 
-  return undefined;
+  return;
 };
 
 export default {
@@ -65,7 +66,7 @@ export default {
           );
 
           if (!matchingAlias) {
-            return undefined;
+            return;
           }
 
           const absoluteImportPath = P.resolve(folder, sourcePath);
@@ -108,7 +109,7 @@ export default {
           });
         }
 
-        return undefined;
+        return;
       },
     };
   },

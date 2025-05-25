@@ -1,11 +1,13 @@
+import P from 'node:path';
+
 import { endent, flatten, join, map, pick } from '@dword-design/functions';
 import tester from '@dword-design/tester';
 import testerPluginTmpDir from '@dword-design/tester-plugin-tmp-dir';
 import packageName from 'depcheck-package-name';
 import { ESLint } from 'eslint';
 import { execaCommand } from 'execa';
-import outputFiles from 'output-files';
-import P from 'path';
+
+import self from './index.js';
 
 export default tester(
   {
@@ -42,18 +44,9 @@ export default tester(
         test.output = test.output || test.code;
         test.messages = test.messages || [];
 
-        await outputFiles({
-          'node_modules/eslint-plugin-self/index.js':
-            "module.exports = require('../../..')",
-          ...test.files,
-        });
-
         const lintingConfig = {
-          overrideConfig: {
-            extends: ['plugin:self/recommended'],
-            parserOptions: { ecmaVersion: 2015, sourceType: 'module' },
-          },
-          useEslintrc: false,
+          baseConfig: self.configs.recommended,
+          overrideConfigFile: true,
         };
 
         const eslintToLint = new ESLint(lintingConfig);
