@@ -56,15 +56,15 @@ An ESLint plugin that enforces the use of import aliases. Also supports autofixi
 Aliases are a great thing to make imports more readable and you do not have to change import paths that often when a file path is changed.
 
 ```js
-import foo from '../../model/sub/foo'
-import bar from '../other/bar'
+import foo from '../../model/sub/foo';
+import bar from '../other/bar';
 ```
 
 changes to
 
 ```js
-import foo from '@/model/sub/foo'
-import bar from '@/sub/other/bar'
+import foo from '@/model/sub/foo';
+import bar from '@/sub/other/bar';
 ```
 
 Now what if you are in a bigger team or you have a lot of projects to update. Or you just want to make sure that everything is consistent. This is where a linter comes into the play. This rule allows you to detect inconsistent imports and even autofix them. This works by matching alias paths agains the imports and replacing the import paths with the first matching aliased path.
