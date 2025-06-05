@@ -1,3 +1,11 @@
+## [6.0.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v6.0.1...v6.0.2) (2025-06-05)
+
+
+### Bug Fixes
+
+* fix ts issues ([262f0e7](https://github.com/dword-design/eslint-plugin-import-alias/commit/262f0e712352dacf3ab3a2a68c60ebd71582a6ea))
+* update readme ([46e3b15](https://github.com/dword-design/eslint-plugin-import-alias/commit/46e3b1581f67b47f5b15bfd87f71e812f81bcee6))
+
 ## [6.0.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v6.0.0...v6.0.1) (2025-06-05)
 
 
