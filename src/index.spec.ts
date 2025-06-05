@@ -27,9 +27,8 @@ const tests = {
   },
   aliasForSubpaths: {
     code: "import '@/foo'",
-    filename: 'sub/index.ts',
     files: { 'foo.ts': '' },
-    options: { alias: { '@': '.' }, aliasForSubpaths: false },
+    options: { alias: { '@': '.' }, aliasForSubpaths: true },
   },
   babelrc: {
     code: "import '../foo'",
