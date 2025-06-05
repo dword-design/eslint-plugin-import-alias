@@ -44,22 +44,22 @@
     "test": "base test"
   },
   "dependencies": {
-    "@babel/core": "^7.27.1",
-    "@dword-design/functions": "^6.0.2",
+    "@babel/core": "^7.27.4",
     "babel-plugin-module-resolver": "^5.0.2",
     "deepmerge": "^4.3.1"
   },
   "devDependencies": {
-    "@dword-design/base": "^12.0.3",
-    "@dword-design/tester": "^2.0.19",
-    "@dword-design/tester-plugin-tmp-dir": "^2.1.26",
+    "@dword-design/base": "^13.0.1",
+    "@dword-design/defu": "^1.0.0",
+    "@playwright/test": "^1.52.0",
     "depcheck-package-name": "^3.0.1",
-    "eslint": "^9.27.0",
-    "execa": "^9.5.3",
-    "fs-extra": "^11.3.0",
-    "output-files": "^2.0.32"
+    "endent": "npm:@dword-design/endent@^1.4.1",
+    "eslint": "^9.28.0",
+    "lodash-es": "^4.17.21",
+    "output-files": "^2.0.32",
+    "typescript-eslint": "^8.33.1"
   },
-  "packageManager": "pnpm@9.7.1+sha512.faf344af2d6ca65c4c5c8c2224ea77a81a5e8859cbc4e06b1511ddce2f0151512431dd19e6aff31f2c6a8f5f2aced9bd2273e1fed7dd4de1868984059d2c4247",
+  "packageManager": "pnpm@10.11.1+sha512.e519b9f7639869dc8d5c3c5dfef73b3f091094b0a006d7317353c72b124e80e1afd429732e28705ad6bfa1ee879c1fce46c128ccebd3192101f43dd67c667912",
   "engines": {
     "node": ">=18"
   },

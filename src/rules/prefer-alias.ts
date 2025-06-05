@@ -1,7 +1,6 @@
-import P from 'node:path';
+import pathLib from 'node:path';
 
 import { OptionManager } from '@babel/core';
-import { find, keys, replace, some, startsWith } from '@dword-design/functions';
 import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver';
 import deepmerge from 'deepmerge';
 
@@ -9,34 +8,41 @@ const isParentImport = path => /^(\.\/)?\.\.\//.test(path);
 
 const findMatchingAlias = (sourcePath, currentFile, options) => {
   const resolvePath = options.resolvePath || defaultResolvePath;
-  const absoluteSourcePath = P.resolve(P.dirname(currentFile), sourcePath);
 
-  for (const aliasName of options.alias |> keys) {
-    const path = P.resolve(
-      P.dirname(currentFile),
+  const absoluteSourcePath = pathLib.resolve(
+    pathLib.dirname(currentFile),
+    sourcePath,
+  );
+
+  for (const aliasName of Object.keys(options.alias)) {
+    const path = pathLib.resolve(
+      pathLib.dirname(currentFile),
       resolvePath(`${aliasName}/`, currentFile, options),
     );
 
-    if (absoluteSourcePath |> startsWith(path)) {
+    if (absoluteSourcePath.startsWith(path)) {
       return { name: aliasName, path };
     }
   }
-
-  return;
 };
 
 export default {
   create: context => {
     const currentFile = context.getFilename();
-    const folder = P.dirname(currentFile);
+    const folder = pathLib.dirname(currentFile);
     // can't check a non-file
     if (currentFile === '<text>') return {};
     const manager = new OptionManager();
-    const babelConfig = manager.init({ filename: currentFile });
-    const plugin = babelConfig.plugins |> find({ key: 'module-resolver' });
+
+    const babelConfig = manager.init({
+      filename: currentFile,
+      ...context.options[0]?.babelOptions,
+    });
+
+    const plugin = babelConfig.plugins.find(_ => _.key === 'module-resolver');
 
     const options = deepmerge.all([
-      { alias: [] },
+      { alias: [], cwd: context.cwd },
       plugin?.options || {},
       context.options[0] || {},
     ]);
@@ -52,13 +58,12 @@ export default {
       ImportDeclaration: node => {
         const sourcePath = node.source.value;
 
-        const hasAlias =
-          options.alias
-          |> keys
-          |> some(alias => sourcePath |> startsWith(`${alias}/`));
+        const hasAlias = Object.keys(options.alias).some(alias =>
+          sourcePath.startsWith(`${alias}/`),
+        );
 
         // relative parent
-        if (sourcePath |> isParentImport) {
+        if (isParentImport(sourcePath)) {
           const matchingAlias = findMatchingAlias(
             sourcePath,
             currentFile,
@@ -69,12 +74,11 @@ export default {
             return;
           }
 
-          const absoluteImportPath = P.resolve(folder, sourcePath);
+          const absoluteImportPath = pathLib.resolve(folder, sourcePath);
 
-          const rewrittenImport = `${matchingAlias.name}/${
-            P.relative(matchingAlias.path, absoluteImportPath)
-            |> replace(/\\/g, '/')
-          }`;
+          const rewrittenImport = `${matchingAlias.name}/${pathLib
+            .relative(matchingAlias.path, absoluteImportPath)
+            .replaceAll('\\', '/')}`;
 
           return context.report({
             fix: fixer =>
@@ -94,7 +98,7 @@ export default {
         );
 
         if (
-          !(importWithoutAlias |> isParentImport) &&
+          !isParentImport(importWithoutAlias) &&
           hasAlias &&
           !options.allowSubpathWithAlias
         ) {
@@ -121,6 +125,7 @@ export default {
         properties: {
           alias: { type: 'object' },
           aliasForSubpaths: { default: false, type: 'boolean' },
+          babelOptions: { type: 'object' },
         },
         type: 'object',
       },

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "dist",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "skipLibCheck": true,
+    "target": "ESNext"
+  },
+  "exclude": [
+    "**/*.spec.ts"
+  ],
+  "include": [
+    "src"
+  ]
+}

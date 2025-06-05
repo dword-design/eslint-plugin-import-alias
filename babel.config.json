@@ -1,3 +1,13 @@
 {
-  "extends": "@dword-design/babel-config"
+  "plugins": [
+    [
+      "babel-plugin-module-resolver",
+      {
+        "alias": {
+          "@/src": "./dist"
+        }
+      }
+    ],
+    "babel-plugin-add-import-extension"
+  ]
 }
