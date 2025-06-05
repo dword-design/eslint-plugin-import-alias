@@ -1,8 +1,8 @@
 import pathLib from 'node:path';
 
 import { OptionManager } from '@babel/core';
+import defu from '@dword-design/defu';
 import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver';
-import deepmerge from 'deepmerge';
 
 const isParentImport = path => /^(\.\/)?\.\.\//.test(path);
 
@@ -41,11 +41,10 @@ export default {
 
     const plugin = babelConfig.plugins.find(_ => _.key === 'module-resolver');
 
-    const options = deepmerge.all([
-      { alias: [], cwd: context.cwd },
-      plugin?.options || {},
-      context.options[0] || {},
-    ]);
+    const options = defu(context.options[0] || {}, plugin?.options || {}, {
+      alias: [],
+      cwd: context.cwd,
+    });
 
     if (options.alias.length === 0) {
       throw new Error(

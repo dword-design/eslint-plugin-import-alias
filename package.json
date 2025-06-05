@@ -45,12 +45,11 @@
   },
   "dependencies": {
     "@babel/core": "^7.27.4",
-    "babel-plugin-module-resolver": "^5.0.2",
-    "deepmerge": "^4.3.1"
+    "@dword-design/defu": "^1.0.0",
+    "babel-plugin-module-resolver": "^5.0.2"
   },
   "devDependencies": {
     "@dword-design/base": "^13.0.1",
-    "@dword-design/defu": "^1.0.0",
     "@playwright/test": "^1.52.0",
     "depcheck-package-name": "^3.0.1",
     "endent": "npm:@dword-design/endent@^1.4.1",
