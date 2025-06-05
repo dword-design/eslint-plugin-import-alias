@@ -1,4 +1,4 @@
 {
   "name": "@dword-design/node",
-  "cjsFallback": true
+  "testRunner": "playwright"
 }
