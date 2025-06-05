@@ -1,3 +1,15 @@
+# [6.0.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v5.1.2...v6.0.0) (2025-06-05)
+
+
+### Bug Fixes
+
+* lock file maintenance ([#198](https://github.com/dword-design/eslint-plugin-import-alias/issues/198)) ([a935433](https://github.com/dword-design/eslint-plugin-import-alias/commit/a935433dd42a5512049f36e994b5234464571da4))
+
+
+### BREAKING CHANGES
+
+* Moved to new ESLint flat config format
+
 ## [5.1.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v5.1.1...v5.1.2) (2025-04-13)
 
 
