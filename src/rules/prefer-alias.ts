@@ -1,9 +1,16 @@
 import pathLib from 'node:path';
 
-import { OptionManager } from '@babel/core';
+import { loadOptions } from '@babel/core';
 import defu from '@dword-design/defu';
 import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver';
 
+interface BabelPlugin {
+  key: string;
+  options?: Record<string, unknown>;
+}
+interface BabelConfig {
+  plugins?: BabelPlugin[];
+}
 const isParentImport = path => /^(\.\/)?\.\.\//.test(path);
 
 const findMatchingAlias = (sourcePath, currentFile, options) => {
@@ -32,16 +39,18 @@ export default {
     const folder = pathLib.dirname(currentFile);
     // can't check a non-file
     if (currentFile === '<text>') return {};
-    const manager = new OptionManager();
+    const optionsFromRule = context.options[0] ?? {};
 
-    const babelConfig = manager.init({
+    const babelConfig = (loadOptions({
       filename: currentFile,
-      ...context.options[0]?.babelOptions,
-    });
+      ...optionsFromRule.babelOptions,
+    }) || {}) as BabelConfig;
 
-    const plugin = babelConfig.plugins.find(_ => _.key === 'module-resolver');
+    const optionsFromPlugin =
+      babelConfig?.plugins?.find(_ => _.key === 'module-resolver')?.options ??
+      {};
 
-    const options = defu(context.options[0] || {}, plugin?.options || {}, {
+    const options = defu(optionsFromRule, optionsFromPlugin, {
       alias: [],
       cwd: context.cwd,
     });
