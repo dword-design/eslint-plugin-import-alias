@@ -1,3 +1,10 @@
+## [6.0.3](https://github.com/dword-design/eslint-plugin-import-alias/compare/v6.0.2...v6.0.3) (2025-06-05)
+
+
+### Bug Fixes
+
+* fix aliasForSubpaths naming ([62b3bcc](https://github.com/dword-design/eslint-plugin-import-alias/commit/62b3bcc7f5169e09762b579d4e239f4b637eb039))
+
 ## [6.0.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v6.0.1...v6.0.2) (2025-06-05)
 
 
