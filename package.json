@@ -28,7 +28,14 @@
   "license": "MIT",
   "author": "Sebastian Landwehr <info@sebastianlandwehr.com>",
   "type": "module",
-  "exports": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
+    }
+  },
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -41,26 +48,30 @@
     "lint": "base lint",
     "prepare": "base prepare",
     "prepublishOnly": "base prepublishOnly",
-    "test": "base test"
+    "test": "base test",
+    "typecheck": "base typecheck",
+    "verify": "base verify"
   },
   "dependencies": {
-    "@babel/core": "^7.27.4",
-    "@dword-design/defu": "^1.0.0",
+    "@babel/core": "^7.28.0",
+    "@dword-design/defu": "^1.0.3",
     "babel-plugin-module-resolver": "^5.0.2"
   },
   "devDependencies": {
-    "@dword-design/base": "^13.0.1",
-    "@playwright/test": "^1.52.0",
-    "depcheck-package-name": "^3.0.1",
-    "endent": "npm:@dword-design/endent@^1.4.1",
-    "eslint": "^9.28.0",
+    "@dword-design/base": "^15.2.4",
+    "@playwright/test": "^1.54.2",
+    "@types/babel__core": "^7.20.5",
+    "@types/lodash-es": "^4.17.12",
+    "depcheck-package-name": "^4.0.0",
+    "endent": "npm:@dword-design/endent@^1.4.7",
+    "eslint": "^9.32.0",
     "lodash-es": "^4.17.21",
-    "output-files": "^2.0.32",
-    "typescript-eslint": "^8.33.1"
+    "output-files": "^3.0.0",
+    "typescript-eslint": "^8.38.0"
   },
   "packageManager": "pnpm@10.11.1+sha512.e519b9f7639869dc8d5c3c5dfef73b3f091094b0a006d7317353c72b124e80e1afd429732e28705ad6bfa1ee879c1fce46c128ccebd3192101f43dd67c667912",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "publishConfig": {
     "access": "public"

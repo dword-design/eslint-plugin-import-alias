@@ -3,6 +3,8 @@ import pathLib from 'node:path';
 import { loadOptions } from '@babel/core';
 import defu from '@dword-design/defu';
 import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver';
+import { type Rule } from 'eslint';
+import { pick } from 'lodash-es';
 
 interface BabelPlugin {
   key: string;
@@ -11,9 +13,24 @@ interface BabelPlugin {
 interface BabelConfig {
   plugins?: BabelPlugin[];
 }
-const isParentImport = path => /^(\.\/)?\.\.\//.test(path);
+interface Options {
+  alias: Record<string, string>;
+  aliasForSubpaths?: boolean;
+  babelOptions?: Record<string, unknown>;
+  resolvePath?: (
+    sourcePath: string,
+    currentFile: string,
+    options: any,
+  ) => string;
+  cwd: string;
+}
+const isParentImport = (path: string) => /^(\.\/)?\.\.\//.test(path);
 
-const findMatchingAlias = (sourcePath, currentFile, options) => {
+const findMatchingAlias = (
+  sourcePath: string,
+  currentFile: string,
+  options: Options,
+) => {
   const resolvePath = options.resolvePath || defaultResolvePath;
 
   const absoluteSourcePath = pathLib.resolve(
@@ -24,7 +41,11 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
   for (const aliasName of Object.keys(options.alias)) {
     const path = pathLib.resolve(
       pathLib.dirname(currentFile),
-      resolvePath(`${aliasName}/`, currentFile, options),
+      resolvePath(
+        `${aliasName}/`,
+        currentFile,
+        pick(options, ['alias', 'cwd']),
+      ),
     );
 
     if (absoluteSourcePath.startsWith(path)) {
@@ -34,7 +55,7 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
 };
 
 export default {
-  create: context => {
+  create: (context: Rule.RuleContext) => {
     const currentFile = context.getFilename();
     const folder = pathLib.dirname(currentFile);
     // can't check a non-file
@@ -134,6 +155,7 @@ export default {
           alias: { type: 'object' },
           aliasForSubpaths: { default: false, type: 'boolean' },
           babelOptions: { type: 'object' },
+          resolvePath: { type: 'function' },
         },
         type: 'object',
       },

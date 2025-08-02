@@ -6,12 +6,21 @@ import packageName from 'depcheck-package-name';
 import endent from 'endent';
 import { ESLint } from 'eslint';
 import { pick } from 'lodash-es';
-import outputFiles from 'output-files';
+import outputFiles, { type Files } from 'output-files';
 import tseslint from 'typescript-eslint';
 
 import self from '.';
 
-const tests = {
+interface TestConfig {
+  error?: string;
+  files?: Files;
+  filename?: string;
+  code: string;
+  output?: string;
+  messages?: Array<{ message: string; ruleId: string | null }>;
+}
+
+const tests: Record<string, TestConfig> = {
   'alias subpath': {
     code: "import '@/foo'",
     files: { 'foo.ts': '' },
