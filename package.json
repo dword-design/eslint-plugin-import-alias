@@ -55,7 +55,7 @@
     "endent": "npm:@dword-design/endent@^1.4.1",
     "eslint": "^9.28.0",
     "lodash-es": "^4.17.21",
-    "output-files": "^2.0.32",
+    "output-files": "^3.0.0",
     "typescript-eslint": "^8.33.1"
   },
   "packageManager": "pnpm@10.11.1+sha512.e519b9f7639869dc8d5c3c5dfef73b3f091094b0a006d7317353c72b124e80e1afd429732e28705ad6bfa1ee879c1fce46c128ccebd3192101f43dd67c667912",
