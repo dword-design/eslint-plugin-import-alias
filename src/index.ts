@@ -1,4 +1,4 @@
-import preferAlias from './rules/prefer-alias.js';
+import preferAlias from './rules/prefer-alias';
 
 const plugin = { rules: { 'prefer-alias': preferAlias } };
 

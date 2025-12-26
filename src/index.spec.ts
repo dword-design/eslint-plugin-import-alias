@@ -1,17 +1,27 @@
 import P from 'node:path';
 
-import defu from '@dword-design/defu';
+import defaults from '@dword-design/defaults';
 import { expect, test } from '@playwright/test';
 import packageName from 'depcheck-package-name';
 import endent from 'endent';
 import { ESLint } from 'eslint';
 import { pick } from 'lodash-es';
-import outputFiles from 'output-files';
+import outputFiles, { type Files } from 'output-files';
 import tseslint from 'typescript-eslint';
 
 import self from '.';
 
-const tests = {
+interface TestConfig {
+  error?: string | null;
+  files?: Files;
+  filename?: string;
+  code: string;
+  output?: string;
+  messages?: Array<{ message: string; ruleId: string | null }>;
+  options?: Record<string, unknown>;
+}
+
+const tests: Record<string, TestConfig> = {
   'alias subpath': {
     code: "import '@/foo'",
     files: { 'foo.ts': '' },
@@ -147,14 +157,18 @@ const tests = {
   },
 };
 
-for (const [name, testConfig] of Object.entries(tests)) {
+for (const [name, partialTestConfig] of Object.entries(tests)) {
   test(name, async ({}, testInfo) => {
     const cwd = testInfo.outputPath();
-    testConfig.error = testConfig.error ?? null;
-    testConfig.files = testConfig.files ?? {};
-    testConfig.filename = testConfig.filename || 'index.ts';
-    testConfig.output = testConfig.output || testConfig.code;
-    testConfig.messages = testConfig.messages ?? [];
+
+    const testConfig = defaults(partialTestConfig, {
+      error: null,
+      filename: 'index.ts',
+      files: {},
+      messages: [],
+      output: partialTestConfig.code,
+    });
+
     await outputFiles(cwd, testConfig.files);
 
     const lintingConfig = {
@@ -165,14 +179,16 @@ for (const [name, testConfig] of Object.entries(tests)) {
           rules: {
             '@dword-design/import-alias/prefer-alias': [
               'error',
-              defu(testConfig.options, { babelOptions: { configFile: false } }),
+              defaults(testConfig.options, {
+                babelOptions: { configFile: false },
+              }),
             ],
           },
         },
       ],
       cwd,
       overrideConfigFile: true,
-    };
+    } as ESLint.Options;
 
     const eslintToLint = new ESLint(lintingConfig);
     const eslintToFix = new ESLint({ ...lintingConfig, fix: true });

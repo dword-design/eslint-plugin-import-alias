@@ -1,21 +1,43 @@
 import pathLib from 'node:path';
 
 import { loadOptions } from '@babel/core';
-import defu from '@dword-design/defu';
+import defaults from '@dword-design/defaults';
+import { ESLintUtils } from '@typescript-eslint/utils';
 import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver';
+import { omit, pick } from 'lodash-es';
 
-interface BabelPlugin {
-  key: string;
-  options?: Record<string, unknown>;
+export interface BabelPluginModuleResolverOptions {
+  alias?: Record<string, string>;
+  cwd?: string;
+  resolvePath?: (
+    sourcePath: string,
+    currentFile: string,
+    options: Pick<BabelPluginModuleResolverOptions, 'alias' | 'cwd'>,
+  ) => string;
 }
-interface BabelConfig {
-  plugins?: BabelPlugin[];
+const createRule = ESLintUtils.RuleCreator(() => '');
+
+export interface Options {
+  alias: Record<string, string>;
+  aliasForSubpaths: boolean;
+  resolvePath: (
+    sourcePath: string,
+    currentFile: string,
+    options: Pick<BabelPluginModuleResolverOptions, 'alias' | 'cwd'>,
+  ) => string;
+  cwd: string;
 }
-const isParentImport = path => /^(\.\/)?\.\.\//.test(path);
 
-const findMatchingAlias = (sourcePath, currentFile, options) => {
-  const resolvePath = options.resolvePath || defaultResolvePath;
+type OptionsInput = Partial<Options> & {
+  babelOptions?: Record<string, unknown>;
+};
+const isParentImport = (path: string) => /^(\.\/)?\.\.\//.test(path);
 
+const findMatchingAlias = (
+  sourcePath: string,
+  currentFile: string,
+  options: Options,
+) => {
   const absoluteSourcePath = pathLib.resolve(
     pathLib.dirname(currentFile),
     sourcePath,
@@ -24,7 +46,11 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
   for (const aliasName of Object.keys(options.alias)) {
     const path = pathLib.resolve(
       pathLib.dirname(currentFile),
-      resolvePath(`${aliasName}/`, currentFile, options),
+      options.resolvePath(
+        `${aliasName}/`,
+        currentFile,
+        pick(options, ['alias', 'cwd']),
+      ),
     );
 
     if (absoluteSourcePath.startsWith(path)) {
@@ -33,35 +59,52 @@ const findMatchingAlias = (sourcePath, currentFile, options) => {
   }
 };
 
-export default {
+export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
   create: context => {
     const currentFile = context.getFilename();
     const folder = pathLib.dirname(currentFile);
     // can't check a non-file
     if (currentFile === '<text>') return {};
-    const optionsFromRule = context.options[0] ?? {};
 
-    const babelConfig = (loadOptions({
-      filename: currentFile,
-      ...optionsFromRule.babelOptions,
-    }) || {}) as BabelConfig;
-
-    const optionsFromPlugin =
-      babelConfig?.plugins?.find(_ => _.key === 'module-resolver')?.options ??
-      {};
-
-    const options = defu(optionsFromRule, optionsFromPlugin, {
-      alias: [],
-      cwd: context.cwd,
+    const optionsFromRule = defaults(context.options[0] ?? {}, {
+      babelOptions: {},
     });
 
-    if (options.alias.length === 0) {
+    const babelConfig = loadOptions({
+      filename: currentFile,
+      ...optionsFromRule.babelOptions,
+    });
+
+    const babelPlugin =
+      babelConfig?.plugins?.find?.(
+        iteratedPlugin => iteratedPlugin.key === 'module-resolver',
+      ) ?? null;
+
+    const babelPluginOptions = (babelPlugin?.options ??
+      {}) as BabelPluginModuleResolverOptions; // TODO: https://github.com/microsoft/TypeScript/issues/62929
+
+    const optionsFromPlugin = pick(babelPluginOptions, [
+      'alias',
+      'resolvePath',
+    ] as const);
+
+    const options = defaults(
+      omit(optionsFromRule, ['babelOptions']),
+      optionsFromPlugin,
+      {
+        alias: {},
+        aliasForSubpaths: false,
+        cwd: context.cwd,
+        resolvePath: defaultResolvePath,
+      },
+    );
+
+    if (Object.keys(options.alias).length === 0) {
       throw new Error(
         'No alias configured. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.',
       );
     }
 
-    const resolvePath = options.resolvePath || defaultResolvePath;
     return {
       ImportDeclaration: node => {
         const sourcePath = node.source.value;
@@ -89,17 +132,18 @@ export default {
             .replaceAll('\\', '/')}`;
 
           return context.report({
+            data: { rewrittenImport, sourcePath },
             fix: fixer =>
               fixer.replaceTextRange(
                 [node.source.range[0] + 1, node.source.range[1] - 1],
                 rewrittenImport,
               ),
-            message: `Unexpected parent import '${sourcePath}'. Use '${rewrittenImport}' instead`,
+            messageId: 'parentImport',
             node,
           });
         }
 
-        const importWithoutAlias = resolvePath(
+        const importWithoutAlias = options.resolvePath(
           sourcePath,
           currentFile,
           options,
@@ -111,12 +155,13 @@ export default {
           !options.aliasForSubpaths
         ) {
           return context.report({
+            data: { rewrittenImport: importWithoutAlias, sourcePath },
             fix: fixer =>
               fixer.replaceTextRange(
                 [node.source.range[0] + 1, node.source.range[1] - 1],
                 importWithoutAlias,
               ),
-            message: `Unexpected subpath import via alias '${sourcePath}'. Use '${importWithoutAlias}' instead`,
+            messageId: 'subpathImport',
             node,
           });
         }
@@ -125,8 +170,19 @@ export default {
       },
     };
   },
+  defaultOptions: [{}],
   meta: {
-    fixable: true,
+    docs: {
+      description:
+        'Enforce usage of import aliases over relative parent imports',
+    },
+    fixable: 'code' as const,
+    messages: {
+      parentImport:
+        "Unexpected parent import '{{sourcePath}}'. Use '{{rewrittenImport}}' instead",
+      subpathImport:
+        "Unexpected subpath import via alias '{{sourcePath}}'. Use '{{rewrittenImport}}' instead",
+    },
     schema: [
       {
         additionalProperties: false,
@@ -138,6 +194,7 @@ export default {
         type: 'object',
       },
     ],
-    type: 'suggestion',
+    type: 'suggestion' as const,
   },
-};
+  name: 'prefer-alias',
+});
