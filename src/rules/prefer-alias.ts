@@ -23,7 +23,7 @@ export interface Options {
   resolvePath: (
     sourcePath: string,
     currentFile: string,
-    options: Pick<Options, 'alias' | 'cwd'>,
+    options: Pick<BabelPluginModuleResolverOptions, 'alias' | 'cwd'>,
   ) => string;
   cwd: string;
 }

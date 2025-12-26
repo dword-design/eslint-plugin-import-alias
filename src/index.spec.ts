@@ -157,14 +157,18 @@ const tests: Record<string, TestConfig> = {
   },
 };
 
-for (const [name, testConfig] of Object.entries(tests)) {
+for (const [name, partialTestConfig] of Object.entries(tests)) {
   test(name, async ({}, testInfo) => {
     const cwd = testInfo.outputPath();
-    testConfig.error = testConfig.error ?? null;
-    testConfig.files = testConfig.files ?? {};
-    testConfig.filename = testConfig.filename || 'index.ts';
-    testConfig.output = testConfig.output || testConfig.code;
-    testConfig.messages = testConfig.messages ?? [];
+
+    const testConfig = defaults(partialTestConfig, {
+      error: null,
+      filename: 'index.ts',
+      files: {},
+      messages: [],
+      output: partialTestConfig.code,
+    });
+
     await outputFiles(cwd, testConfig.files);
 
     const lintingConfig = {
