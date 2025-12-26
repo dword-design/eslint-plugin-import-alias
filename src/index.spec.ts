@@ -1,6 +1,6 @@
 import P from 'node:path';
 
-import defu from '@dword-design/defu';
+import defaults from '@dword-design/defaults';
 import { expect, test } from '@playwright/test';
 import packageName from 'depcheck-package-name';
 import endent from 'endent';
@@ -12,12 +12,13 @@ import tseslint from 'typescript-eslint';
 import self from '.';
 
 interface TestConfig {
-  error?: string;
+  error?: string | null;
   files?: Files;
   filename?: string;
   code: string;
   output?: string;
   messages?: Array<{ message: string; ruleId: string | null }>;
+  options?: Record<string, unknown>;
 }
 
 const tests: Record<string, TestConfig> = {
@@ -174,14 +175,16 @@ for (const [name, testConfig] of Object.entries(tests)) {
           rules: {
             '@dword-design/import-alias/prefer-alias': [
               'error',
-              defu(testConfig.options, { babelOptions: { configFile: false } }),
+              defaults(testConfig.options, {
+                babelOptions: { configFile: false },
+              }),
             ],
           },
         },
       ],
       cwd,
       overrideConfigFile: true,
-    };
+    } as ESLint.Options;
 
     const eslintToLint = new ESLint(lintingConfig);
     const eslintToFix = new ESLint({ ...lintingConfig, fix: true });

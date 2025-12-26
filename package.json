@@ -52,14 +52,15 @@
   },
   "dependencies": {
     "@babel/core": "^7.28.5",
-    "@dword-design/defu": "^1.0.3",
+    "@dword-design/defaults": "^1.1.0",
+    "@types/babel__core": "^7.20.5",
+    "@types/lodash-es": "^4.17.12",
+    "@typescript-eslint/utils": "^8.50.1",
     "babel-plugin-module-resolver": "^5.0.2"
   },
   "devDependencies": {
     "@dword-design/base": "^16.1.5",
     "@playwright/test": "^1.57.0",
-    "@types/babel__core": "^7.20.5",
-    "@types/lodash-es": "^4.17.12",
     "depcheck-package-name": "^5.0.0",
     "endent": "npm:@dword-design/endent@^1.4.7",
     "eslint": "^9.39.2",
@@ -69,7 +70,7 @@
   },
   "packageManager": "pnpm@10.11.1+sha512.e519b9f7639869dc8d5c3c5dfef73b3f091094b0a006d7317353c72b124e80e1afd429732e28705ad6bfa1ee879c1fce46c128ccebd3192101f43dd67c667912",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "publishConfig": {
     "access": "public"
