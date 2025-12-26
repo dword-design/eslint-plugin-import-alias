@@ -1,3 +1,16 @@
+# [7.0.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v6.0.3...v7.0.0) (2025-12-26)
+
+
+### Bug Fixes
+
+* lock file maintenance ([#202](https://github.com/dword-design/eslint-plugin-import-alias/issues/202)) ([fe9d409](https://github.com/dword-design/eslint-plugin-import-alias/commit/fe9d4099681e0705a16c3750806aa0750ae3f06b))
+* trigger release ([ccc493d](https://github.com/dword-design/eslint-plugin-import-alias/commit/ccc493dfbdd758cade4f302228a849bf5bb18072))
+
+
+### BREAKING CHANGES
+
+* node.js >= 22
+
 ## [6.0.3](https://github.com/dword-design/eslint-plugin-import-alias/compare/v6.0.2...v6.0.3) (2025-06-05)
 
 
