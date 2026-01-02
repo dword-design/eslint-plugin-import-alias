@@ -1,3 +1,16 @@
+# [8.0.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v7.0.0...v8.0.0) (2026-01-02)
+
+
+### Features
+
+* typescript paths support  and prefer inner alias paths over outer ones (see doc) ([#210](https://github.com/dword-design/eslint-plugin-import-alias/issues/210)) ([3535cec](https://github.com/dword-design/eslint-plugin-import-alias/commit/3535cecdf83aa715187801e7395c333868482d3c))
+
+
+### BREAKING CHANGES
+
+* load typescript paths as aliases
+* prefer inner alias paths over outer ones (see doc)
+
 # [7.0.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v6.0.3...v7.0.0) (2025-12-26)
 
 
