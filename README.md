@@ -87,7 +87,7 @@ Add the plugin to your ESLint config:
 
 ```js
 import { defineConfig } from 'eslint/config';
-import importAlias from '@dword-design/import-alias';
+import importAlias from '@dword-design/eslint-plugin-import-alias';
 
 export default defineConfig([
   importAlias.configs.recommended,
