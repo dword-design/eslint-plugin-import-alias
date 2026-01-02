@@ -9,7 +9,7 @@ import { pick } from 'lodash-es';
 import outputFiles, { type Files } from 'output-files';
 import tseslint from 'typescript-eslint';
 
-import self from '.';
+import self, { type OptionsInput } from '.';
 
 interface TestConfig {
   error?: string | null;
@@ -17,8 +17,11 @@ interface TestConfig {
   filename?: string;
   code: string;
   output?: string;
-  messages?: Array<{ message: string; ruleId: string | null }>;
-  options?: Record<string, unknown>;
+  messages?: Array<{
+    message: string;
+    ruleId: '@dword-design/import-alias/prefer-alias';
+  }>;
+  options?: OptionsInput;
 }
 
 const tests: Record<string, TestConfig> = {
@@ -57,6 +60,7 @@ const tests: Record<string, TestConfig> = {
         ruleId: '@dword-design/import-alias/prefer-alias',
       },
     ],
+    options: { shouldReadTsConfig: false },
     output: "import '@/foo'",
   },
   'custom alias': {
@@ -112,9 +116,10 @@ const tests: Record<string, TestConfig> = {
   'no aliases': {
     code: "import '../foo'",
     error:
-      'No alias configured. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.',
+      'No alias configured. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, defining them in your tsconfig.json paths, or passing them directly to the prefer-alias rule.',
     filename: P.join('sub', 'index.ts'),
     files: { 'foo.ts': '', 'package.json': JSON.stringify({}) },
+    options: { shouldReadTsConfig: false },
   },
   'parent import but no matching alias': {
     code: "import '../../foo'",
@@ -154,6 +159,83 @@ const tests: Record<string, TestConfig> = {
     code: "import '@foo/bar'",
     files: { 'foo.ts': '' },
     options: { alias: { '@': '.' } },
+  },
+  tsconfig: {
+    code: "import '../foo'",
+    filename: P.join('sub', 'index.ts'),
+    files: {
+      'foo.ts': '',
+      'tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '@/*': ['./*'] } },
+      }),
+    },
+    messages: [
+      {
+        message: "Unexpected parent import '../foo'. Use '@/foo' instead",
+        ruleId: '@dword-design/import-alias/prefer-alias',
+      },
+    ],
+    options: { babelOptions: { configFile: false } },
+    output: "import '@/foo'",
+  },
+  'tsconfig with different baseUrl': {
+    code: "import '../../foo'",
+    filename: P.join('src', 'sub', 'index.ts'),
+    files: {
+      'foo.ts': '',
+      'tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: './src', paths: { '@/*': ['../*'] } },
+      }),
+    },
+    messages: [
+      {
+        message: "Unexpected parent import '../../foo'. Use '@/foo' instead",
+        ruleId: '@dword-design/import-alias/prefer-alias',
+      },
+    ],
+    options: { babelOptions: { configFile: false } },
+    output: "import '@/foo'",
+  },
+  'tsconfig with extends': {
+    code: "import '../foo'",
+    filename: P.join('sub', 'index.ts'),
+    files: {
+      'foo.ts': '',
+      'tsconfig.base.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '~/*': ['./*'] } },
+      }),
+      'tsconfig.json': JSON.stringify({ extends: './tsconfig.base.json' }),
+    },
+    messages: [
+      {
+        message: "Unexpected parent import '../foo'. Use '~/foo' instead",
+        ruleId: '@dword-design/import-alias/prefer-alias',
+      },
+    ],
+    options: { babelOptions: { configFile: false } },
+    output: "import '~/foo'",
+  },
+  'tsconfig with multiple path mappings': {
+    code: "import '../lib/utils'",
+    filename: P.join('sub', 'index.ts'),
+    files: {
+      'lib/utils.ts': '',
+      'tsconfig.json': JSON.stringify({
+        compilerOptions: {
+          baseUrl: '.',
+          paths: { '@/*': ['./*'], '@lib/*': ['./lib/*'] },
+        },
+      }),
+    },
+    messages: [
+      {
+        message:
+          "Unexpected parent import '../lib/utils'. Use '@lib/utils' instead",
+        ruleId: '@dword-design/import-alias/prefer-alias',
+      },
+    ],
+    options: { babelOptions: { configFile: false } },
+    output: "import '@lib/utils'",
   },
 };
 

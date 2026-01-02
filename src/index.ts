@@ -10,3 +10,5 @@ export default {
     },
   },
 };
+
+export { type OptionsInput } from './rules/prefer-alias';

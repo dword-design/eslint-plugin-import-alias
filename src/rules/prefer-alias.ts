@@ -4,7 +4,11 @@ import { loadOptions } from '@babel/core';
 import defaults from '@dword-design/defaults';
 import { ESLintUtils } from '@typescript-eslint/utils';
 import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver';
-import { omit, pick } from 'lodash-es';
+import { omit, orderBy, pick } from 'lodash-es';
+
+const ts = await import('typescript')
+  .then(module => module.default)
+  .catch(() => null);
 
 export interface BabelPluginModuleResolverOptions {
   alias?: Record<string, string>;
@@ -15,11 +19,80 @@ export interface BabelPluginModuleResolverOptions {
     options: Pick<BabelPluginModuleResolverOptions, 'alias' | 'cwd'>,
   ) => string;
 }
+
+const loadTsConfigPaths = (currentFile: string, cwd: string) => {
+  if (!ts) {
+    return {};
+  }
+
+  const configPath = ts.findConfigFile(
+    pathLib.dirname(currentFile),
+    ts.sys.fileExists,
+    'tsconfig.json',
+  );
+
+  if (!configPath) {
+    return {};
+  }
+
+  const configText = ts.sys.readFile(configPath);
+
+  if (!configText) {
+    return {};
+  }
+
+  const result = ts.parseConfigFileTextToJson(configPath, configText);
+
+  if (!result.config) {
+    return {};
+  }
+
+  const parsedConfig = ts.parseJsonConfigFileContent(
+    result.config,
+    ts.sys,
+    pathLib.dirname(configPath),
+    undefined,
+    configPath,
+  );
+
+  const { baseUrl, paths } = parsedConfig.options;
+
+  if (!paths) {
+    return {};
+  }
+
+  const aliases: Record<string, string> = {};
+
+  const basePath = baseUrl
+    ? pathLib.resolve(pathLib.dirname(configPath), baseUrl)
+    : pathLib.dirname(configPath);
+
+  return Object.fromEntries(
+    Object.entries(paths).map(([key, values]) => {
+      // Remove trailing /* from the alias pattern
+      const aliasKey = key.replace(/\/\*$/, '');
+
+      // Remove trailing /* from the path and resolve relative to baseUrl
+      const absoluteAliasPath = pathLib.resolve(
+        basePath,
+        values[0].replace(/\/\*$/, ''),
+      );
+
+      // Make it relative to cwd for compatibility with babel-plugin-module-resolver
+      const relativeAliasPath = pathLib.relative(cwd, absoluteAliasPath);
+      return [aliasKey, `./${relativeAliasPath}`];
+    }),
+  );
+  return aliases;
+};
+
 const createRule = ESLintUtils.RuleCreator(() => '');
 
 export interface Options {
   alias: Record<string, string>;
   aliasForSubpaths: boolean;
+  shouldReadTsConfig: boolean;
+  shouldReadBabelConfig: boolean;
   resolvePath: (
     sourcePath: string,
     currentFile: string,
@@ -28,9 +101,9 @@ export interface Options {
   cwd: string;
 }
 
-type OptionsInput = Partial<Options> & {
-  babelOptions?: Record<string, unknown>;
-};
+type BabelOptions = Exclude<Parameters<typeof loadOptions>[0], undefined>;
+
+export type OptionsInput = Partial<Options> & { babelOptions?: BabelOptions };
 const isParentImport = (path: string) => /^(\.\/)?\.\.\//.test(path);
 
 const findMatchingAlias = (
@@ -43,20 +116,31 @@ const findMatchingAlias = (
     sourcePath,
   );
 
-  for (const aliasName of Object.keys(options.alias)) {
-    const path = pathLib.resolve(
-      pathLib.dirname(currentFile),
-      options.resolvePath(
-        `${aliasName}/`,
-        currentFile,
-        pick(options, ['alias', 'cwd']),
-      ),
-    );
+  const matches = Object.keys(options.alias)
+    .map(aliasName => {
+      const path = pathLib.resolve(
+        pathLib.dirname(currentFile),
+        options.resolvePath(
+          `${aliasName}/`,
+          currentFile,
+          pick(options, ['alias', 'cwd']),
+        ),
+      );
 
-    if (absoluteSourcePath.startsWith(path)) {
-      return { name: aliasName, path };
-    }
-  }
+      if (absoluteSourcePath.startsWith(path)) {
+        return {
+          name: aliasName,
+          path,
+          segmentCount: path.split(pathLib.sep).length,
+        };
+      }
+
+      return null;
+    })
+    .filter(match => !!match);
+
+  const sortedMatches = orderBy(matches, ['segmentCount'], ['desc']);
+  return sortedMatches?.[0] ?? null;
 };
 
 export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
@@ -68,29 +152,37 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
 
     const optionsFromRule = defaults(context.options[0] ?? {}, {
       babelOptions: {},
+      shouldReadBabelConfig: true,
+      shouldReadTsConfig: true,
     });
 
-    const babelConfig = loadOptions({
-      filename: currentFile,
-      ...optionsFromRule.babelOptions,
-    });
+    const optionsFromBabelPlugin = optionsFromRule.shouldReadBabelConfig
+      ? (() => {
+          const babelConfig = loadOptions({
+            filename: currentFile,
+            ...optionsFromRule.babelOptions,
+          });
 
-    const babelPlugin =
-      babelConfig?.plugins?.find?.(
-        iteratedPlugin => iteratedPlugin.key === 'module-resolver',
-      ) ?? null;
+          const babelPlugin =
+            babelConfig?.plugins?.find?.(
+              iteratedPlugin => iteratedPlugin.key === 'module-resolver',
+            ) ?? null;
 
-    const babelPluginOptions = (babelPlugin?.options ??
-      {}) as BabelPluginModuleResolverOptions; // TODO: https://github.com/microsoft/TypeScript/issues/62929
+          const babelPluginOptions = (babelPlugin?.options ??
+            {}) as BabelPluginModuleResolverOptions; // TODO: https://github.com/microsoft/TypeScript/issues/62929
 
-    const optionsFromPlugin = pick(babelPluginOptions, [
-      'alias',
-      'resolvePath',
-    ] as const);
+          return pick(babelPluginOptions, ['alias', 'resolvePath'] as const);
+        })()
+      : {};
 
     const options = defaults(
       omit(optionsFromRule, ['babelOptions']),
-      optionsFromPlugin,
+      {
+        alias: optionsFromRule.shouldReadTsConfig
+          ? loadTsConfigPaths(currentFile, context.cwd)
+          : {},
+      },
+      optionsFromBabelPlugin,
       {
         alias: {},
         aliasForSubpaths: false,
@@ -101,7 +193,7 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
 
     if (Object.keys(options.alias).length === 0) {
       throw new Error(
-        'No alias configured. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, or directly to the prefer-alias rule.',
+        'No alias configured. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, defining them in your tsconfig.json paths, or passing them directly to the prefer-alias rule.',
       );
     }
 
@@ -190,6 +282,8 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
           alias: { type: 'object' },
           aliasForSubpaths: { default: false, type: 'boolean' },
           babelOptions: { type: 'object' },
+          shouldReadBabelConfig: { default: true, type: 'boolean' },
+          shouldReadTsConfig: { default: true, type: 'boolean' },
         },
         type: 'object',
       },
