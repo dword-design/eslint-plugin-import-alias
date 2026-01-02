@@ -85,7 +85,9 @@ $ yarn add @dword-design/eslint-plugin-import-alias
 
 Add the plugin to your ESLint config:
 
-```js
+```ts
+// eslint.config.ts
+
 import { defineConfig } from 'eslint/config';
 import importAlias from '@dword-design/import-alias';
 
@@ -94,9 +96,37 @@ export default defineConfig([
 ]);
 ```
 
-Alright, now you have to tell the plugin which aliases to use. In the simplest case, you are already using [babel-plugin-module-resolver](https://www.npmjs.com/package/babel-plugin-module-resolver) for your aliases. Your babel config would look something like this:
+Options can be passed by setting them in the `prefer-alias` rule:
+
+```ts
+// eslint.config.ts
+
+import { defineConfig } from 'eslint/config';
+import importAlias from '@dword-design/import-alias';
+
+export default defineConfig([
+  importAlias.configs.recommended,
+  {
+    rules: {
+      '@dword-design/import-alias/prefer-alias': ['error', /* options */],
+    },
+  },
+]);
+```
+
+Now you have multiple ways to tell the plugin about aliases.
+
+### `tsconfig.json` `paths` setting
+
+If you are a TypeScript user and you have aliases configured in your `tsconfig.json` via the `paths` setting, they will automatically be loaded. You can disable this behavior by setting `shouldReadTsConfig` to `false` in the plugin options.
+
+### [babel-plugin-module-resolver](https://www.npmjs.com/package/babel-plugin-module-resolver)
+
+If you are already using [babel-plugin-module-resolver](https://www.npmjs.com/package/babel-plugin-module-resolver), the plugin will load the Babel config and extract the `alias` and `resolvePath` options. You can disable this behavior by setting `shouldReadBabelConfig` to `false` in the plugin options.
 
 ```json
+// .babelrc.json
+
 {
   "plugins": {
     ["module-resolver", {
@@ -108,31 +138,53 @@ Alright, now you have to tell the plugin which aliases to use. In the simplest c
 }
 ```
 
-In this case lucky you, you don't have to do anything else. The plugin should work out of the box.
+### Plugin `alias` option
 
-If you have a special project setup that does not have a babel config in the project path, you can still use the plugin by passing the aliases directly to the rule. In this case you define the rule additionally in the `rules` section:
+You can also just pass the aliases to the plugin as an option.
 
-```json
-"rules": {
-  "@dword-design/import-alias/prefer-alias": [
-    "error",
-    {
-      "alias": {
-        "@": "./src",
-        "@components": "./src/components"
-      }
-    }
-  ]
-}
+```ts
+// eslint.config.ts
+
+import { defineConfig } from 'eslint/config';
+import importAlias from '@dword-design/import-alias';
+
+export default defineConfig([
+  importAlias.configs.recommended,
+  {
+    rules: {
+      '@dword-design/import-alias/prefer-alias': [
+        'error',
+        {
+          'alias': {
+            '@': './src',
+            '@components': './src/components',
+          },
+        },
+      ],
+    },
+  },
+]);
 ```
+
+## Alias resolution
 
 By default, the plugin will convert parent paths to aliases (like `../model/foo`), but will keep subpath imports relative. You can change that to also convert subpaths to aliased imports by passing the `aliasForSubpaths` option to the rule like so:
 
-```json
-"rules": {
-  "@dword-design/import-alias/prefer-alias": ["error", { "aliasForSubpaths": true }]
+```ts
+rules: {
+  '@dword-design/import-alias/prefer-alias': ['error', { aliasForSubpaths: true }],
 }
 ```
+
+Also, inner alias paths are preferred to outer ones. Example:
+
+```ts
+rules: {
+  '@dword-design/import-alias/prefer-alias': ['error', { alias: { '@': './app', '@@': '.' }],
+}
+```
+
+If an import resolves to a file insode `app`, `@` will be preferred over `@@` although both aliases match. This is convenient for the use case where you have a lot of aliases for top-level folders like `components`, `utils` etc where you usually want those instead of a generic root alias. If you have other use cases, please let me know.
 
 <!-- LICENSE/ -->
 ## Contribute
