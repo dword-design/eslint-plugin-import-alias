@@ -113,6 +113,20 @@ const tests: Record<string, TestConfig> = {
     output: "import '@/foo'",
   },
   external: { code: "import 'foo'", options: { alias: { '@': '.' } } },
+  'multiple matching aliases takes the innermost': {
+    code: "import '../lib/utils'",
+    filename: P.join('sub', 'index.ts'),
+    files: { 'lib/utils.ts': '' },
+    messages: [
+      {
+        message:
+          "Unexpected parent import '../lib/utils'. Use '@lib/utils' instead",
+        ruleId: '@dword-design/import-alias/prefer-alias',
+      },
+    ],
+    options: { alias: { '@': '.', '@lib': './lib' } },
+    output: "import '@lib/utils'",
+  },
   'no aliases': {
     code: "import '../foo'",
     error:
@@ -175,7 +189,6 @@ const tests: Record<string, TestConfig> = {
         ruleId: '@dword-design/import-alias/prefer-alias',
       },
     ],
-    options: { babelOptions: { configFile: false } },
     output: "import '@/foo'",
   },
   'tsconfig with different baseUrl': {
@@ -193,7 +206,6 @@ const tests: Record<string, TestConfig> = {
         ruleId: '@dword-design/import-alias/prefer-alias',
       },
     ],
-    options: { babelOptions: { configFile: false } },
     output: "import '@/foo'",
   },
   'tsconfig with extends': {
@@ -212,7 +224,6 @@ const tests: Record<string, TestConfig> = {
         ruleId: '@dword-design/import-alias/prefer-alias',
       },
     ],
-    options: { babelOptions: { configFile: false } },
     output: "import '~/foo'",
   },
   'tsconfig with multiple path mappings': {
@@ -234,7 +245,6 @@ const tests: Record<string, TestConfig> = {
         ruleId: '@dword-design/import-alias/prefer-alias',
       },
     ],
-    options: { babelOptions: { configFile: false } },
     output: "import '@lib/utils'",
   },
 };
