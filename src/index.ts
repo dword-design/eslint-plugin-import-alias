@@ -6,7 +6,7 @@ export default {
   configs: {
     recommended: {
       plugins: { '@dword-design/import-alias': plugin },
-      rules: { '@dword-design/import-alias/prefer-alias': 'error' },
+      rules: { '@dword-design/import-alias/prefer-alias': 'error' as const },
     },
   },
 };
