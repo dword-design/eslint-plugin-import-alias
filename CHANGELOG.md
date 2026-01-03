@@ -1,3 +1,11 @@
+## [8.1.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.1...v8.1.2) (2026-01-03)
+
+
+### Bug Fixes
+
+* fix matching ([a8903d5](https://github.com/dword-design/eslint-plugin-import-alias/commit/a8903d5a65b7fc7e6a3d4f84a6f57f600da64b93))
+* foo ([89e028f](https://github.com/dword-design/eslint-plugin-import-alias/commit/89e028fc61c802ae517b864a522e48c3e083f6ef))
+
 ## [8.1.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.0...v8.1.1) (2026-01-03)
 
 
