@@ -287,7 +287,24 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
       ImportDeclaration: node => {
         const sourcePath = node.source.value;
 
-        const hasAlias = Object.keys(options.alias).some(alias =>
+        const filteredAliases = Object.fromEntries(
+          Object.entries(options.alias)
+            .flatMap(([aliasName, aliasInfos]) =>
+              aliasInfos.map(info => [aliasName, info] as const),
+            )
+            .filter(([, info]) =>
+              info.includePatterns.length > 0
+                ? micromatch.isMatch(
+                    pathLib.relative(info.configDir, context.filename),
+                    info.includePatterns,
+                    { cwd: info.configDir },
+                  )
+                : true,
+            )
+            .map(([aliasName, info]) => [aliasName, info.path] as const),
+        );
+
+        const hasAlias = Object.keys(filteredAliases).some(alias =>
           sourcePath.startsWith(`${alias}/`),
         );
 
@@ -322,23 +339,6 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
           });
         }
 
-        const filteredAliases = Object.fromEntries(
-          Object.entries(options.alias)
-            .flatMap(([aliasName, aliasInfos]) =>
-              aliasInfos.map(info => [aliasName, info] as const),
-            )
-            .filter(([, info]) =>
-              info.includePatterns.length > 0
-                ? micromatch.isMatch(
-                    pathLib.relative(info.configDir, context.filename),
-                    info.includePatterns,
-                    { cwd: info.configDir },
-                  )
-                : true,
-            )
-            .map(([aliasName, info]) => [aliasName, info.path] as const),
-        );
-
         const importWithoutAlias = options.resolvePath(
           sourcePath,
           context.filename,
@@ -361,8 +361,6 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
             node,
           });
         }
-
-        return;
       },
     };
   },

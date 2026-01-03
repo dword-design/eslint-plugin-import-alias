@@ -25,6 +25,20 @@ interface TestConfig {
 }
 
 const tests: Record<string, TestConfig> = {
+  'alias but no matching include pattern': {
+    code: "import '@/foo';",
+    filename: P.join('sub', 'index.ts'),
+    files: {
+      'foo.ts': '',
+      'tsconfig.foo.json': JSON.stringify({
+        compilerOptions: { paths: { '@/*': ['./*'] } },
+        include: ['non-existing.ts'],
+      }),
+      'tsconfig.json': JSON.stringify({
+        references: [{ path: './tsconfig.foo.json' }],
+      }),
+    },
+  },
   'alias subpath': {
     code: "import '@/foo'",
     files: { 'foo.ts': '' },
