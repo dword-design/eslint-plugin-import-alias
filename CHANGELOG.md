@@ -1,3 +1,10 @@
+## [8.1.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.0...v8.1.1) (2026-01-03)
+
+
+### Bug Fixes
+
+* fix typescript project references ([208c6f4](https://github.com/dword-design/eslint-plugin-import-alias/commit/208c6f4b296fd536c5fe837551887824f97833fd))
+
 # [8.1.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.0.1...v8.1.0) (2026-01-03)
 
 
