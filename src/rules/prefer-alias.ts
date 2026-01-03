@@ -180,9 +180,11 @@ const findMatchingAlias = (
       aliasInfos.map(info => [aliasName, info] as const),
     )
     .filter(([, info]) =>
-      micromatch.isMatch(currentFilename, info.includePatterns, {
-        cwd: info.configDir,
-      }),
+      micromatch.isMatch(
+        pathLib.relative(info.configDir, currentFilename),
+        info.includePatterns,
+        { cwd: info.configDir },
+      ),
     )
     .map(([aliasName, info]) => {
       const path = pathLib.resolve(
@@ -324,9 +326,11 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
               aliasInfos.map(info => [aliasName, info] as const),
             )
             .filter(([, info]) =>
-              micromatch.isMatch(context.filename, info.includePatterns, {
-                cwd: info.configDir,
-              }),
+              micromatch.isMatch(
+                pathLib.relative(info.configDir, context.filename),
+                info.includePatterns,
+                { cwd: info.configDir },
+              ),
             )
             .map(([aliasName, info]) => [aliasName, info.path] as const),
         );
