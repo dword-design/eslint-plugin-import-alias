@@ -1,3 +1,10 @@
+## [8.1.3](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.2...v8.1.3) (2026-01-03)
+
+
+### Bug Fixes
+
+* fix case where there are aliases in the code but the file doesn't match ([9c3a206](https://github.com/dword-design/eslint-plugin-import-alias/commit/9c3a206b7657e0ab7c9e1b1a1bfa3d261e7dc955))
+
 ## [8.1.2](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.1...v8.1.2) (2026-01-03)
 
 
