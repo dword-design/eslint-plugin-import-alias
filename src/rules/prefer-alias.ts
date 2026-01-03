@@ -77,7 +77,7 @@ const loadTsConfigPathsFromFile = (
 
   const { baseUrl, paths = [] } = parsedConfig.options;
   const projectReferences = parsedConfig.projectReferences ?? [];
-  const includePatterns = result.config.include ?? ['**/*'];
+  const includePatterns = result.config.include ?? [];
   const configDir = pathLib.dirname(configPath);
   // Load paths from current config
   const basePath = baseUrl ? pathLib.resolve(configDir, baseUrl) : configDir;
@@ -180,11 +180,13 @@ const findMatchingAlias = (
       aliasInfos.map(info => [aliasName, info] as const),
     )
     .filter(([, info]) =>
-      micromatch.isMatch(
-        pathLib.relative(info.configDir, currentFilename),
-        info.includePatterns,
-        { cwd: info.configDir },
-      ),
+      info.includePatterns.length > 0
+        ? micromatch.isMatch(
+            pathLib.relative(info.configDir, currentFilename),
+            info.includePatterns,
+            { cwd: info.configDir },
+          )
+        : true,
     )
     .map(([aliasName, info]) => {
       const path = pathLib.resolve(
@@ -218,7 +220,7 @@ const withNormalizedAliases = (
   ...options,
   alias: mapValues(options.alias, aliasPath =>
     typeof aliasPath === 'string'
-      ? [{ configDir: cwd, includePatterns: ['**/*'], path: aliasPath }]
+      ? [{ configDir: cwd, includePatterns: [], path: aliasPath }]
       : aliasPath,
   ),
 });
@@ -326,11 +328,13 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
               aliasInfos.map(info => [aliasName, info] as const),
             )
             .filter(([, info]) =>
-              micromatch.isMatch(
-                pathLib.relative(info.configDir, context.filename),
-                info.includePatterns,
-                { cwd: info.configDir },
-              ),
+              info.includePatterns.length > 0
+                ? micromatch.isMatch(
+                    pathLib.relative(info.configDir, context.filename),
+                    info.includePatterns,
+                    { cwd: info.configDir },
+                  )
+                : true,
             )
             .map(([aliasName, info]) => [aliasName, info.path] as const),
         );
