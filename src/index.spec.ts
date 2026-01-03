@@ -247,6 +247,82 @@ const tests: Record<string, TestConfig> = {
     ],
     output: "import '@lib/utils'",
   },
+  'tsconfig with multiple references': {
+    code: "import '../../utils/src/helpers'",
+    filename: P.join('packages', 'app', 'src', 'index.ts'),
+    files: {
+      'packages/app/src/foo.ts': '',
+      'packages/app/tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '@app/*': ['./src/*'] } },
+        references: [{ path: '../shared' }, { path: '../utils' }],
+      }),
+      'packages/shared/tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '@shared/*': ['./lib/*'] } },
+      }),
+      'packages/utils/src/helpers.ts': '',
+      'packages/utils/tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '@utils/*': ['./src/*'] } },
+      }),
+    },
+    messages: [
+      {
+        message:
+          "Unexpected parent import '../../utils/src/helpers'. Use '@utils/helpers' instead",
+        ruleId: '@dword-design/import-alias/prefer-alias',
+      },
+    ],
+    output: "import '@utils/helpers'",
+  },
+  'tsconfig with nested references': {
+    code: "import '../../core/utils'",
+    filename: P.join('packages', 'app', 'src', 'index.ts'),
+    files: {
+      'packages/app/src/foo.ts': '',
+      'packages/app/tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '@app/*': ['./src/*'] } },
+        references: [{ path: '../shared' }],
+      }),
+      'packages/core/tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '@core/*': ['./*'] } },
+      }),
+      'packages/core/utils.ts': '',
+      'packages/shared/tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '@shared/*': ['./lib/*'] } },
+        references: [{ path: '../core' }],
+      }),
+    },
+    messages: [
+      {
+        message:
+          "Unexpected parent import '../../core/utils'. Use '@core/utils' instead",
+        ruleId: '@dword-design/import-alias/prefer-alias',
+      },
+    ],
+    output: "import '@core/utils'",
+  },
+  'tsconfig with references': {
+    code: "import '../../shared/src/utils'",
+    filename: P.join('packages', 'app', 'src', 'index.ts'),
+    files: {
+      'packages/app/src/foo.ts': '',
+      'packages/app/tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '@app/*': ['./src/*'] } },
+        references: [{ path: '../shared' }],
+      }),
+      'packages/shared/src/utils.ts': '',
+      'packages/shared/tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '@shared/*': ['./src/*'] } },
+      }),
+    },
+    messages: [
+      {
+        message:
+          "Unexpected parent import '../../shared/src/utils'. Use '@shared/utils' instead",
+        ruleId: '@dword-design/import-alias/prefer-alias',
+      },
+    ],
+    output: "import '@shared/utils'",
+  },
 };
 
 for (const [name, partialTestConfig] of Object.entries(tests)) {

@@ -20,21 +20,16 @@ export interface BabelPluginModuleResolverOptions {
   ) => string;
 }
 
-const loadTsConfigPaths = (currentFile: string, cwd: string) => {
-  if (!ts) {
+const loadTsConfigPathsFromFile = (
+  configPath: string,
+  cwd: string,
+  visitedConfigs: Set<string> = new Set<string>(),
+): Record<string, string> => {
+  if (!ts || visitedConfigs.has(configPath)) {
     return {};
   }
 
-  const configPath = ts.findConfigFile(
-    pathLib.dirname(currentFile),
-    ts.sys.fileExists,
-    'tsconfig.json',
-  );
-
-  if (!configPath) {
-    return {};
-  }
-
+  visitedConfigs.add(configPath);
   const configText = ts.sys.readFile(configPath);
 
   if (!configText) {
@@ -55,19 +50,15 @@ const loadTsConfigPaths = (currentFile: string, cwd: string) => {
     configPath,
   );
 
-  const { baseUrl, paths } = parsedConfig.options;
+  const { baseUrl, paths = [] } = parsedConfig.options;
+  const projectReferences = parsedConfig.projectReferences ?? [];
 
-  if (!paths) {
-    return {};
-  }
-
-  const aliases: Record<string, string> = {};
-
+  // Load paths from current config
   const basePath = baseUrl
     ? pathLib.resolve(pathLib.dirname(configPath), baseUrl)
     : pathLib.dirname(configPath);
 
-  return Object.fromEntries(
+  const aliases = Object.fromEntries(
     Object.entries(paths).map(([key, values]) => {
       // Remove trailing /* from the alias pattern
       const aliasKey = key.replace(/\/\*$/, '');
@@ -83,7 +74,60 @@ const loadTsConfigPaths = (currentFile: string, cwd: string) => {
       return [aliasKey, `./${relativeAliasPath}`];
     }),
   );
+
+  // Load paths from referenced projects (recursively)
+  for (const reference of projectReferences) {
+    const referencePath = pathLib.resolve(
+      pathLib.dirname(configPath),
+      reference.path,
+    );
+
+    // Try to load the referenced tsconfig
+    let referencedConfigPath = referencePath;
+
+    if (!referencedConfigPath.endsWith('.json')) {
+      referencedConfigPath = pathLib.join(referencePath, 'tsconfig.json');
+    }
+
+    if (ts.sys.fileExists(referencedConfigPath)) {
+      // Recursively load paths from the referenced config and its references
+      const referencedAliases = loadTsConfigPathsFromFile(
+        referencedConfigPath,
+        cwd,
+        visitedConfigs,
+      );
+
+      // Merge referenced aliases, giving priority to already defined aliases
+      for (const [key, value] of Object.entries(referencedAliases)) {
+        if (!aliases[key]) {
+          aliases[key] = value;
+        }
+      }
+    }
+  }
+
   return aliases;
+};
+
+const loadTsConfigPaths = (
+  currentFile: string,
+  cwd: string,
+): Record<string, string> => {
+  if (!ts) {
+    return {};
+  }
+
+  const configPath = ts.findConfigFile(
+    pathLib.dirname(currentFile),
+    ts.sys.fileExists,
+    'tsconfig.json',
+  );
+
+  if (!configPath) {
+    return {};
+  }
+
+  return loadTsConfigPathsFromFile(configPath, cwd);
 };
 
 const createRule = ESLintUtils.RuleCreator(() => '');
