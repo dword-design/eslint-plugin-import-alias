@@ -56,11 +56,13 @@
     "@types/babel__core": "^7.20.5",
     "@types/lodash-es": "^4.17.12",
     "@typescript-eslint/utils": "^8.50.1",
-    "babel-plugin-module-resolver": "^5.0.2"
+    "babel-plugin-module-resolver": "^5.0.2",
+    "micromatch": "^4.0.8"
   },
   "devDependencies": {
     "@dword-design/base": "^16.1.7",
     "@playwright/test": "^1.57.0",
+    "@types/micromatch": "^4.0.10",
     "depcheck-package-name": "^5.0.0",
     "endent": "npm:@dword-design/endent@^1.4.7",
     "eslint": "^9.39.2",

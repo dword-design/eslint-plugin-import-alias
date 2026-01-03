@@ -137,7 +137,7 @@ const tests: Record<string, TestConfig> = {
   },
   'parent import but no matching alias': {
     code: "import '../../foo'",
-    options: { alias: { '@': '.' } },
+    options: { alias: { '@': '.' }, shouldReadTsConfig: false },
   },
   'parent import with ..': {
     code: "import '../foo'",
@@ -323,6 +323,56 @@ const tests: Record<string, TestConfig> = {
     ],
     output: "import '@shared/utils'",
   },
+  'tsconfig with references having same alias name': {
+    code: "import '../../backend/lib/database'",
+    filename: P.join('packages', 'app', 'src', 'index.ts'),
+    files: {
+      'packages/app/src/foo.ts': '',
+      'packages/app/tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '@app/*': ['./src/*'] } },
+        references: [{ path: '../frontend' }, { path: '../backend' }],
+      }),
+      'packages/backend/lib/database.ts': '',
+      'packages/backend/tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '@lib/*': ['./lib/*'] } },
+      }),
+      'packages/frontend/lib/button.ts': '',
+      'packages/frontend/tsconfig.json': JSON.stringify({
+        compilerOptions: { baseUrl: '.', paths: { '@lib/*': ['./lib/*'] } },
+      }),
+    },
+    messages: [
+      {
+        message:
+          "Unexpected parent import '../../backend/lib/database'. Use '@lib/database' instead",
+        ruleId: '@dword-design/import-alias/prefer-alias',
+      },
+    ],
+    output: "import '@lib/database'",
+  },
+  'tsconfig with references having same alias name with non-matching includes':
+    {
+      code: "import '../../lib/utils'",
+      filename: P.join('packages', 'app', 'src', 'index.ts'),
+      files: {
+        'lib/utils.ts': '',
+        'packages/app/src/foo.ts': '',
+        'packages/app/tsconfig.json': JSON.stringify({
+          compilerOptions: { baseUrl: '.', paths: { '@app/*': ['./src/*'] } },
+          references: [{ path: '../frontend' }, { path: '../backend' }],
+        }),
+        'packages/backend/tsconfig.json': JSON.stringify({
+          compilerOptions: { baseUrl: '..', paths: { '@lib/*': ['./lib/*'] } },
+          include: ['../lib/backend/**/*'],
+        }),
+        'packages/frontend/tsconfig.json': JSON.stringify({
+          compilerOptions: { baseUrl: '..', paths: { '@lib/*': ['./lib/*'] } },
+          include: ['../lib/frontend/**/*'],
+        }),
+      },
+      messages: [],
+      output: "import '../../lib/utils'",
+    },
 };
 
 for (const [name, partialTestConfig] of Object.entries(tests)) {
