@@ -1,3 +1,10 @@
+## [8.0.1](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.0.0...v8.0.1) (2026-01-03)
+
+
+### Bug Fixes
+
+* fix config typing ([3099b31](https://github.com/dword-design/eslint-plugin-import-alias/commit/3099b31720b2d7a2b45c0a50fb0ef575e9fffd7e))
+
 # [8.0.0](https://github.com/dword-design/eslint-plugin-import-alias/compare/v7.0.0...v8.0.0) (2026-01-02)
 
 
