@@ -67,7 +67,7 @@
     "endent": "npm:@dword-design/endent@^1.4.7",
     "eslint": "^9.39.2",
     "lodash-es": "^4.17.22",
-    "output-files": "^3.0.0",
+    "output-files": "^4.0.0",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.50.0"
   },
