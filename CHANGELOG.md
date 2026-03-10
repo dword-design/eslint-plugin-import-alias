@@ -1,3 +1,10 @@
+## [8.1.7](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.6...v8.1.7) (2026-03-10)
+
+
+### Bug Fixes
+
+* update pnpm to v10.32.0 ([#195](https://github.com/dword-design/eslint-plugin-import-alias/issues/195)) ([31ed579](https://github.com/dword-design/eslint-plugin-import-alias/commit/31ed5790780e6fdb0ef701cf139a824653844dc5))
+
 ## [8.1.6](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.5...v8.1.6) (2026-03-10)
 
 
