@@ -1,3 +1,11 @@
+## [8.1.4](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.3...v8.1.4) (2026-03-10)
+
+
+### Bug Fixes
+
+* fix imports in readme ([730807d](https://github.com/dword-design/eslint-plugin-import-alias/commit/730807d3aaf619733baa9a1cc8bc25c012ddf5ee))
+* update README.md ([#199](https://github.com/dword-design/eslint-plugin-import-alias/issues/199)) ([bbebe74](https://github.com/dword-design/eslint-plugin-import-alias/commit/bbebe7444cc9006e2f068039d91db10045289c99))
+
 ## [8.1.3](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.2...v8.1.3) (2026-01-03)
 
 
