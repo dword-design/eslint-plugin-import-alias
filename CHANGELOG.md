@@ -1,3 +1,11 @@
+## [8.1.5](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.4...v8.1.5) (2026-03-10)
+
+
+### Bug Fixes
+
+* fix typo in README.md regarding import aliases ([da4ef19](https://github.com/dword-design/eslint-plugin-import-alias/commit/da4ef19addf092fe0604614c9b5ec6f7092da789))
+* lock file maintenance ([#222](https://github.com/dword-design/eslint-plugin-import-alias/issues/222)) ([7b344de](https://github.com/dword-design/eslint-plugin-import-alias/commit/7b344de18f5d3b5c9d9faf9a31254701890d8b6b))
+
 ## [8.1.4](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.3...v8.1.4) (2026-03-10)
 
 
