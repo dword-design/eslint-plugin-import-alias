@@ -66,7 +66,7 @@
     "@types/node": "^25.4.0",
     "depcheck-package-name": "^5.0.0",
     "endent": "npm:@dword-design/endent@^1.4.7",
-    "eslint": "^9.39.4",
+    "eslint": "^10.0.0",
     "lodash-es": "^4.17.23",
     "output-files": "^4.0.0",
     "typescript": "^5.9.3",
