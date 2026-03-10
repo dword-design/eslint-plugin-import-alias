@@ -51,25 +51,26 @@
     "verify": "base verify"
   },
   "dependencies": {
-    "@babel/core": "^7.28.5",
-    "@dword-design/defaults": "^1.1.1",
+    "@babel/core": "^7.29.0",
+    "@dword-design/defaults": "^1.1.2",
     "@types/babel__core": "^7.20.5",
     "@types/lodash-es": "^4.17.12",
-    "@typescript-eslint/utils": "^8.50.1",
+    "@typescript-eslint/utils": "^8.57.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "micromatch": "^4.0.8"
   },
   "devDependencies": {
-    "@dword-design/base": "^16.1.7",
-    "@playwright/test": "^1.57.0",
+    "@dword-design/base": "^16.2.3",
+    "@playwright/test": "^1.58.2",
     "@types/micromatch": "^4.0.10",
+    "@types/node": "^25.4.0",
     "depcheck-package-name": "^5.0.0",
     "endent": "npm:@dword-design/endent@^1.4.7",
-    "eslint": "^9.39.2",
-    "lodash-es": "^4.17.22",
-    "output-files": "^3.0.0",
-    "typescript": "^5.0.0",
-    "typescript-eslint": "^8.50.0"
+    "eslint": "^9.39.4",
+    "lodash-es": "^4.17.23",
+    "output-files": "^4.0.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.0"
   },
   "peerDependencies": {
     "typescript": ">=5.0.0"
