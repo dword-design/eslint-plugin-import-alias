@@ -102,7 +102,7 @@ Options can be passed by setting them in the `prefer-alias` rule:
 // eslint.config.ts
 
 import { defineConfig } from 'eslint/config';
-import importAlias from '@dword-design/import-alias';
+import importAlias from '@dword-design/eslint-plugin-import-alias';
 
 export default defineConfig([
   importAlias.configs.recommended,
@@ -146,7 +146,7 @@ You can also just pass the aliases to the plugin as an option.
 // eslint.config.ts
 
 import { defineConfig } from 'eslint/config';
-import importAlias from '@dword-design/import-alias';
+import importAlias from '@dword-design/eslint-plugin-import-alias';
 
 export default defineConfig([
   importAlias.configs.recommended,
