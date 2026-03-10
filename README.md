@@ -184,7 +184,7 @@ rules: {
 }
 ```
 
-If an import resolves to a file insode `app`, `@` will be preferred over `@@` although both aliases match. This is convenient for the use case where you have a lot of aliases for top-level folders like `components`, `utils` etc where you usually want those instead of a generic root alias. If you have other use cases, please let me know.
+If an import resolves to a file inside `app`, `@` will be preferred over `@@` although both aliases match. This is convenient for the use case where you have a lot of aliases for top-level folders like `components`, `utils` etc where you usually want those instead of a generic root alias. If you have other use cases, please let me know.
 
 <!-- LICENSE/ -->
 ## Contribute
