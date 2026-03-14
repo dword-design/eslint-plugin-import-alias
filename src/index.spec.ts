@@ -314,6 +314,28 @@ const tests: Record<string, TestConfig> = {
     ],
     output: "import '@core/utils'",
   },
+  'tsconfig with path to barrel file': {
+    code: 'import { barrelName } from "../withBarrel";console.log(barrelName);',
+    filename: P.join('src', 'nestedImportBarrel', 'index.ts'),
+    files: {
+      'src/withBarrel/helper.ts': "export const barrelName = 'withBarrel';",
+      'src/withBarrel/index.ts': "export {barrelName } from './helper';",
+      'tsconfig.json': JSON.stringify({
+        compilerOptions: {
+          baseUrl: '.',
+          paths: { '@withBarrel/*': ['src/withBarrel/*'] },
+        },
+      }),
+    },
+    messages: [
+      {
+        message:
+          "Unexpected parent import '../withBarrel'. Use '@withBarrel' instead",
+        ruleId: '@dword-design/import-alias/prefer-alias',
+      },
+    ],
+    output: 'import { barrelName } from "@withBarrel";console.log(barrelName);',
+  },
   'tsconfig with references': {
     code: "import '../../shared/src/utils'",
     filename: P.join('packages', 'app', 'src', 'index.ts'),
