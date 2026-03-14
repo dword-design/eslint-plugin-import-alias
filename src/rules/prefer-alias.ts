@@ -323,9 +323,13 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
 
           const absoluteImportPath = pathLib.resolve(folder, sourcePath);
 
-          const rewrittenImport = `${matchingAlias.name}/${pathLib
+          const relativePath = pathLib
             .relative(matchingAlias.path, absoluteImportPath)
-            .replaceAll('\\', '/')}`;
+            .replaceAll('\\', '/');
+
+          const rewrittenImport = relativePath
+            ? `${matchingAlias.name}/${relativePath}`
+            : matchingAlias.name;
 
           return context.report({
             data: { rewrittenImport, sourcePath },
