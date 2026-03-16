@@ -7,6 +7,8 @@ import { resolvePath as defaultResolvePath } from 'babel-plugin-module-resolver'
 import { mapValues, omit, orderBy, pick } from 'lodash-es';
 import micromatch from 'micromatch';
 
+import isParentImport from './is-parent-import';
+
 const ts = await import('typescript')
   .then(module => module.default)
   .catch(() => null);
@@ -18,7 +20,7 @@ export interface BabelPluginModuleResolverOptions {
     sourcePath: string,
     currentFile: string,
     options: Pick<BabelPluginModuleResolverOptions, 'alias' | 'cwd'>,
-  ) => string;
+  ) => string | null;
 }
 interface AliasInfo {
   path: string;
@@ -35,7 +37,7 @@ export interface Options {
     sourcePath: string,
     currentFile: string,
     options: Pick<BabelPluginModuleResolverOptions, 'alias' | 'cwd'>,
-  ) => string;
+  ) => string | null;
 }
 
 type BabelOptions = Exclude<Parameters<typeof loadOptions>[0], undefined>;
@@ -162,7 +164,6 @@ const loadTsConfigPaths = (currentFile: string, cwd: string) => {
 };
 
 const createRule = ESLintUtils.RuleCreator(() => '');
-const isParentImport = (path: string) => /^(\.\/)?\.\.\//.test(path);
 
 const findMatchingAlias = (
   sourcePath: string,
@@ -189,12 +190,19 @@ const findMatchingAlias = (
         : true,
     )
     .map(([aliasName, info]) => {
+      const resolvedRelativePath = options.resolvePath(
+        `${aliasName}/`,
+        currentFilename,
+        { alias: { [aliasName]: info.path }, cwd },
+      );
+
+      if (!resolvedRelativePath) {
+        return null;
+      }
+
       const path = pathLib.resolve(
         pathLib.dirname(currentFilename),
-        options.resolvePath(`${aliasName}/`, currentFilename, {
-          alias: { [aliasName]: info.path },
-          cwd,
-        }),
+        resolvedRelativePath,
       );
 
       if (absoluteSourcePath.startsWith(path)) {
@@ -327,9 +335,10 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
             .relative(matchingAlias.path, absoluteImportPath)
             .replaceAll('\\', '/');
 
-          const rewrittenImport = relativePath
-            ? `${matchingAlias.name}/${relativePath}`
-            : matchingAlias.name;
+          const rewrittenImport = [
+            matchingAlias.name,
+            ...(relativePath ? [relativePath] : []),
+          ].join('/');
 
           return context.report({
             data: { rewrittenImport, sourcePath },
@@ -350,6 +359,7 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
         );
 
         if (
+          importWithoutAlias &&
           !isParentImport(importWithoutAlias) &&
           hasAlias &&
           !options.aliasForSubpaths
