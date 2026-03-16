@@ -52,6 +52,18 @@ const tests: Record<string, TestConfig> = {
     options: { alias: { '@': '.' } },
     output: "import './foo'",
   },
+  'alias without path': {
+    code: "import '..';",
+    filename: P.join('sub', 'index.ts'),
+    messages: [
+      {
+        message: "Unexpected parent import '..'. Use '@' instead",
+        ruleId: '@dword-design/import-alias/prefer-alias',
+      },
+    ],
+    options: { alias: { '@': '.' } },
+    output: "import '@';",
+  },
   aliasForSubpaths: {
     code: "import '@/foo'",
     files: { 'foo.ts': '' },
