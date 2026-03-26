@@ -3,7 +3,7 @@ declare module 'babel-plugin-module-resolver' {
     sourcePath: string,
     currentFile: string,
     options: { alias?: Record<string, string>; cwd?: string },
-  ): string;
+  ): string | null;
 }
 declare module '@babel/core' {
   export type BabelPlugin = { key: string; options?: Record<string, unknown> };
