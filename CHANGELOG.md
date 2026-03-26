@@ -1,3 +1,11 @@
+## [8.1.8](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.7...v8.1.8) (2026-03-26)
+
+
+### Bug Fixes
+
+* fix for windows ([a28a4d1](https://github.com/dword-design/eslint-plugin-import-alias/commit/a28a4d191df2802117fd1c33cb65c9f425e13820))
+* handle barrel file ([#220](https://github.com/dword-design/eslint-plugin-import-alias/issues/220)) ([6b96b4c](https://github.com/dword-design/eslint-plugin-import-alias/commit/6b96b4c55e404b9a305f3647054ed0da485161e3))
+
 ## [8.1.7](https://github.com/dword-design/eslint-plugin-import-alias/compare/v8.1.6...v8.1.7) (2026-03-10)
 
 
