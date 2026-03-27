@@ -69,7 +69,7 @@
     "eslint": "^10.0.0",
     "lodash-es": "^4.17.23",
     "output-files": "^4.0.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.0",
     "typescript-eslint": "^8.57.0"
   },
   "peerDependencies": {
