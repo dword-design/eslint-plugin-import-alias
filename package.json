@@ -52,7 +52,7 @@
     "verify": "base verify"
   },
   "dependencies": {
-    "@babel/core": "^7.29.0",
+    "@babel/core": "^8.0.0",
     "@dword-design/defaults": "^1.1.2",
     "@types/babel__core": "^7.20.5",
     "@types/lodash-es": "^4.17.12",
