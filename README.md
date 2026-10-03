@@ -186,6 +186,35 @@ rules: {
 
 If an import resolves to a file inside `app`, `@` will be preferred over `@@` although both aliases match. This is convenient for the use case where you have a lot of aliases for top-level folders like `components`, `utils` etc where you usually want those instead of a generic root alias. If you have other use cases, please let me know.
 
+### Keeping imports relative within the same alias
+
+By default, every parent import is converted to an alias. If your aliases mark module boundaries, you can keep imports relative as long as they stay inside the same alias by setting `useAliasWhen` to `parent-import-cross-alias`:
+
+```ts
+rules: {
+  '@dword-design/import-alias/prefer-alias': [
+    'error',
+    {
+      alias: {
+        '@modules/billing': './app/modules/billing',
+        '@modules/cycles': './app/modules/cycles',
+      },
+      useAliasWhen: 'parent-import-cross-alias',
+    },
+  ],
+}
+```
+
+In `app/modules/cycles/components/foo.ts`:
+
+```ts
+import '../utils/bar'; // stays relative, same alias
+import '@modules/cycles/utils/bar'; // reported, fixed to '../utils/bar'
+import '../../billing/utils/baz'; // reported, fixed to '@modules/billing/utils/baz'
+```
+
+Two imports are in the same alias if the innermost alias containing the importing file is also the innermost alias containing the imported file. A wildcard alias like `@modules/*` is a single alias for all modules below it, so list each module as its own alias. `useAliasWhen` accepts `parent-import` (default) and `parent-import-cross-alias`. It does not change how subpath imports are handled, use `aliasForSubpaths` for that.
+
 <!-- LICENSE/ -->
 ## Contribute
 

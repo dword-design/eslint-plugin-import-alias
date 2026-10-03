@@ -31,6 +31,7 @@ interface AliasInfo {
 export interface Options {
   alias: Record<string, AliasInfo[]>;
   aliasForSubpaths: boolean;
+  useAliasWhen: 'parent-import' | 'parent-import-cross-alias';
   shouldReadTsConfig: boolean;
   shouldReadBabelConfig: boolean;
   resolvePath: (
@@ -233,7 +234,10 @@ const withNormalizedAliases = (
   ),
 });
 
-export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
+export default createRule<
+  [OptionsInput],
+  'parentImport' | 'sameAliasImport' | 'subpathImport'
+>({
   create: context => {
     const folder = pathLib.dirname(context.filename);
     // can't check a non-file
@@ -282,6 +286,7 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
         aliasForSubpaths: false,
         cwd: context.cwd,
         resolvePath: defaultResolvePath,
+        useAliasWhen: 'parent-import' as const,
       },
     );
 
@@ -290,6 +295,17 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
         'No alias configured. You have to define aliases by either passing them to the babel-plugin-module-resolver plugin in your Babel config, defining them in your tsconfig.json paths, or passing them directly to the prefer-alias rule.',
       );
     }
+
+    const isInSameAliasAsFile = (alias: { name: string; path: string }) => {
+      const fileAlias = findMatchingAlias(
+        '.',
+        context.filename,
+        pick(options, ['alias', 'resolvePath']),
+        { cwd: context.cwd },
+      );
+
+      return fileAlias?.name === alias.name && fileAlias.path === alias.path;
+    };
 
     return {
       ImportDeclaration: node => {
@@ -326,6 +342,13 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
           );
 
           if (!matchingAlias) {
+            return;
+          }
+
+          if (
+            options.useAliasWhen === 'parent-import-cross-alias' &&
+            isInSameAliasAsFile(matchingAlias)
+          ) {
             return;
           }
 
@@ -375,6 +398,33 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
             node,
           });
         }
+
+        if (
+          importWithoutAlias &&
+          isParentImport(importWithoutAlias) &&
+          hasAlias &&
+          options.useAliasWhen === 'parent-import-cross-alias'
+        ) {
+          const matchingAlias = findMatchingAlias(
+            importWithoutAlias,
+            context.filename,
+            pick(options, ['alias', 'resolvePath']),
+            { cwd: context.cwd },
+          );
+
+          if (matchingAlias && isInSameAliasAsFile(matchingAlias)) {
+            return context.report({
+              data: { rewrittenImport: importWithoutAlias, sourcePath },
+              fix: fixer =>
+                fixer.replaceTextRange(
+                  [node.source.range[0] + 1, node.source.range[1] - 1],
+                  importWithoutAlias,
+                ),
+              messageId: 'sameAliasImport',
+              node,
+            });
+          }
+        }
       },
     };
   },
@@ -388,6 +438,8 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
     messages: {
       parentImport:
         "Unexpected parent import '{{sourcePath}}'. Use '{{rewrittenImport}}' instead",
+      sameAliasImport:
+        "Unexpected alias import '{{sourcePath}}' within the same alias. Use '{{rewrittenImport}}' instead",
       subpathImport:
         "Unexpected subpath import via alias '{{sourcePath}}'. Use '{{rewrittenImport}}' instead",
     },
@@ -400,6 +452,11 @@ export default createRule<[OptionsInput], 'parentImport' | 'subpathImport'>({
           babelOptions: { type: 'object' },
           shouldReadBabelConfig: { default: true, type: 'boolean' },
           shouldReadTsConfig: { default: true, type: 'boolean' },
+          useAliasWhen: {
+            default: 'parent-import',
+            enum: ['parent-import', 'parent-import-cross-alias'],
+            type: 'string',
+          },
         },
         type: 'object',
       },
