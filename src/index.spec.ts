@@ -399,6 +399,127 @@ const tests: Record<string, TestConfig> = {
       messages: [],
       output: "import '../../lib/utils'",
     },
+  'useAliasWhen parent-import still aliases a parent import within the same alias':
+    {
+      code: "import '../utils/foo'",
+      filename: P.join('app', 'modules', 'cycles', 'components', 'index.ts'),
+      messages: [
+        {
+          message:
+            "Unexpected parent import '../utils/foo'. Use '@modules/cycles/utils/foo' instead",
+          ruleId: '@dword-design/import-alias/prefer-alias',
+        },
+      ],
+      options: {
+        alias: {
+          '@modules/billing': './app/modules/billing',
+          '@modules/cycles': './app/modules/cycles',
+        },
+      },
+      output: "import '@modules/cycles/utils/foo'",
+    },
+  'useAliasWhen parent-import-cross-alias aliases a parent import into another alias':
+    {
+      code: "import '../../billing/utils/foo'",
+      filename: P.join('app', 'modules', 'cycles', 'components', 'index.ts'),
+      messages: [
+        {
+          message:
+            "Unexpected parent import '../../billing/utils/foo'. Use '@modules/billing/utils/foo' instead",
+          ruleId: '@dword-design/import-alias/prefer-alias',
+        },
+      ],
+      options: {
+        alias: {
+          '@modules/billing': './app/modules/billing',
+          '@modules/cycles': './app/modules/cycles',
+        },
+        useAliasWhen: 'parent-import-cross-alias',
+      },
+      output: "import '@modules/billing/utils/foo'",
+    },
+  'useAliasWhen parent-import-cross-alias aliases a parent import outside the innermost alias':
+    {
+      code: "import '../../billing/utils/foo'",
+      filename: P.join('app', 'modules', 'cycles', 'components', 'index.ts'),
+      messages: [
+        {
+          message:
+            "Unexpected parent import '../../billing/utils/foo'. Use '@modules/billing/utils/foo' instead",
+          ruleId: '@dword-design/import-alias/prefer-alias',
+        },
+      ],
+      options: {
+        alias: {
+          '@modules': './app/modules',
+          '@modules/cycles': './app/modules/cycles',
+        },
+        useAliasWhen: 'parent-import-cross-alias',
+      },
+      output: "import '@modules/billing/utils/foo'",
+    },
+  'useAliasWhen parent-import-cross-alias keeps a parent import within the same alias':
+    {
+      code: "import '../utils/foo'",
+      filename: P.join('app', 'modules', 'cycles', 'components', 'index.ts'),
+      options: {
+        alias: {
+          '@modules/billing': './app/modules/billing',
+          '@modules/cycles': './app/modules/cycles',
+        },
+        useAliasWhen: 'parent-import-cross-alias',
+      },
+    },
+  'useAliasWhen parent-import-cross-alias keeps an alias import into another alias':
+    {
+      code: "import '@modules/billing/utils/foo'",
+      filename: P.join('app', 'modules', 'cycles', 'components', 'index.ts'),
+      files: { 'app/modules/billing/utils/foo.ts': '' },
+      options: {
+        alias: {
+          '@modules/billing': './app/modules/billing',
+          '@modules/cycles': './app/modules/cycles',
+        },
+        useAliasWhen: 'parent-import-cross-alias',
+      },
+    },
+  'useAliasWhen parent-import-cross-alias reads aliases from tsconfig': {
+    code: "import '../utils/foo'",
+    filename: P.join('app', 'modules', 'cycles', 'components', 'index.ts'),
+    files: {
+      'tsconfig.json': JSON.stringify({
+        compilerOptions: {
+          baseUrl: '.',
+          paths: {
+            '#modules/billing/*': ['./app/modules/billing/*'],
+            '#modules/cycles/*': ['./app/modules/cycles/*'],
+          },
+        },
+      }),
+    },
+    options: { useAliasWhen: 'parent-import-cross-alias' },
+  },
+  'useAliasWhen parent-import-cross-alias rewrites an alias import within the same alias to a relative one':
+    {
+      code: "import '@modules/cycles/utils/foo'",
+      filename: P.join('app', 'modules', 'cycles', 'components', 'index.ts'),
+      files: { 'app/modules/cycles/utils/foo.ts': '' },
+      messages: [
+        {
+          message:
+            "Unexpected alias import '@modules/cycles/utils/foo' within the same alias. Use '../utils/foo' instead",
+          ruleId: '@dword-design/import-alias/prefer-alias',
+        },
+      ],
+      options: {
+        alias: {
+          '@modules/billing': './app/modules/billing',
+          '@modules/cycles': './app/modules/cycles',
+        },
+        useAliasWhen: 'parent-import-cross-alias',
+      },
+      output: "import '../utils/foo'",
+    },
 };
 
 for (const [name, partialTestConfig] of Object.entries(tests)) {
