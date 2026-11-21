@@ -61,7 +61,7 @@
     "micromatch": "^4.0.8"
   },
   "devDependencies": {
-    "@dword-design/base": "^16.2.3",
+    "@dword-design/base": "^17.0.0",
     "@playwright/test": "^1.58.2",
     "@types/micromatch": "^4.0.10",
     "@types/node": "^25.4.0",
